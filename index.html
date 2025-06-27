@@ -64,8 +64,8 @@ async function geton() {
 
 const proxy = "https://corsproxy.io/";
 // geton().then(v => {
-  const baseUri = "https://script.google.com/macros/s/AKfycbwp830XXjJoJa8QFEJMPeNPYXWT3AjHQqtmxU0y9OpPzoTNC9rRwtdWiYNGnSg1hkWR0A/exec?id=";
-  const getc = "https://script.google.com/macros/s/AKfycbweNlNmY6IbBoSUzXR6vciSvthN0lz8zn2S7W6NKHqV5qXZMS5GPqokxLSXr9s8Dhip/exec?id=";
+  const baseUri = "https://script.google.com/macros/s/AKfycbzlU7hfEutRsaQ2oRYXavZD9fOxk-sd9XRADGXeiFSG2xGJfTeIyev1gD7mHvwLpG0a5g/exec?id=";
+  const getc = "https://script.google.com/macros/s/AKfycbwDpUC_qnN2J3VHGD9yIV6fqsCr5BL5Daan45f1frpYTN2dfW1e-0xLmzAnk7CqMIP4/exec?id=";
 
 // });
 
@@ -195,7 +195,7 @@ const converted = "<div class=view>" + view + " 回視聴</div> " + formattedTex
 function fn(number) {
   if (number >= 110000000) {
     const oku = 1;
-    const senMan = Math.floor((number - 100000000) / 10000000); // 千万の部分
+    const senMan = Math.floor((number - 100000000) / 10000000); 
     return `${oku}億${senMan}千万`;
   } else if (number >= 100000000) {
     return `1億`;
