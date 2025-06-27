@@ -48,9 +48,9 @@ const baseUri = "";
 
   const hash = window.location.hash.slice(1);
   if(hash){
-const videoId = hash;
    const url = document.getElementById('youtube-url');
-url.textContent = `http://youtu.be/${videoId}`;
+url.textContent = `http://youtu.be/${hash}`;
+alert(`${hash}`)
  
     loadVideo(videoId);
     loadVideoInfo(videoId);
