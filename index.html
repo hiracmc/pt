@@ -63,7 +63,6 @@ function e() {
   if (videoId) {
     const location = window.location.hash.slice(0);
     window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
-      window.location.href=`${location}#${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
@@ -71,7 +70,6 @@ function e() {
     if(videoId){
     const location = window.location.hash.slice(0);
     window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
-      window.location.href=`${location}#${videoId}`;
 
     } else {
     alert('エラー');
