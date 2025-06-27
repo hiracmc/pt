@@ -175,7 +175,7 @@ async function loadVideoInfo(videoId) {
     const stats = data.items[0].statistics;
     const videoInfo = snippet;
 const text = videoInfo.description;
-const view = stats.viewCount;
+const view = fn(stats.viewCount);
 const formattedText = text.replace(/\n/g, "<br>");
 
 const converted = "<div class=view>" + view + " 回視聴</div> " + formattedText.replace(
@@ -190,6 +190,19 @@ const converted = "<div class=view>" + view + " 回視聴</div> " + formattedTex
   }
 
   return true;
+}
+
+function fn(number) {
+  if (number >= 100000000) {
+    return Math.floor(number / 100000000) + '億';
+  } else if (number >= 10000000) {
+    const man = Math.floor(number / 10000);
+    return Math.floor(man / 1000) * 1000 + '万';
+  } else if (number >= 10000) {
+    return Math.floor(number / 10000) + '万' + (number % 10000 !== 0 ? (number % 10000) : '');
+  } else {
+    return number.toString();
+  }
 }
 
 /*
