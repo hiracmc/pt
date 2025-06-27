@@ -11,7 +11,7 @@
 
 
 <div class="ue">
-    <a href="https://hiracmc.github.io/pontube/">
+    <a href="https://hiracmc.github.io/pt/">
       <img src="assets/logo.png" alt="ホームへ" class = "home">
     </a>
 v0.01
@@ -68,9 +68,9 @@ function e() {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
-    window.location.reload;
-      window.location.href=`${window.location}#${videoId}`;
-      location.href = location.href;
+    const location = window.location.hash.slice(0);
+    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+      window.location.href=`${location}#${videoId}`;
 
     } else {
     alert('有効なURLを入力してください。');
