@@ -129,6 +129,7 @@ async function loadVideoInfo(videoId) {
 const apiUrl = `${baseUri}${videoId}`;
     try {
       const response = await fetch(apiUrl);
+      console.log(`${response}`)
       if (!response.ok) throw new Error('APIエラー');
 
       const data = await response.json();
