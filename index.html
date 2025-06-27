@@ -146,7 +146,7 @@ const converted = formattedText.replace(
   /(https?:\/\/[^\s]+)/g,
   '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
 );
-    document.getElementById('description').textContent = converted;
+    document.getElementById('description').innerHTML = converted;
     document.getElementById('video-name').textContent = videoInfo.title;
     document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
   } catch (err) {
