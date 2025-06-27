@@ -99,14 +99,28 @@ margin-top: 8px;
 font-size: 20px;
 font-weight: bold;
 color: #fff;
-width: 45em; 
+width: 28em; 
 }
 
 
 #description{
 margin-left: 50px;
 margin-top: 8px;
-font-size: 20px;
+font-size: 15px;
 color: #fff;
-width: 30em;
+width: 20em;
+}
+
+#description a {
+color: #58c2ff;
+text-decoration: underline;
+
+
+}
+
+#description a:hover {
+color: #00a2ff;
+text-decoration: underline;
+
+
 }
