@@ -4,8 +4,48 @@ text-align:center;
 width:151.6px;
 height: 33.8px;
 margin-top: 20px;
-margin-left: 20px;
+margin-left: 53px;
 }
+
+#channel-info {
+display: flex;
+
+
+
+}
+
+#channel-info img{
+width:56px;
+height: 56px;
+margin-top: 10px;
+margin-bottom: 10px;
+margin-left: 53px;
+border-radius: 26px;
+}
+
+.so{
+
+  display: inline-block;
+}
+
+#channel-info p{
+
+margin-left: 15px;
+margin-top: -20px;
+font-size: 14px;
+    color: #cecece;
+
+}
+
+#channel-info h3{
+
+margin-left: 15px;
+margin-top: 12px;
+font-size: 20px;
+    color: #fff;
+    font-weight: bold;
+}
+
 
 .kensaku{
 display: flex;
@@ -20,6 +60,7 @@ border-radius: 30px;
     margin: 0.5em 0;
     margin-left: 40px;
     font-size: 16px;
+    margin-top: 13px;
 }
 
 .kensaku1{
@@ -70,8 +111,8 @@ left: 0;
 
 .dougalink{
     text-align:left;
-    width: 500px; /*親要素いっぱい広げる*/
-	padding: 30px -5px; /*ボックスを大きくする*/
+    width: 500px; 
+	padding: 30px -5px; 
 	font-size: 18px;
     color: #fff;
     border: 1px solid #d3d3d3;
