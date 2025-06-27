@@ -43,6 +43,7 @@ v0.01
 <script>
 
 const API_KEY = '';
+const baseUri = "";
 
 
   const hash = window.location.hash.slice(1);
@@ -69,7 +70,7 @@ function e() {
     if(videoId){
     window.location.reload;
       window.location.href=`${window.location}#${videoId}`;
-      window.location.reload;
+      location.href = location.href;
 
     } else {
     alert('有効なURLを入力してください。');
@@ -102,7 +103,6 @@ function loadVideo(videoId) {
 }
 
 async function loadVideoInfo(videoId) {
-    const baseUri = await getWorkingInstance();
 const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
 
     try {
@@ -120,7 +120,6 @@ const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
 }
 
 async function loadComments(videoId) {
-  const baseUri = await getWorkingInstance();
 const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
   fetch(`${apiUrl}`)
     .then(response => response.json())
@@ -137,25 +136,6 @@ const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
     .catch(error => console.error('Error:', error));
 }
 
-async function getWorkingInstance() {
-  const res = await fetch('https://api.invidious.io/instances.json');
-  if (!res.ok) throw new Error('インスタンス一覧の取得に失敗');
-  const instances = await res.json(); // オブジェクトの配列
-
-  // HTTPSでモニター中＆応答ありなインスタンスを絞る
-  const candidates = instances.filter(inst =>
-    inst.type === 'https' &&
-    inst.monitor === true &&
-    inst.uptime > 90 // 稼働率 90%以上
-  );
-
-  if (candidates.length === 0) {
-    throw new Error('利用可能なインスタンスが見つかりません');
-  }
-
-  // ランダムに1つ選ぶ
-  return candidates[Math.floor(Math.random() * candidates.length)].uri;
-}
 
 </script>
 </body>
