@@ -128,15 +128,18 @@ function loadVideo(videoId) {
 async function loadVideoInfo(videoId) {
 const apiUrl = `${baseUri}${videoId}`;
     try {
-      const response = await fetch(apiUrl);
-      if (!response.ok) throw new Error('APIエラー');
+      const re = await fetch(apiUrl);
+      re.then(response => response.json())
+      re.then(data => {
+    console.log(data);
+    if (!response.ok) throw new Error('APIエラー');
       const data = response.json();
-      console.log(`${data}`)
       const snippet = data.items[0].snippet;
       const videoInfo = snippet;
       document.getElementById('description').textContent = videoInfo.description;
       document.getElementById('video-name').textContent = videoInfo.title;
       document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
+  });
     }
     catch (err) {
 }
