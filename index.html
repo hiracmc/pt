@@ -64,9 +64,9 @@ async function geton() {
 
 const proxy = "https://corsproxy.io/";
 // geton().then(v => {
-  const baseUri = "https://script.google.com/macros/s/AKfycby1S9PyrgZXUPKPq7__KPWifGfGDGkGryP-pE0jItvYwyQngWYE_D52JHQDFo23obtwig/exec?id=";
-  const getc = "https://script.google.com/macros/s/AKfycbx__5dqU_U1WuSAhYdlxSAiT8DJcsG0URf17xxb9QifsSLIB2Q98w1ERbdzQklJo757/exec?id=";
-  const getcs = "https://script.google.com/macros/s/AKfycbyrBPCVtKoTpv3P4oEOvSfrmaceUnOcyShplFhdQ5tMHowD2oVZWoEdm9Y6XisvtOUG1g/exec?id="
+  const baseUri = "https://script.google.com/macros/s/AKfycbwp830XXjJoJa8QFEJMPeNPYXWT3AjHQqtmxU0y9OpPzoTNC9rRwtdWiYNGnSg1hkWR0A/exec?id=";
+  const getc = "https://script.google.com/macros/s/AKfycbweNlNmY6IbBoSUzXR6vciSvthN0lz8zn2S7W6NKHqV5qXZMS5GPqokxLSXr9s8Dhip/exec?id=";
+
 // });
 
 const API_KEY = '';
@@ -142,17 +142,14 @@ async function loadChannelInfo(videoId) {
     const channelId = data.items[0].snippet.channelId;
 
     const apiUr = `${getc}${channelId}`;
-    const apiU = `${getcs}${channelId}`;
     try {
       const response2 = await fetch(apiUr);
       const channelSnippet = await response2.json();
-      const response3 = await fetch(apiU);
-      const channelStats = await response3.json();
 
       const videoinfo = channelSnippet.items[0].snippet;
-      const touroku = channelStats.items[0].statistics.subscriberCount;
+      const touroku = channelSnippet.items[0].statistics.subscriberCount;
 
-      const c = `<img src="${videoinfo.thumbnails.default.url}" alt="ホームへ" class="home"> <div class="so"><h3>${videoinfo.title}</h3><p>登録者数 ${touroku}人</p></div>`;
+      const c = `<img src="${videoinfo.thumbnails.default.url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${videoinfo.title}</h3><p>登録者数 ${touroku}人</p></div>`;
 
       document.getElementById('channel-info').innerHTML = c;
     } catch (err) {
@@ -173,14 +170,15 @@ async function loadVideoInfo(videoId) {
     }
 
     const data = await response.json();
-    console.log(data.items[0].snippet);
 
     const snippet = data.items[0].snippet;
+    const stats = data.items[0].statistics;
     const videoInfo = snippet;
 const text = videoInfo.description;
+const view = stats.viewCount;
 const formattedText = text.replace(/\n/g, "<br>");
 
-const converted = formattedText.replace(
+const converted = "<div class=view>" + view + " 回視聴</div> " + formattedText.replace(
   /(https?:\/\/[^\s<>]+)/g,
   '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
 );
