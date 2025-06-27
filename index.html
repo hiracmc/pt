@@ -193,15 +193,18 @@ const converted = "<div class=view>" + view + " 回視聴</div> " + formattedTex
 }
 
 function fn(number) {
-  if (number >= 100000000) {
-    return Math.floor(number / 100000000) + '億';
-  } else if (number >= 10000000) {
-    const man = Math.floor(number / 10000);
-    return Math.floor(man / 1000) * 1000 + '万';
+  if (number >= 110000000) {
+    const oku = 1;
+    const senMan = Math.floor((number - 100000000) / 1000000); // 千万の部分
+    return `${oku}億${senMan}千万`;
+  } else if (number >= 100000000) {
+    return `1億`;
+  } else if (number >= 100000) {
+    return `${Math.floor(number / 10000)}万`;
   } else if (number >= 10000) {
-    return Math.floor(number / 10000) + '万' + (number % 10000 !== 0 ? (number % 10000) : '');
+    return `${Math.floor(number / 10000)}万`;
   } else {
-    return number.toString();
+    return `${number}`;
   }
 }
 
