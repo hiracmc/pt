@@ -46,11 +46,11 @@ const API_KEY = '';
 const baseUri = "";
 
 
-  const hash = window.location.hash.slice(1);
-  if(hash){
+  const videoId = window.location.hash.slice(1);
+  if(videoId){
    const url = document.getElementById('youtube-url');
-url.textContent = `http://youtu.be/${hash}`;
-alert(`${hash}`)
+url.textContent = `http://youtu.be/${videoId}`;
+alert(`${videoId}`)
  
     loadVideo(videoId);
     loadVideoInfo(videoId);
