@@ -95,8 +95,7 @@ function extractVideoId(url) {
 function loadVideo(videoId) {
   const container = document.getElementById('video-container');
   container.innerHTML = `<iframe width="854" height="480" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  const container2 = document.getElementById('video-link');
-  container2.innerHTML = `<input type="url" placeholder="URL" class="dougalink" readonly value=`http://youtu.be/${videoId}`>`;
+
 }
 
 async function loadVideoInfo(videoId) {
