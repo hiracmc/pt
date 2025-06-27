@@ -131,9 +131,9 @@ const apiUrl = `${baseUri}${videoId}`;
       const response = await fetch(apiUrl);
       console.log(`${response}`)
       if (!response.ok) throw new Error('APIエラー');
-
-      const data = await response.json();
-      const videoInfo = data;
+      const data = response.json();
+      const snippet = data.items[0].snippet;
+      const videoInfo = snippet;
       document.getElementById('description').textContent = videoInfo.description;
       document.getElementById('video-name').textContent = videoInfo.title;
       document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
