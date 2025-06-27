@@ -26,15 +26,12 @@ v0.01
   <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   -->
   <div id="video-container"></div>
-  <div id="video-name">
-    <h1></h1>
-   <div id="video-info"></div>
-    <h2></h2>
-    <div id="description"></div>
-    <h2></h2>
-    <div id="channel-info"></div>
-    <h2></h2>
-    <div id="comments"></div>
+  <div id="video-name"><h1></h1></div>
+  <div id="video-link"><h2></h2></div>
+   <div id="video-info"><h2></h2></div>
+    <div id="description"><h2></h2></div>
+    <div id="channel-info"><h2></h2></div>
+    <div id="comments">
   
   </div>
 
@@ -43,7 +40,7 @@ v0.01
 <script>
 
 const API_KEY = '';
-const baseUri = "";
+const baseUri = "https://inv.nadeko.net";
 
 
   const videoId = window.location.hash.slice(1);
@@ -98,6 +95,8 @@ function extractVideoId(url) {
 function loadVideo(videoId) {
   const container = document.getElementById('video-container');
   container.innerHTML = `<iframe width="854" height="480" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  const container2 = document.getElementById('video-link');
+  container2.innerHTML = `<input type="url" placeholder="URL" class="dougalink" readonly value=`http://youtu.be/${videoId}`>`;
 }
 
 async function loadVideoInfo(videoId) {

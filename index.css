@@ -66,3 +66,22 @@ width: 90vw;
 left: 0;
   right: 0;
 }
+
+
+.dougalink{
+    text-align:left;
+    width: 500px; /*親要素いっぱい広げる*/
+	padding: 30px -5px; /*ボックスを大きくする*/
+	font-size: 18px;
+    color: #fff;
+    border: 1px solid #d3d3d3;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.dougalink:focus {
+  outline: none;
+  border: 2px solid #fff;
+}
