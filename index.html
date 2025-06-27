@@ -12,7 +12,7 @@
 
 <div class="ue">
     <a href="https://hiracmc.github.io/pontube/">
-      <img src="assets/YouTube_Logo_2017.png" alt="ホームへ" class = "home">
+      <img src="assets/logo.png" alt="ホームへ" class = "home">
     </a>
 v0.01
   <div id="js-result">
@@ -26,49 +26,54 @@ v0.01
   <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   -->
   <div id="video-container"></div>
-   <!--<div id="video-info">
-    <h2>概要</h2>
+  <div id="video-name">
+    <h1></h1>
+   <div id="video-info"></div>
+    <h2></h2>
     <div id="description"></div>
-    <h2>チャンネル情報</h2>
+    <h2></h2>
     <div id="channel-info"></div>
-    <h2>コメント</h2>
+    <h2></h2>
     <div id="comments"></div>
-  -->
+  
   </div>
 
 </div>
 
 <script>
 
-const API_KEY = 'YOUR_API_KEY';
+const API_KEY = '';
 
 
   const hash = window.location.hash.slice(1);
   if(hash){
 const videoId = hash;
-   const url = document.getElementById('youtube-url').value;
+   const url = document.getElementById('youtube-url');
 url.textContent = `http://youtu.be/${videoId}`;
-    
+ 
     loadVideo(videoId);
     loadVideoInfo(videoId);
     loadComments(videoId);
+    
   }
 function e() {
   const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId(url);
   if (videoId) {
-    window.location.href=`https://hiracmc.github.io/pontube/#${videoId}`;
+    window.location.reload;
+    window.location.href=`${window.location}#${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
-      window.location.href=`https://hiracmc.github.io/pontube/#${videoId}`;
-      //location.href=`https://scratch.mit.edu`;
+    window.location.reload;
+      window.location.href=`${window.location}#${videoId}`;
+      window.location.reload;
 
     } else {
     alert('有効なURLを入力してください。');
-    window.location.href=`https://hiracmc.github.io/pontube/`;
+    window.location.reload;
   }}
 }
   
@@ -96,19 +101,28 @@ function loadVideo(videoId) {
   container.innerHTML = `<iframe width="854" height="480" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 }
 
-function loadVideoInfo(videoId) {
-  fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`)
-    .then(response => response.json())
-    .then(data => {
-      const videoInfo = data.items[0].snippet;
+async function loadVideoInfo(videoId) {
+    const baseUri = await getWorkingInstance();
+const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) throw new Error('APIエラー');
+
+      const data = await response.json();
+      const videoInfo = data;
       document.getElementById('description').textContent = videoInfo.description;
-      document.getElementById('channel-info').textContent = `チャンネル名: ${videoInfo.channelTitle}`;
-    })
-    .catch(error => console.error('Error:', error));
+      document.getElementById('video-name').textContent = videoInfo.title;
+      document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
+    }
+    catch (err) {
+}
 }
 
-function loadComments(videoId) {
-  fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}`)
+async function loadComments(videoId) {
+  const baseUri = await getWorkingInstance();
+const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
+  fetch(`${apiUrl}`)
     .then(response => response.json())
     .then(data => {
       const commentsContainer = document.getElementById('comments');
@@ -122,6 +136,27 @@ function loadComments(videoId) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+async function getWorkingInstance() {
+  const res = await fetch('https://api.invidious.io/instances.json');
+  if (!res.ok) throw new Error('インスタンス一覧の取得に失敗');
+  const instances = await res.json(); // オブジェクトの配列
+
+  // HTTPSでモニター中＆応答ありなインスタンスを絞る
+  const candidates = instances.filter(inst =>
+    inst.type === 'https' &&
+    inst.monitor === true &&
+    inst.uptime > 90 // 稼働率 90%以上
+  );
+
+  if (candidates.length === 0) {
+    throw new Error('利用可能なインスタンスが見つかりません');
+  }
+
+  // ランダムに1つ選ぶ
+  return candidates[Math.floor(Math.random() * candidates.length)].uri;
+}
+
 </script>
 </body>
 </html>
