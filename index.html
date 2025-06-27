@@ -61,8 +61,9 @@ function e() {
   const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId(url);
   if (videoId) {
-    window.location.reload;
-    window.location.href=`${window.location}#${videoId}`;
+    const location = window.location.hash.slice(0);
+    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+      window.location.href=`${location}#${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
