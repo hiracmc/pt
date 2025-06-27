@@ -77,7 +77,7 @@ url.textContent = `http://youtu.be/${videoId}`;
  
     loadVideo(videoId);
     loadVideoInfo(videoId);
-    loadComments(videoId);
+    //loadComments(videoId);
     
   }
 function e() {
@@ -129,9 +129,9 @@ async function loadVideoInfo(videoId) {
 const apiUrl = `${baseUri}${videoId}`;
     try {
       const response = await fetch(apiUrl);
-      console.log(`${response}`)
       if (!response.ok) throw new Error('APIエラー');
       const data = response.json();
+      console.log(`${data}`)
       const snippet = data.items[0].snippet;
       const videoInfo = snippet;
       document.getElementById('description').textContent = videoInfo.description;
@@ -142,7 +142,7 @@ const apiUrl = `${baseUri}${videoId}`;
 }
 return true;
 }
-
+/*
 async function loadComments(videoId) {
 const apiUrl = `${baseUri}${videoId}`;
   fetch(`${apiUrl}`)
@@ -160,7 +160,7 @@ const apiUrl = `${baseUri}${videoId}`;
     .catch(error => console.error('Error:', error));
     return true
 }
-
+*/
 
 </script>
 </body>
