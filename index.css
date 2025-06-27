@@ -1,8 +1,8 @@
 .home{
 font-size: 32px;
 text-align:center;
-width:181.6px;
-height: 38.8px;
+width:151.6px;
+height: 33.8px;
 margin-top: 20px;
 margin-left: 20px;
 }
@@ -11,10 +11,10 @@ margin-left: 20px;
 display: flex;
 
     width: 700px;
-    height: 50px;
+    height: 35px;
     padding: 0.5em;
     text-align:center;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #686868;
 border-radius: 30px;
     background: #202020;
     margin: 0.5em 0;
@@ -24,7 +24,7 @@ border-radius: 30px;
 
 .kensaku1{
     text-align:left;
-    width: 85%; /*親要素いっぱい広げる*/
+    width: 90%; /*親要素いっぱい広げる*/
 	padding: 30px -5px; /*ボックスを大きくする*/
 	font-size: 18px;
     color: #fff;
@@ -41,13 +41,13 @@ border-radius: 30px;
 
 .kensaku2{
 text-align:center;
-    width: 15%;
+    width: 10%;
     height: 100%;
     background: #202020;
     border: none;
     font-size: 18px;
     color: #fff;
-    border-left: 1px solid #d3d3d3;
+    border-left: 1px solid #686868;
 }
 
 .kensaku2:focus {
@@ -55,7 +55,7 @@ text-align:center;
 }
 
 body {
-background-color: #202020;
+background-color: #111111;
 font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiryo,sans-serif;
 }
 
@@ -84,4 +84,10 @@ left: 0;
 .dougalink:focus {
   outline: none;
   border: 2px solid #fff;
+}
+
+#video-container{
+margin-top: 30px;
+margin-left: 50px;
+
 }
