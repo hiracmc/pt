@@ -39,8 +39,35 @@ v0.01
 
 <script>
 
+
+async function geton() {
+  const response = await fetch('https://api.invidious.io/instances.json');
+  const data = await response.json(); // データ形式: [ [url, {info}], ... ]
+  console.log(`${data}`)
+  // HTTPS で監視が有効なインスタンスのみを抽出
+  const onlineInstances = data
+    .filter(([url, info]) => info?.type === 'https' && info?.monitor === true)
+    .map(([url]) => url);
+
+  if (onlineInstances.length === 0) {
+    throw new Error("オンラインのInvidiousインスタンスが見つかりませんでした。");
+  }
+
+  // ランダムに1つ選んで変数に代入
+  const v = onlineInstances[Math.floor(Math.random() * onlineInstances.length)];
+  console.log("このインスタンスに接続するよ～:", v);
+
+  return v;
+}
+
+
+const proxy = "https://corsproxy.io/";
+// geton().then(v => {
+  const baseUri = "https://script.google.com/macros/s/1BuSOCCecR9iayN1MX4Kn7kJVv736BK2b7FX2RG_DwdKbKf9I2GeU-dlX/exec?id=";
+// });
+
 const API_KEY = '';
-const baseUri = "https://inv.nadeko.net";
+
 
 
   const videoId = window.location.hash.slice(1);
@@ -99,8 +126,7 @@ function loadVideo(videoId) {
 }
 
 async function loadVideoInfo(videoId) {
-const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
-
+const apiUrl = `${baseUri}${videoId}`;
     try {
       const response = await fetch(apiUrl);
       if (!response.ok) throw new Error('APIエラー');
@@ -113,10 +139,11 @@ const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
     }
     catch (err) {
 }
+return true;
 }
 
 async function loadComments(videoId) {
-const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
+const apiUrl = `${baseUri}${videoId}`;
   fetch(`${apiUrl}`)
     .then(response => response.json())
     .then(data => {
@@ -130,6 +157,7 @@ const apiUrl = `${$baseUri}/api/v1/videos/${videoId}`;
       });
     })
     .catch(error => console.error('Error:', error));
+    return true
 }
 
 
