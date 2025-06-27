@@ -91,3 +91,22 @@ margin-top: 30px;
 margin-left: 50px;
 
 }
+
+
+#video-name{
+margin-left: 50px;
+margin-top: 8px;
+font-size: 28px;
+font-weight: bold;
+color: #fff;
+
+}
+
+
+#description{
+margin-left: 50px;
+margin-top: 8px;
+font-size: 20px;
+color: #fff;
+
+}
