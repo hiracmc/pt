@@ -131,7 +131,7 @@ function extractVideoId(url) {
 
 function loadVideo(videoId) {
   const container = document.getElementById('video-container');
-  const yoko = window.innerWidth * 0.7;
+  const yoko = window.innerWidth * 0.7 + 25;
   const tate = yoko * 9 / 16;
 
   container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
