@@ -4,18 +4,35 @@ a {
 
 
 .home{
+  background: linear-gradient(to right, #ff0000, #9c0000,#ff2600, #ff0000);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 4s linear infinite;
+
 font-size: 50px;
 text-align:center;
 font-family: "Righteous", sans-serif;
-width:151.6px;
-height: 33.8px;
+
+
 margin-top: 4px;
 margin-left: 53px;
-color:#ffffff;
 border: none;
 text-decoration: none;
-
 }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+
 
 #channel-info {
 display: flex;
@@ -128,6 +145,7 @@ width: 100vw;
 height: 5vw;
 left: 0;
   right: 0;
+  margin-top: 20px;
   margin-bottom: 20px;
   padding: 0px -1px;
   background-color: #0f0f0f;
@@ -170,7 +188,7 @@ margin-top: 15px;
 font-size: 20px;
 font-weight: bold;
 color: #fff;
-width: 60em; 
+width: 60vw; 
 }
 
 .setu{
@@ -183,7 +201,7 @@ margin-left: 50px;
 margin-top: 8px;
 font-size: 18px;
 color: #fff;
-width:51vw;
+width:60vw;
 background-color: #272727;
   padding: 25px;
   display: inline-block;

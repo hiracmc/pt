@@ -83,6 +83,10 @@ const API_KEY = '';
   if(videoId){
    const url = document.getElementById('youtube-url');
 url.textContent = `http://youtu.be/${videoId}`;
+ 
+    loadVideo(videoId);
+    loadVideoInfo(videoId);
+    loadChannelInfo(videoId);
     //loadComments(videoId);
     
   }
