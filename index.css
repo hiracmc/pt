@@ -23,6 +23,32 @@ border: none;
 text-decoration: none;
 }
 
+.homein{
+
+  text-align:center;
+  background: linear-gradient(to right, #ff0000, #9c0000,#ff2600, #ff0000);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 4s linear infinite;
+margin-top: 20vh;
+font-size: 100px;
+text-align:center;
+font-family: "Righteous", sans-serif;
+position: absolute;
+
+  left: 50%;
+  transform: translate(-50%,0px);
+
+
+border: none;
+text-decoration: none;
+}
+
+
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -32,6 +58,11 @@ text-decoration: none;
   }
 }
 
+
+.varr{
+color: #fff;
+font-size: 12px;
+}
 
 
 #channel-info {
@@ -101,7 +132,39 @@ border-radius: 30px;
     margin-top: 13px;
 }
 
+.kensakuu{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    font-size: 16px;
+    margin-top: 13px;
+}
+
 .kensaku1{
+    text-align:left;
+    width: 90%; /*親要素いっぱい広げる*/
+	padding: 30px -5px; /*ボックスを大きくする*/
+	font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.kensakuu1{
     text-align:left;
     width: 90%; /*親要素いっぱい広げる*/
 	padding: 30px -5px; /*ボックスを大きくする*/
@@ -118,7 +181,22 @@ border-radius: 30px;
   outline: none;
 }
 
+.kensakuu1:focus {
+  outline: none;
+}
+
 .kensaku2{
+text-align:center;
+    width: 10%;
+    height: 100%;
+    background: #202020;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    border-left: 1px solid #686868;
+}
+
+.kensakuu2{
 text-align:center;
     width: 10%;
     height: 100%;
@@ -132,6 +210,11 @@ text-align:center;
 .kensaku2:focus {
   outline: none;
 }
+
+.kensakuu2:focus {
+  outline: none;
+}
+
 
 body {
 background-color: #0f0f0f;
