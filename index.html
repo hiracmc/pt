@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
 </head>
 <body>
 
@@ -17,12 +18,14 @@
     <a href="https://hiracmc.github.io/pt/">
       <h1 class="home">Pontube</h1>
     </a>
-v0.012
+    <div class="var">v0.012</div>
   <div id="js-result">
 <div class="kensaku">
           <input type="url" id="youtube-url" placeholder="URL" class="kensaku1">
 
- <button type="submit" onclick="e()" class="kensaku2">探す</button> 
+ <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
+search
+</span></button> 
 
     </div></div>
 </div>
@@ -128,7 +131,7 @@ function extractVideoId(url) {
 
 function loadVideo(videoId) {
   const container = document.getElementById('video-container');
-  container.innerHTML = `<iframe width="1000" height="562" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  container.innerHTML = `<iframe width="1000" height="562" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
 
 }
 

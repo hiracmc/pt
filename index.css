@@ -2,6 +2,12 @@ a {
   text-decoration: none;
 }
 
+.douga{
+width:52vw;
+height: 61.8vh;
+
+
+}
 
 .home{
 font-size: 50px;
@@ -124,10 +130,19 @@ font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiry
 .ue {
 display: flex;
 text-align:center;
-width: 90vw;
+width: 100vw;
+height: 5vw;
 left: 0;
   right: 0;
-  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px -1px;
+  background-color: #0f0f0f;
+}
+
+.ue .var{
+color: #fff;
+margin-left: 5px;
+font-size: 12px;
 }
 
 
@@ -174,7 +189,7 @@ margin-left: 50px;
 margin-top: 8px;
 font-size: 18px;
 color: #fff;
-width: 47.7em;
+width:49vw;
 background-color: #272727;
   padding: 25px;
   display: inline-block;
@@ -190,4 +205,14 @@ text-decoration: underline;
 color: #0088ff;
 text-decoration: underline;
 
+}
+
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 500,
+  'GRAD' 200,
+  'opsz' 40;
 }
