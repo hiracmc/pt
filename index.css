@@ -4,13 +4,13 @@ a {
 
 
 .home{
-  background: linear-gradient(to right, #ff0000, #9c0000,#ff2600, #ff0000);
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
   background-size: 200%;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   color: transparent;
-  animation: gradient 4s linear infinite;
+  animation: gradient 2s linear infinite;
 
 font-size: 50px;
 text-align:center;
@@ -26,13 +26,13 @@ text-decoration: none;
 .homein{
 
   text-align:center;
-  background: linear-gradient(to right, #ff0000, #9c0000,#ff2600, #ff0000);
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
   background-size: 200%;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   color: transparent;
-  animation: gradient 4s linear infinite;
+  animation: gradient 2s linear infinite;
 margin-top: 20vh;
 font-size: 100px;
 text-align:center;
@@ -310,4 +310,53 @@ text-decoration: underline;
   'wght' 500,
   'GRAD' 200,
   'opsz' 40;
+}
+
+
+.kome {
+margin-left: 50px;
+margin-top: 30px;
+font-size: 18px;
+color: #fff;
+width:60vw;
+  padding: 25px;
+  display: flex;
+  background-color: #1d1d1d;
+  border: 4px solid #111111;
+  border-radius: 10px;
+}
+
+
+.kome a {
+color: #0088ff;
+text-decoration: underline;
+}
+
+.kome a:hover {
+color: #0074da;
+text-decoration: underline;
+}
+
+.komesita {
+  display: inline-block;
+
+}
+
+.komesita p {
+  color:#e2e2e2;
+  margin-top: -10px;
+  margin-left: 10px;
+}
+
+.komesita .b {
+  color:#e2e2e2;
+  margin-top: 0px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.komeue img {
+  border-radius: 25px;
+  width:50px;
+height: 50px;
 }

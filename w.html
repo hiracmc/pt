@@ -21,7 +21,7 @@
     <div class="var">v0.012</div>
   <div id="js-result">
 <div class="kensaku">
-          <input type="url" id="youtube-url" placeholder="URL" class="kensaku1">
+          <input type="url" id="youtube-url" placeholder="検索" class="kensaku1">
 
  <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
 search
@@ -37,11 +37,8 @@ search
    <div id="video-info"><h2></h2></div>
 <div id="channel-info"></div>
   <div id="description"></div>
-  
-    <div id="comments">
-  
-  </div>
-
+  <div class="komee">コメント</div>
+<div id="komento"></div>
 </div>
 
 <script>
@@ -72,7 +69,8 @@ const proxy = "https://corsproxy.io/";
 // geton().then(v => {
   const baseUri = "https://script.google.com/macros/s/AKfycbx8v3UM8-oImNJFMicfAT4oWFWE7rvppJRs8QUfiNvG3emq_tJg3OtrSdLvph1MLGPmPg/exec?id=";
   const getc = "https://script.google.com/macros/s/AKfycbww6z3czhraDQl-_9_UeaaIAvgO7EQ-DpAs9zxiTJJ2uKMbhDSA3hEHAR-mfd76pY0S/exec?id=";
-  const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id="
+  const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id=";
+  const come = "https://script.google.com/macros/s/AKfycbwu88FSqn0H16s2U5lu_9zh3zLxwX9JurKwZVCiPrEestVo21EZRr4IiUis7Dg9jbOZ/exec?id="
 // });
 
 const API_KEY = '';
@@ -199,15 +197,54 @@ const converted = "<div class=view>" + view + " 回視聴</div> " + formattedTex
   /(https?:\/\/[^\s<>]+)/g,
   '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
 );
+    const tag = "マイクラ";
     document.getElementById('description').innerHTML = converted;
     document.getElementById('video-name').textContent = videoInfo.title;
     document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
+    getkome(videoId)
   } catch (err) {
     console.error("エラーが発生しました:", err);
   }
 
   return true;
 }
+
+
+async function getkome(videoId) {
+  const apiUrl = `${come}${videoId}`;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error('APIエラー');
+    }
+
+    const data = await response.json();
+    let text = "";
+
+    for (let i = 0; i < 30; i++) {
+      const snippet = data.items[i].snippet.topLevelComment.snippet;
+      const comment = snippet.textDisplay;
+      const name = snippet.authorDisplayName;
+      const icon = snippet.authorProfileImageUrl;
+
+      text += `
+        <div class="kome">
+          <div class="komeue">
+          <img src="${icon}" alt="${name}" width="40" height="40">
+          </div>
+          <div class="komesita"><p class="b">${name}</p><p class="kometext"><p>${comment}</p></div>
+        </div>
+      `;
+    }
+
+    document.getElementById('komento').innerHTML = text;
+
+  } catch (err) {
+    console.error("エラーが発生しました:", err);
+  }
+}
+
+
 
 function fn(number) {
   if (number >= 110000000) {
