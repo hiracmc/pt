@@ -18,7 +18,7 @@
     <a href="https://hiracmc.github.io/pt/">
       <h1 class="homein">Pontube</h1>
     </a>
-    <div class="varr">v0.012</div>
+    <div class="varr">v0.013</div>
   <div id="js-result">
 <div class="kensakuu">
 
@@ -116,122 +116,6 @@ function extractVideoId(url) {
     return null;
   }
 }
-
-function loadVideo(videoId) {
-  const container = document.getElementById('video-container');
-  const yoko = (window.innerWidth) * 0.6 + 48;
-  const tate = yoko * 9 / 16;
-
-  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
-
-}
-
-async function loadChannelInfo(videoId) {
-  const apiUrl = `${baseUri}${videoId}`;
-  try {
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error('APIエラー');
-    }
-
-    const data = await response.json();
-    const channelId = data.items[0].snippet.channelId;
-
-    const apiUr = `${getc}${channelId}`;
-    try {
-      const response2 = await fetch(apiUr);
-      const channelSnippet = await response2.json();
-
-      const videoinfo = channelSnippet.items[0].snippet;
-      const touroku = channelSnippet.items[0].statistics.subscriberCount;
-
-      const c = `<img src="${videoinfo.thumbnails.default.url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo.title,25)}</h3><p>登録者数 ${touroku}人</p></div>`;
-
-      document.getElementById('channel-info').innerHTML = c;
-    } catch (err) {
-      console.error("チャンネル情報の取得に失敗:", err);
-    }
-  } catch (err) {
-    console.error("動画情報の取得に失敗:", err);
-  }
-}
-
-function syouryaku(text,max) {
-  const maxLength = max;
-  if (text.length <= maxLength) {
-    return text;
-  }
-  return text.slice(0, maxLength) + "...";
-}
-
-async function loadVideoInfo(videoId) {
-  const apiUrl = `${baseUri}${videoId}`;
-  try {
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error('APIエラー');
-    }
-
-    const data = await response.json();
-
-    const snippet = data.items[0].snippet;
-    const stats = data.items[0].statistics;
-    const videoInfo = snippet;
-const text = videoInfo.description;
-const view = fn(stats.viewCount);
-const formattedText = text.replace(/\n/g, "<br>");
-
-const converted = "<div class=view>" + view + " 回視聴</div> " + formattedText.replace(
-  /(https?:\/\/[^\s<>]+)/g,
-  '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-);
-    document.getElementById('description').innerHTML = converted;
-    document.getElementById('video-name').textContent = videoInfo.title;
-    document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
-  } catch (err) {
-    console.error("エラーが発生しました:", err);
-  }
-
-  return true;
-}
-
-function fn(number) {
-  if (number >= 110000000) {
-    const oku = 1;
-    const senMan = Math.floor((number - 100000000) / 10000000); 
-    return `${oku}億${senMan}千万`;
-  } else if (number >= 100000000) {
-    return `1億`;
-  } else if (number >= 100000) {
-    return `${Math.floor(number / 10000)}万`;
-  } else if (number >= 10000) {
-    return `${Math.floor(number / 10000)}万`;
-  } else {
-    return `${number}`;
-  }
-}
-
-/*
-async function loadComments(videoId) {
-const apiUrl = `${baseUri}${videoId}`;
-  fetch(`${apiUrl}`)
-    .then(response => response.json())
-    .then(data => {
-      const commentsContainer = document.getElementById('comments');
-      commentsContainer.innerHTML = '';
-      data.items.forEach(item => {
-        const comment = item.snippet.topLevelComment.snippet;
-        const commentElement = document.createElement('p');
-        commentElement.textContent = `${comment.authorDisplayName}: ${comment.textDisplay}`;
-        commentsContainer.appendChild(commentElement);
-      });
-    })
-    .catch(error => console.error('Error:', error));
-    return true
-}
-*/
 
 </script>
 </body>
