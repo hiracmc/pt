@@ -216,23 +216,3 @@ function fn(number) {
     return `${number}`;
   }
 }
-
-/*
-async function loadComments(videoId) {
-const apiUrl = `${baseUri}${videoId}`;
-  fetch(`${apiUrl}`)
-    .then(response => response.json())
-    .then(data => {
-      const commentsContainer = document.getElementById('comments');
-      commentsContainer.innerHTML = '';
-      data.items.forEach(item => {
-        const comment = item.snippet.topLevelComment.snippet;
-        const commentElement = document.createElement('p');
-        commentElement.textContent = `${comment.authorDisplayName}: ${comment.textDisplay}`;
-        commentsContainer.appendChild(commentElement);
-      });
-    })
-    .catch(error => console.error('Error:', error));
-    return true
-}
-*/
