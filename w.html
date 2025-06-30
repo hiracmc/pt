@@ -77,7 +77,6 @@ url.textContent = `http://youtu.be/${videoId}`;
  console.log(videoId)
     loadVideo(videoId);
     loadVideoInfo(videoId);
-    loadChannelInfo(videoId);
     //loadComments(videoId);
     
   }
@@ -128,27 +127,6 @@ function loadVideo(videoId) {
 
 }
 
-async function loadChannelInfo(videoId) {
-  const apiUrl = `${baseUri}${videoId}`;
-  try {
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error('APIエラー');
-    }
-
-    const data = await response.json();
-    const videoinfo = data.author;
-      const touroku = data.subCountText;
-
-      const c = `<img src="${data.authorThumbnails[0].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>登録者数 ${touroku}人</p></div>`;
-
-      document.getElementById('channel-info').innerHTML = c;
-    } catch (err) {
-      console.error("チャンネル情報の取得に失敗:", err);
-  }
-}
-
 function syouryaku(text,max) {
   const maxLength = max;
   if (text.length <= maxLength) {
@@ -178,6 +156,12 @@ console.log(`動画の説明を読み込みます…${videoId}`)
     document.getElementById('description').innerHTML = descriptionHtml;
     document.getElementById('video-name').textContent = title;
     document.getElementById('channel-info').textContent = `${data.channelTitle}`;
+    const videoinfo = data.author;
+      const touroku = data.subCountText;
+
+      const c = `<img src="${data.authorThumbnails[0].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>登録者数 ${touroku}人</p></div>`;
+
+      document.getElementById('channel-info').innerHTML = c;
     getkome(videoId)
   } catch (err) {
     console.error("エラーが発生しました:", err);
