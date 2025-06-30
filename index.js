@@ -142,7 +142,7 @@ async function loadVideoInfo(videoId) {
     } = data
 
     const descriptionHtml = "<div class=view>" + view + " 回視聴</div> " + data.descriptionHtml
-
+alert(descriptionHtml)
     document.getElementById('description').innerHTML = descriptionHtml;
     document.getElementById('video-name').textContent = title;
     document.getElementById('channel-info').textContent = `${data.channelTitle}`;
