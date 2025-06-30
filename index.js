@@ -19,18 +19,12 @@ async function geton() {
   return v;
 }
 
-
-const proxy = "https://corsproxy.io/";
-// geton().then(v => {
-  const baseUri = "https://script.google.com/macros/s/AKfycbx8v3UM8-oImNJFMicfAT4oWFWE7rvppJRs8QUfiNvG3emq_tJg3OtrSdLvph1MLGPmPg/exec?id=";
+const server = "https://invidious.nikkosphere.com/";
+  
+  const baseUri = server + "api/v1/videos/";
   const getc = "https://script.google.com/macros/s/AKfycbww6z3czhraDQl-_9_UeaaIAvgO7EQ-DpAs9zxiTJJ2uKMbhDSA3hEHAR-mfd76pY0S/exec?id=";
   const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id=";
   const come = "https://script.google.com/macros/s/AKfycbwu88FSqn0H16s2U5lu_9zh3zLxwX9JurKwZVCiPrEestVo21EZRr4IiUis7Dg9jbOZ/exec?id="
-// });
-
-const API_KEY = '';
-
-
 
   const videoId = window.location.hash.slice(1);
   if(videoId){
@@ -141,21 +135,17 @@ async function loadVideoInfo(videoId) {
 
     const data = await response.json();
 
-    const snippet = data.items[0].snippet;
-    const stats = data.items[0].statistics;
-    const videoInfo = snippet;
-const text = videoInfo.description;
-const view = fn(stats.viewCount);
-const formattedText = text.replace(/\n/g, "<br>");
+    const {
+      title,
+      viewCount,
+      publishedText
+    } = data
 
-const converted = "<div class=view>" + view + " 回視聴</div> " + formattedText.replace(
-  /(https?:\/\/[^\s<>]+)/g,
-  '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-);
-    const tag = "マイクラ";
-    document.getElementById('description').innerHTML = converted;
-    document.getElementById('video-name').textContent = videoInfo.title;
-    document.getElementById('channel-info').textContent = `${videoInfo.channelTitle}`;
+    const descriptionHtml = "<div class=view>" + view + " 回視聴</div> " + data.descriptionHtml
+
+    document.getElementById('description').innerHTML = descriptionHtml;
+    document.getElementById('video-name').textContent = title;
+    document.getElementById('channel-info').textContent = `${data.channelTitle}`;
     getkome(videoId)
   } catch (err) {
     console.error("エラーが発生しました:", err);
