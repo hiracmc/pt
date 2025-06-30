@@ -126,6 +126,7 @@ function syouryaku(text,max) {
 
 async function loadVideoInfo(videoId) {
   const apiUrl = `${baseUri}${videoId}`;
+  alert(apiUrl)
   try {
     const response = await fetch(apiUrl);
 
@@ -139,7 +140,7 @@ async function loadVideoInfo(videoId) {
       title,
       viewCount,
       publishedText
-    } = data
+    } = data;
 
     const descriptionHtml = "<div class=view>" + view + " 回視聴</div> " + data.descriptionHtml
 alert(descriptionHtml)
