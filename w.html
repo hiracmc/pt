@@ -150,7 +150,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
       publishedText
     } = data;
 
-    const descriptionHtml = "<div class=view>" + viewCount + ` 回視聴 ` + publishedText + `に投稿済み</div></br> <div style="white-space: pre-wrap;"` + data.descriptionHtml + "</div>"
+    const descriptionHtml = "<div class=view>" + fn(viewCount) + ` 回視聴 ` + publishedText + `に投稿済み</div></br> <div style="white-space: pre-wrap;"` + data.descriptionHtml + "</div>"
     document.getElementById('description').innerHTML = descriptionHtml;
     document.getElementById('video-name').textContent = title;
     document.getElementById('channel-info').textContent = `${data.channelTitle}`;
