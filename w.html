@@ -161,7 +161,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
       const touroku = data.subCountText;
     console.log(`登録者数:${data.subCount} ${data.subCountText}`)
 
-      const c = `<img src="${data.authorThumbnails[0].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>${touroku} 登録者</p></div>`;
+      const c = `<img src="${data.authorThumbnails[2].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>${touroku} 登録者</p></div>`;
 
       document.getElementById('channel-info').innerHTML = c;
     getkome(videoId)
