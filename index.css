@@ -364,6 +364,7 @@ width:60vw;
   background-color: #1d1d1d;
   border: 4px solid #111111;
   border-radius: 10px;
+white-space: pre-wrap;
 }
 
 
@@ -386,6 +387,7 @@ text-decoration: underline;
   color:#e2e2e2;
   margin-top: -10px;
   margin-left: 10px;
+  white-space: pre-wrap;
 }
 
 .komesita .b {
@@ -401,7 +403,7 @@ text-decoration: underline;
 height: 50px;
 }
 
-.komee {
+#komee {
 margin-left: 60px;
 margin-top: 50px;
 font-size: 28px;

@@ -41,7 +41,7 @@ search
       <div class="kag"></div></div>
         <button type="submit" onclick="sw()" id="syouryaku">もっと見る</button>
   </div>
-  <div class="komee">コメント</div>
+  <div id="komee">コメント</div>
 <div id="komento"></div>
 </div>
  <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script> -->
@@ -76,7 +76,7 @@ const server = "https://invidious.nikkosphere.com/";
   console.log(baseUri)
   const getc = "https://script.google.com/macros/s/AKfycbww6z3czhraDQl-_9_UeaaIAvgO7EQ-DpAs9zxiTJJ2uKMbhDSA3hEHAR-mfd76pY0S/exec?id=";
   const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id=";
-  const come = "https://script.google.com/macros/s/AKfycbwu88FSqn0H16s2U5lu_9zh3zLxwX9JurKwZVCiPrEestVo21EZRr4IiUis7Dg9jbOZ/exec?id="
+  const come = server + "api/v1/comments/";
 console.log("スクリプトを読み込みました")
   const videoId = window.location.hash.slice(1);
   if(videoId){
@@ -216,6 +216,10 @@ const text = d;
   return true;
 }
 
+ /**
+   * 
+   * @param {Array} comments
+   */
 
 async function getkome(videoId) {
   const apiUrl = `${come}${videoId}`;
@@ -226,23 +230,25 @@ async function getkome(videoId) {
     }
 
     const data = await response.json();
+    console.log(data)
     let text = "";
 
-    for (let i = 0; i < 30; i++) {
-      const snippet = data.items[i].snippet.topLevelComment.snippet;
-      const comment = snippet.textDisplay;
-      const name = snippet.authorDisplayName;
-      const icon = snippet.authorProfileImageUrl;
-
+    data.comments.forEach(comment => {
+      const snippet = comment;
+      const commentt = snippet.contentHtml;
+      const name = comment.author
+      const icon = comment.authorThumbnails[0].url
+      const commentCount = data.commentCount.toLocaleString();;
+      document.getElementById('komee').innerHTML = commentCount + " 件のコメント";
       text += `
         <div class="kome">
           <div class="komeue">
           <img src="${icon}" alt="${name}" width="40" height="40">
           </div>
-          <div class="komesita"><p class="b">${name}</p><p class="kometext"><p>${comment}</p></div>
+          <div class="komesita"><p class="b">${name}</p><p class="kometext"><p>${commentt}</p></div>
         </div>
       `;
-    }
+    })
 
     document.getElementById('komento').innerHTML = text;
 
