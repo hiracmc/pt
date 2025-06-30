@@ -20,12 +20,11 @@
     </a>
   <div id="js-result">
 <div class="kensaku">
-  <form>
           <input type="url" id="youtube-url" placeholder="検索" class="kensaku1">
 
  <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
 search
-</span></button></form>
+</span></button>
 
     </div></div>
 </div>
@@ -33,15 +32,23 @@ search
   <div id="video-name"><h1></h1></div>
   <div id="video-link"><h2></h2></div>
    <div id="video-info"><h2></h2></div>
+   <div class="iroiro">
 <div id="channel-info"></div>
-  <div id="description"><p></p></div>
+</div>
+<div class="iroiroo">
+  <div id="syor">
+    <div id="description"><p></p></div>
+      <div class="kag"></div></div>
+        <button type="submit" onclick="sw()" id="syouryaku">もっと見る</button>
+  </div>
   <div class="komee">コメント</div>
 <div id="komento"></div>
 </div>
  <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script> -->
 <script>
 
-  const ifd = 0;
+  var ifd = 0;
+  let d
   
 async function geton() {
   const response = await fetch('./assets/inv.json');
@@ -100,6 +107,29 @@ function e() {
   }}
 }
   
+function sw(){
+if(ifd === 1){
+  const text = d;
+  document.getElementById('description').innerHTML = syoi(text) + ` .....`;
+  const button = document.getElementById('syouryaku')
+  button.innerText = "もっと見る";
+  ifd = 0;
+} else {
+document.getElementById('description').innerHTML = d;
+const button = document.getElementById('syouryaku')
+  button.innerText = "一部を表示";
+  ifd = 1;
+}
+}
+
+function syoi(text) {
+    const se = /<\/?br\s*\/?>/i;
+  const lines = text.split("\n");
+  const result = lines.slice(0, 5);
+  const kekka = result.join('<br>');
+  return kekka;
+}
+
 
 function extractVideoId(url) {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
@@ -137,9 +167,13 @@ function syouryaku(text,max) {
 }
 
 async function loadVideoInfo(videoId) {
-  const apiUrl = `${baseUri}${videoId}`;
+  const apiUrl = `${baseUri}${videoId}?hl=ja`;
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+  headers: {
+    "Accept-Language": "ja"
+  }
+})
 
     if (!response.ok) {
       throw new Error('APIエラー');
@@ -154,16 +188,26 @@ console.log(`動画の説明を読み込みます…${videoId}`)
       descriptionHtml
     } = data;
 
-    const descriptionHtml = "<div class=view>" + fn(viewCount) + ` 回視聴   ` + publishedText + `に投稿済み</div></br> <div style="white-space: pre-wrap;"` + descriptionHtml + "</div>"
-    document.getElementById('description').innerHTML = descriptionHtml;
+
+    const descriptionHtmls = "<div class=view>" + fn(viewCount) + ` 回視聴   ` + publishedText + `に投稿済み</div> <div style="white-space: pre-wrap;">` + descriptionHtml + "</div>"
+    d = descriptionHtmls;
+    document.getElementById('description').innerHTML = descriptionHtmls;
     document.getElementById('video-name').textContent = title;
     document.getElementById('channel-info').textContent = `${data.channelTitle}`;
     const videoinfo = data.author;
       const touroku = data.subCountText;
 
-      const c = `<img src="${data.authorThumbnails[2].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>${touroku} 登録者</p></div>`;
+      const c = `<img src="${data.authorThumbnails[2].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>${touroku} 人の登録者</p></div>`;
 
       document.getElementById('channel-info').innerHTML = c;
+
+const text = d;
+  document.getElementById('description').innerHTML = syoi(text) + ` .....`;
+  const button = document.getElementById('syouryaku')
+  button.innerText = "もっと見る";
+
+
+
     getkome(videoId)
   } catch (err) {
     console.error("エラーが発生しました:", err);

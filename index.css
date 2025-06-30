@@ -99,9 +99,10 @@ font-size: 14px;
 .view{
 
 margin-left: -1px;
-margin-top: -10px;
+margin-top: -5px;
 font-size: 18px;
     color: #ffffff;
+    font-weight: bold;
 
 }
 
@@ -132,6 +133,44 @@ border-radius: 30px;
     margin-top: 13px;
 }
 
+.iroiro{
+display: flex;
+
+}
+
+.iroiroo{
+display: flex;
+
+}
+
+#syouryaku{
+width: 200px;
+height: 10px;
+background: #272727;
+border: none;
+margin-top: 20px;
+margin-left: -220px;
+color:#fff;
+font-size: 16px;
+text-align:right;
+font-weight: bold;
+}
+
+#syor .kag {
+width: 60vw;
+height: 30px;
+background: #ebebeb;
+border: none;
+margin-top: -50px;
+margin-left: 75px;
+color:#fff;
+
+}
+
+#syouryaku:hover{
+  color:#e2e2e2;
+}
+
 .kensakuu{
 display: flex;
 
@@ -153,8 +192,8 @@ border-radius: 30px;
 
 .kensaku1{
     text-align:left;
-    width: 90%; /*親要素いっぱい広げる*/
-	padding: 30px -5px; /*ボックスを大きくする*/
+    width: 90%;
+	padding: 30px -5px; 
 	font-size: 18px;
     color: #fff;
     border: none;
@@ -166,8 +205,8 @@ border-radius: 30px;
 
 .kensakuu1{
     text-align:left;
-    width: 90%; /*親要素いっぱい広げる*/
-	padding: 30px -5px; /*ボックスを大きくする*/
+    width: 90%; 
+	padding: 30px -5px; 
 	font-size: 18px;
     color: #fff;
     border: none;
