@@ -153,6 +153,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
     } = data;
 
     const descriptionHtml = "<div class=view>" + viewCount + " 回視聴</div></br> " + data.descriptionHtml
+    console.log(descriptionHtml)
     document.getElementById('description').innerHTML = descriptionHtml;
     document.getElementById('video-name').textContent = title;
     document.getElementById('channel-info').textContent = `${data.channelTitle}`;
