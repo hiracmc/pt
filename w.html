@@ -157,7 +157,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
     document.getElementById('video-name').textContent = title;
     document.getElementById('channel-info').textContent = `${data.channelTitle}`;
     const videoinfo = data.author;
-      const touroku = data.subCountText;
+      const touroku = data.subCount;
 
       const c = `<img src="${data.authorThumbnails[0].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>登録者数 ${touroku}人</p></div>`;
 
@@ -208,19 +208,15 @@ async function getkome(videoId) {
 
 
 function fn(number) {
-  if (number >= 110000000) {
-    const oku = 1;
-    const senMan = Math.floor((number - 100000000) / 10000000); 
-    return `${oku}億${senMan}千万`;
-  } else if (number >= 100000000) {
-    return `1億`;
-  } else if (number >= 100000) {
-    return `${Math.floor(number / 10000)}万`;
-  } else if (number >= 10000) {
-    return `${Math.floor(number / 10000)}万`;
-  } else {
-    return `${number}`;
-  }
+  if (number >= 100000000) {
+        const oku = Math.floor(number / 100000000);
+        const man = Math.floor((number % 100000000) / 10000);
+        return man > 0 ? `${oku}億${man}万` : `${oku}億`;
+    }
+    if (number >= 10000) {
+        return `${Math.floor(number / 10000)}万`;
+    }
+    return number.toLocaleString();
 }
 </script>
 </body>
