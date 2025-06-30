@@ -138,17 +138,10 @@ async function loadChannelInfo(videoId) {
     }
 
     const data = await response.json();
-    const channelId = data.items[0].snippet.channelId;
+    const videoinfo = data.recommendedVideos.author;
+      const touroku = 334;
 
-    const apiUr = `${getc}${channelId}`;
-    try {
-      const response2 = await fetch(apiUr);
-      const channelSnippet = await response2.json();
-
-      const videoinfo = channelSnippet.items[0].snippet;
-      const touroku = channelSnippet.items[0].statistics.subscriberCount;
-
-      const c = `<img src="${videoinfo.thumbnails.default.url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo.title,25)}</h3><p>登録者数 ${touroku}人</p></div>`;
+      const c = `<img src="${data.recommendedVideos.authorThumbnails.url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3><p>登録者数 ${touroku}人</p></div>`;
 
       document.getElementById('channel-info').innerHTML = c;
     } catch (err) {
