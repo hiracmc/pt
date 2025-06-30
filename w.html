@@ -73,7 +73,7 @@ const server = "https://invidious.nikkosphere.com/";
   if(videoId){
    const url = document.getElementById('youtube-url');
 url.textContent = `http://youtu.be/${videoId}`;
- 
+ console.log(videoId)
     loadVideo(videoId);
     loadVideoInfo(videoId);
     loadChannelInfo(videoId);
@@ -95,7 +95,6 @@ function e() {
     window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
 
     } else {
-    alert('エラー');
     window.location.reload;
   }}
 }
@@ -162,14 +161,13 @@ function syouryaku(text,max) {
 
 async function loadVideoInfo(videoId) {
   const apiUrl = `${baseUri}${videoId}`;
-  alert(apiUrl)
   try {
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
       throw new Error('APIエラー');
     }
-
+console.log(`動画の説明を読み込みます…${videoId}`)
     const data = await response.json();
 
     const {
