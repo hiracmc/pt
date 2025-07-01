@@ -80,13 +80,12 @@ border-radius: 30px;
 
 .kensaku1{
     text-align:left;
-    width: 90%; 
+    width: 500px; 
 	padding: 30px -5px; 
 	font-size: 18px;
     color: #fff;
     border: none;
-    margin-right: 10px;
-  margin-left: -18px;
+    margin-left: -15px;
     background: #4d5155;
 	/*box-sizing: border-box;*/
     
