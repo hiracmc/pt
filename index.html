@@ -25,15 +25,14 @@
 search
 </span></button> 
   <form id="ke">
-  <input type="text" id="kens" placeholder="検索" class="kensaku1" type="submit">
+  <input type="search" id="kens" placeholder="検索" class="kensaku1">
   </form>
 
     </div></div>
 </div>
 
 <script>
-  import geturl from './configs/config.js';
-const formElement = document.getElementById('ke');
+const k = document.getElementById('ke');
 
 function ken(){
 
@@ -49,7 +48,7 @@ window.location.href = home + "/home";
 }
 }
   
-formElement.addEventListener('submit', ken);
+k.addEventListener('search', ken);
   
 
 
