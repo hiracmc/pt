@@ -38,7 +38,7 @@ search
 
 function Search(event) {
   const key = document.getElementById('kens').value;
-  
+  search.preventDefault();
   if (key) {
     if(key.toLowerCase() === "ponzu"){
   alert('Poutubeへようこそ');
