@@ -61,7 +61,7 @@ text-decoration: none;
 .kensaku{
 display: flex;
 
-    width: 600px;
+    width: 500px;
     height: 30px;
     padding: 0.5em;
     text-align:center;
@@ -85,8 +85,9 @@ border-radius: 30px;
 	font-size: 18px;
     color: #fff;
     border: none;
-    margin-left: 10px;
-    background: #202020;
+    margin-right: 10px;
+  margin-left: -18px;
+    background: #4d5155;
 	/*box-sizing: border-box;*/
     
 }
@@ -100,7 +101,9 @@ text-align:center;
     height: 100%;
     border: none;
     font-size: 18px;
-    color: #fff;
+    color: #9BA3A8;
+  margin-left: -13px;
+  background: none;
 }
 
 .kensaku2:focus {
