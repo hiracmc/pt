@@ -24,11 +24,31 @@
 <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
 search
 </span></button> 
-  <input type="url" id="youtube-url" placeholder="検索" class="kensaku1">
+  <form id="ke">
+  <input type="url" id="kens" placeholder="検索" class="kensaku1" type="submit">
+  </form>
 
     </div></div>
 </div>
 
 <script>
+  import geturl from './configs/config.js';
+const formElement = document.getElementById('ke');
+
+function ken(){
+  const key = const nameInput = document.getElementById('kens');
+if(key.toLowerCase() === "ponzu"){
+window.location.href = geturl() + "/home";
+} else {
+  window.location.href = "https://www.google.co.jp/search?q=" + key;
+}
+}
+  
+formElement.addEventListener('submit', ken);
+  
+
+
+  
+</script>
 </body>
 </html>
