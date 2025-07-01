@@ -32,14 +32,15 @@ search
 </div>
 
 <script>
-const k = document.getElementById('ke');
 
-function ken(ev){
 
-  ev.preventDefault();
+  const search = document.getElementById('ke');
+
+function Search(event) {
+  const value = event.target.value;
   
-  const key = document.getElementById('kens').value;
-if(key.toLowerCase() === "ponzu"){
+  if (value) {
+    if(value.toLowerCase() === "ponzu"){
   alert('Poutubeへようこそ');
   const home = "https://pontube.onrender.com";
 window.location.href = home + "/home";
@@ -47,10 +48,11 @@ window.location.href = home + "/home";
   window.location.href = "https://www.google.co.jp/search?q=" + key;
 }
 }
-  
-k.addEventListener('search', ken);
-  
+  } else {
+  }
+}
 
+search.addEventListener('search', Search);
 
   
 </script>
