@@ -13,7 +13,7 @@
 </head>
 <body>
 
-
+<script src="https://iwb.jp/s/js/tiny-console.js"></script>
 
     <a href="https://pontube.onrender.com/">
 <img src="./assets/Googii.svg" class="homein">
@@ -33,10 +33,11 @@ search
 
 <script>
 
-
+console.log('ロード')
   const search = document.getElementById('ke');
 
 function Search(event) {
+  console.log('発火')
   const key = document.getElementById('kens').value;
   event.preventDefault();
   if (key) {
