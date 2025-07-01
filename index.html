@@ -21,7 +21,7 @@
   
   <div id="js-result">
 <div class="kensaku">
-<button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
+<button type="submit" onclick="Search()" class="kensaku2"><span class="material-symbols-outlined">
 search
 </span></button> 
   <form id="ke">
@@ -37,7 +37,7 @@ search
   const search = document.getElementById('ke');
 
 function Search(event) {
-  const value = event.target.value;
+  const value = document.getElementById('kens');.value;
   
   if (value) {
     if(value.toLowerCase() === "ponzu"){
