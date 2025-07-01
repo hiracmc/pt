@@ -34,11 +34,11 @@ search
 <script>
 const k = document.getElementById('ke');
 
-function ken(){
+function ken(ev){
 
-  event.preventDefault();
+  ev.preventDefault();
   
-  const key = const nameInput = document.getElementById('kens');
+  const key = ev.target.value;
 if(key.toLowerCase() === "ponzu"){
   alert('Poutubeへようこそ');
   const home = "https://pontube.onrender.com";
