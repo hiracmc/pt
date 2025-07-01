@@ -37,10 +37,10 @@ search
   const search = document.getElementById('ke');
 
 function Search(event) {
-  const value = document.getElementById('kens').value;
+  const key = document.getElementById('kens').value;
   
-  if (value) {
-    if(value.toLowerCase() === "ponzu"){
+  if (key) {
+    if(key.toLowerCase() === "ponzu"){
   alert('Poutubeへようこそ');
   const home = "https://pontube.onrender.com";
 window.location.href = home + "/home";
