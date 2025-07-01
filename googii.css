@@ -1,0 +1,185 @@
+a {
+  text-decoration: none;
+}
+
+
+.home{
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 2s linear infinite;
+
+font-size: 50px;
+text-align:center;
+font-family: "Righteous", sans-serif;
+
+
+margin-top: 4px;
+margin-left: 53px;
+border: none;
+text-decoration: none;
+}
+
+.homein{
+
+  text-align:center;
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 2s linear infinite;
+margin-top: 20vh;
+font-size: 100px;
+text-align:center;
+font-family: "Righteous", sans-serif;
+position: absolute;
+
+  left: 50%;
+  transform: translate(-50%,0px);
+
+
+border: none;
+text-decoration: none;
+}
+
+
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+
+.kensaku{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    margin-left: 80px;
+    font-size: 16px;
+    margin-top: 13px;
+}
+
+.iroiro{
+display: flex;
+
+}
+
+.iroiroo{
+display: flex;
+
+}
+
+#syouryaku{
+width: 200px;
+height: 10px;
+background: #272727;
+border: none;
+margin-top: 20px;
+margin-left: -220px;
+color:#fff;
+font-size: 16px;
+text-align:right;
+font-weight: bold;
+}
+
+#syor .kag {
+width: 60vw;
+height: 30px;
+background: #ebebeb;
+border: none;
+margin-top: -50px;
+margin-left: 75px;
+color:#fff;
+
+}
+
+#syouryaku:hover{
+  color:#e2e2e2;
+}
+
+.kensakuu{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    font-size: 16px;
+    margin-top: 13px;
+}
+
+
+.kensakuu1{
+    text-align:left;
+    width: 90%; 
+	padding: 30px -5px; 
+	font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.kensakuu1:focus {
+  outline: none;
+}
+.kensakuu2{
+text-align:center;
+    width: 10%;
+    height: 100%;
+    background: #202020;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    border-left: 1px solid #686868;
+}
+
+.kensaku2:focus {
+  outline: none;
+}
+
+.kensakuu2:focus {
+  outline: none;
+}
+
+
+body {
+background-color: #0f0f0f;
+font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiryo,sans-serif;
+}
+
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 500,
+  'GRAD' 200,
+  'opsz' 40;
+}
