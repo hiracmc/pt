@@ -18,7 +18,7 @@ export async function geturl(jsonPath = './assets/inv.json', timeout = 5000) {
       const controller = new AbortController();
       const signal = controller.signal;
       const timeoutId = setTimeout(() => controller.abort(), timeout);
-      return fetch(`${url}/api/v1/videos/Jn8gHsEuULY`, { signal })
+      return fetch(`${url}/api/v1/stats`, { signal })
         .then(res => {
           clearTimeout(timeoutId); 
           if (res.ok) {
