@@ -5,7 +5,7 @@
  */
 export async function geturl(timeout = 5000) {
   const invJsonPath = 'assets/inv.json';
-  const apiTestPath = '/api/v1/videos/19y8YTbvri8';
+  const apiTestPath = '/api/v1/stats';
 
   try {
     const response = await fetch(invJsonPath);
