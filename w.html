@@ -51,15 +51,15 @@ search
   let d
 
 
-import { geturl } from "./assets/geturl.js";
+// import { geturl } from "./assets/geturl.js";
 
-const server = "https://cal1.iv.ggtyler.dev";
+const server = "https://invidious.nikkosphere.com";
   
-  const baseUri = server + "api/v1/videos/";
+  const baseUri = server + "/api/v1/videos/";
   console.log(baseUri)
   const getc = "https://script.google.com/macros/s/AKfycbww6z3czhraDQl-_9_UeaaIAvgO7EQ-DpAs9zxiTJJ2uKMbhDSA3hEHAR-mfd76pY0S/exec?id=";
   const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id=";
-  const come = server + "api/v1/comments/";
+  const come = server + "/api/v1/comments/";
 console.log("スクリプトを読み込みました")
   const videoId = window.location.hash.slice(1);
   if(videoId){
@@ -68,8 +68,6 @@ url.textContent = `http://youtu.be/${videoId}`;
  console.log(videoId)
     loadVideo(videoId);
     loadVideoInfo(videoId);
-    //loadComments(videoId);
-    
   }
 function e() {
   const url = document.getElementById('youtube-url').value;
@@ -150,13 +148,9 @@ function syouryaku(text,max) {
 }
 
 async function loadVideoInfo(videoId) {
-  const apiUrl = `${baseUri}${videoId}?hl=ja`;
+  const apiUrl = `${baseUri}${videoId}`;
   try {
-    const response = await fetch(apiUrl, {
-  headers: {
-    "Accept-Language": "ja"
-  }
-})
+    const response = await fetch(apiUrl)
 
     if (!response.ok) {
       throw new Error('APIエラー');
