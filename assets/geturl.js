@@ -30,9 +30,10 @@ export async function geturl(timeout = 5000) {
         });
 
         if (!apiResponse.ok) {
+          console.log(`${testUrl} no...`)
           throw new Error(`API request failed with status: ${apiResponse.status}`);
         }
-
+        console.log(`${testUrl} ok!`)
         const endTime = performance.now();
         const responseTime = endTime - startTime;
         
