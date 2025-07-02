@@ -3,7 +3,7 @@
  * @param {number} timeout
  * @returns {Promise<string|null>} 
  */
-async function geturl(jsonPath = './assets/inv.json', timeout = 5000) {
+export async function geturl(jsonPath = './assets/inv.json', timeout = 5000) {
   try {
     const response = await fetch(jsonPath);
     if (!response.ok) {

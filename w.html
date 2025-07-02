@@ -50,6 +50,8 @@ search
   var ifd = 0;
   let d
   
+
+
 async function geton() {
   const response = await fetch('./assets/inv.json');
   const data = await response.json(); 
@@ -70,7 +72,9 @@ async function geton() {
   return v;
 }
 
-const server = "https://cal1.iv.ggtyler.dev/";
+import geturl from "./assets/geturl.js";
+
+const server = geturl + "/";
   
   const baseUri = server + "api/v1/videos/";
   console.log(baseUri)
