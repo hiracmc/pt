@@ -51,9 +51,9 @@ search
   let d
 
 
-import geturl from "./assets/geturl.js";
+import {geturl} from "./assets/geturl.js";
 
-const server = await geturl('./assets/inv.json',5000) + "/";
+const server = await geturl() + "/";
   
   const baseUri = server + "api/v1/videos/";
   console.log(baseUri)
