@@ -22,13 +22,16 @@ export async function geturl(jsonPath = './assets/inv.json', timeout = 5000) {
         .then(res => {
           clearTimeout(timeoutId); 
           if (res.ok) {
+            console.log(`${url} good`)
             return { status: 'fulfilled', value: url };
           } else {
+            console.log(`${url} 無視`)
             return { status: 'rejected', reason: `Status: ${res.status}` };
           }
         })
         .catch(err => {
-          clearTimeout(timeoutId); 
+          clearTimeout(timeoutId);
+          console.log(`${url} エラー`) 
           return { status: 'rejected', reason: err.name === 'AbortError' ? 'Timeout' : err.message };
         });
     });
