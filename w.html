@@ -44,37 +44,16 @@ search
   <div id="komee">コメント</div>
 <div id="komento"></div>
 </div>
- <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script> -->
+ <script src="https://iwb.jp/s/js/tiny-console.js"></script>
 <script>
 
   var ifd = 0;
   let d
-  
 
-
-async function geton() {
-  const response = await fetch('./assets/inv.json');
-  const data = await response.json(); 
-  console.log(`${data}`)
-
-  const onlineInstances = data
-    .filter(([url, info]) => info?.type === 'https' && info?.monitor === true)
-    .map(([url]) => url);
-
-  if (onlineInstances.length === 0) {
-    throw new Error("オンラインのInvidiousインスタンスが見つかりませんでした。");
-  }
-
-
-  const v = onlineInstances[Math.floor(Math.random() * onlineInstances.length)];
-  console.log("このインスタンスに接続するよ～:", v);
-
-  return v;
-}
 
 import geturl from "./assets/geturl.js";
 
-const server = geturl + "/";
+const server = await geturl + "/";
   
   const baseUri = server + "api/v1/videos/";
   console.log(baseUri)
