@@ -15,6 +15,8 @@
 <script>
   let ifd = 0;
   let d
+
+
   function sw(){
 if(ifd === 1){
   const text = d;
@@ -35,8 +37,43 @@ const button = document.getElementById('syouryaku')
   const result = lines.slice(0, 5);
   const kekka = result.join('<br>');
   return kekka;
+  }
+function e() {
+  const url = document.getElementById('youtube-url').value;
+  const videoId = extractVideoId(url);
+  if (videoId) {
+    const location = window.location.hash.slice(0);
+    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+
+  } else {
+    const url = document.getElementById('youtube-url').value;
+  const videoId = extractVideoId2(url);
+    if(videoId){
+    const location = window.location.hash.slice(0);
+    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+
+    } else {
+    window.location.reload;
+  }}
 }
 
+function extractVideoId(url) {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
+  const match = url.match(regExp);
+  return (match && match[5].length === 11) ? match[5] : null;
+}
+
+  function extractVideoId2(url) {
+   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
+  
+  const match = url.match(regex);
+
+    if (match) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
   </script>
 
 <div class="ue">
@@ -44,12 +81,15 @@ const button = document.getElementById('syouryaku')
       <h1 class="home">Pontube</h1>
     </a>
   <div id="js-result">
+    <form>
 <div class="kensaku">
+
           <input type="url" id="youtube-url" placeholder="検索" class="kensaku1">
 
  <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
 search
 </span></button>
+</form>
 
     </div></div>
 </div>
@@ -91,43 +131,7 @@ url.textContent = `http://youtu.be/${videoId}`;
     loadVideo(videoId);
     loadVideoInfo(videoId);
   }
-function e() {
-  const url = document.getElementById('youtube-url').value;
-  const videoId = extractVideoId(url);
-  if (videoId) {
-    const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
 
-  } else {
-    const url = document.getElementById('youtube-url').value;
-  const videoId = extractVideoId2(url);
-    if(videoId){
-    const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
-
-    } else {
-    window.location.reload;
-  }}
-}
-
-
-function extractVideoId(url) {
-  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
-  const match = url.match(regExp);
-  return (match && match[5].length === 11) ? match[5] : null;
-}
-
-  function extractVideoId2(url) {
-   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
-  
-  const match = url.match(regex);
-
-    if (match) {
-    return match[1];
-  } else {
-    return null;
-  }
-}
 
 function loadVideo(videoId) {
   const container = document.getElementById('video-container');
