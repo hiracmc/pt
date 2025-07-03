@@ -1,4 +1,4 @@
-async function geton() {
+export async function geton() {
   const response = await fetch('https://api.invidious.io/instances.json');
   const data = await response.json(); // データ形式: [ [url, {info}], ... ]
 

@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google</title>
+  <link href="./index.css" rel="stylesheet" />
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
+</head>
+<body>
+<script>
+
+const server = "https://invidious.nikkosphere.com";
+  
+const baseUri = server + "/api/v1/search?q=";
+
+  function syoi(text) {
+    const se = /<\/?br\s*\/?>/i;
+  const lines = text.split("\n");
+  const result = lines.slice(0, 5);
+  const kekka = result.join('<br>');
+  return kekka;
+  }
+function e() {
+  const url = document.getElementById('youtube-url').value;
+  const videoId = extractVideoId(url);
+  if (videoId) {
+    const location = window.location.hash.slice(0);
+    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+
+  } else {
+    const url = document.getElementById('youtube-url').value;
+  const videoId = extractVideoId2(url);
+    if(videoId){
+    const location = window.location.hash.slice(0);
+    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+
+    } else {
+    window.location.reload;
+  }}
+}
+
+function extractVideoId(url) {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
+  const match = url.match(regExp);
+  return (match && match[5].length === 11) ? match[5] : null;
+}
+
+  function extractVideoId2(url) {
+   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
+  
+  const match = url.match(regex);
+
+    if (match) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
+
+async function getkey(q) {
+  const apiUrl = `${baseUri}${q}`;
+  const apiUrll = "assets/seatchdata.json";
+  try {
+    const response = await fetch(apiUrl)
+
+    if (!response.ok) {
+      throw new Error('APIエラー');
+    }
+    const data = await response.json();
+
+    let text = "";
+
+    data.forEach(video => {
+      const touko = video.publishedText;
+      const name = video.title;
+      const defaultThumbnail = video.videoThumbnails.find(thumb => thumb.quality === 'medium');
+      const samune = defaultThumbnail.url;
+      const times = time(video.lengthSeconds);
+      const viewCount = fn(video.viewCount);
+      document.getElementById('youtube-url').innerHTML = q;
+      text += `
+      <a href="https://pontube.onrender.com/w#${video.videoId}">
+        <div class="douga">
+          <div class="dougasamune">
+          <img src="${samune}" alt="${name}" width="320" height="180">
+            <p class=dougazikan>${times}</p>
+          </div>
+          <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}回視聴・${touko}</p></div>
+        </div>
+        </a>
+      `;
+    })
+console.log(text)
+document.getElementById('do').innerHTML = text;
+
+  } catch (err) {
+    console.error("エラーが発生しました:", err);
+  }
+
+  return true;
+}
+
+function fn(number) {
+  if (number >= 100000000) {
+        const oku = Math.floor(number / 100000000);
+        const man = Math.floor((number % 100000000) / 10000);
+        return man > 0 ? `${oku}億${man}万` : `${oku}億`;
+    }
+    if (number >= 10000) {
+        return `${Math.floor(number / 10000)}万`;
+    }
+    return number;
+}
+
+/**
+ * geminiに作ってもらいました
+ * @param {number} totalSeconds
+ * @returns {string}
+ */
+function time(totalSeconds) {
+  if (typeof totalSeconds !== 'number' || totalSeconds < 0) {
+    return "0";
+  }
+  if (totalSeconds === 0) {
+    return "0";
+  }
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const parts = [];
+  if (hours > 0) {
+    parts.push(`${hours}:`);
+  }
+    parts.push(`${String(minutes).padStart(2, '0')}:`);
+    parts.push(`${String(seconds).padStart(2, '0')}`);
+
+  return parts.join('');
+}
+
+
+  </script>
+
+<div class="ue">
+    <a href="https://pontube.onrender.com/home">
+      <h1 class="home">Pontube</h1>
+    </a>
+  <div id="js-result">
+    <form>
+<div class="kensaku">
+
+          <input type="url" id="youtube-url" placeholder="検索" class="kensaku1">
+
+ <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
+search
+</span></button>
+</form>
+</div></div>
+</div>
+<div id="do">
+
+</div>
+<!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
+<script type="module">
+
+
+// import { geturl } from "./assets/geturl.js";
+console.log(`スクリプトを読み込みました`)
+  const ne =  new URLSearchParams(location.url)
+  const key = decodeURI(ne.get('q'))
+  console.log(key)
+  if(key){
+ getkey(key);
+  } else{ window.location.href=`https://pontube.onrender.com/home` }
+
+function syouryaku(text,max) {
+  const maxLength = max;
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.slice(0, maxLength) + "...";
+}
+
+</script>
+</body>
+</html>
