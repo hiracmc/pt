@@ -22,7 +22,7 @@
   <div id="js-result">
 <div class="kensakuu">
 
-          <input type="url" id="youtube-url" placeholder="検索" class="kensakuu1">
+          <input type="text" id="youtube-url" placeholder="検索" class="kensakuu1">
 
  <button type="submit" onclick="e()" class="kensakuu2"><span class="material-symbols-outlined">
 search
@@ -86,8 +86,7 @@ function e() {
     window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
 
     } else {
-    alert('エラー');
-    window.location.reload;
+    window.location.href=`https://pontube.onrender.com/search/?q=${url}`;
   }}
 }
   
