@@ -17,7 +17,7 @@
 
 const server = "https://invidious.nikkosphere.com";
   
-const baseUri = server + "/api/v1/search?q=";
+const baseUri = server + "/api/v1/search/?q=";
 
   function syoi(text) {
     const se = /<\/?br\s*\/?>/i;
@@ -156,7 +156,7 @@ function time(totalSeconds) {
     <form>
 <div class="kensaku">
 
-          <input type="url" id="youtube-url" placeholder="検索" class="kensaku1">
+          <input type="text" id="youtube-url" placeholder="検索" class="kensaku1">
 
  <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
 search
