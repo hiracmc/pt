@@ -81,6 +81,7 @@ async function getkey(q) {
     let text = "";
 
     data.forEach(video => {
+      if(video){
       const touko = video.publishedText;
       const name = video.title;
       const defaultThumbnail = video.videoThumbnails?.find(thumb => thumb.quality === 'medium');
@@ -98,7 +99,7 @@ async function getkey(q) {
           <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}回視聴・${touko}</p></div>
         </div>
         </a>
-      `;
+      `;}
     })
 console.log(text)
 document.getElementById('do').innerHTML = text;
