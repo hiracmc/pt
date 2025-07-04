@@ -81,7 +81,7 @@ async function getkey(q) {
     let text = "";
 
     data.forEach(video => {
-      console.log(video)
+      console.log(JSON.stringify(video))
       if(video){
       const touko = video.publishedText;
       const name = video.title;
