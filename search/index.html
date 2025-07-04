@@ -81,6 +81,7 @@ async function getkey(q) {
     let text = "";
 
     data.forEach(video => {
+      console.log(video)
       if(video){
       const touko = video.publishedText;
       const name = video.title;
@@ -101,7 +102,6 @@ async function getkey(q) {
         </a>
       `;}
     })
-console.log(text)
 document.getElementById('do').innerHTML = text;
 
   } catch (err) {
