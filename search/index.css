@@ -308,10 +308,40 @@ width:85vw;
 
 }
 
+.hai {
+  display: inline-block;
+
+}
+
+.sya {
+  display: flex;
+  font-weight: bold;
+  margin-top: -30px;
+  margin-left: 40px;
+  position: relative;
+}
+
+.sya p{
+margin-left: 10px;
+position: absolute;
+margin-top: 0.5em;
+}
+
+.syaue img {
+  border-radius: 18px;
+}
+
 .dougasamune{
 position: relative;
 display: inline-block;
+}
 
+.dougasamune img{
+border-radius: 8px;
+}
+
+.maru img {
+border-radius: 100px;
 }
 
 .dougazikan {
@@ -319,7 +349,7 @@ position:absolute;
 bottom: -5px;
 right: 4px;
 color: #fff;
-background-color: rgba(0, 0, 0, 0.5);
+background-color: rgba(0, 0, 0, 0.8);
 padding: 2px 6px;
 border-radius: 5px;
 }
@@ -348,6 +378,7 @@ border-radius: 5px;
   width:50px;
 height: 50px;
 }
+
 
 #komee {
 margin-left: 60px;

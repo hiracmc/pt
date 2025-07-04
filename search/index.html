@@ -20,6 +20,18 @@ const server = "https://invidious.nikkosphere.com";
   
 const baseUri = server + "/api/v1/search/?region=JP&type=video&q=";
 
+function syouryaku(stext,max) {
+  const text = stext || ''; 
+
+  const maxLength = max;
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.slice(0, maxLength) + "...";
+}
+
+
+
   function syoi(text) {
     const se = /<\/?br\s*\/?>/i;
   const lines = text.split("\n");
@@ -80,24 +92,68 @@ async function getkey(q) {
 
     data.forEach(video => {
       console.log(JSON.stringify(video))
-      if(video){
+      if(video.type === "video"){
       const touko = video.publishedText;
-      const name = video.title;
+      const sy = video.title;
+      const name = syouryaku(sy,40)
+      const sya = syouryaku(video.author,30)
+      const icon = video.authorThumbnails[0].url
       const defaultThumbnail = video.videoThumbnails?.find(thumb => thumb.quality === 'medium');
       const samune = defaultThumbnail?.url || "assets/logo.png";
       const times = time(video.lengthSeconds);
       const viewCount = fn(video.viewCount);
       document.getElementById('youtube-url').innerHTML = q;
       text += `
-      <a href="https://pontube.onrender.com/w#${video.videoId}">
+      
         <div class="douga">
           <div class="dougasamune">
+            <a href="https://pontube.onrender.com/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
+          </a>
             <p class=dougazikan>${times}</p>
           </div>
-          <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}回視聴・${touko}</p></div>
+          <div class="hai">
+            <a href="https://pontube.onrender.com/w#${video.videoId}">
+          <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}回視聴・${touko}</p></div></br>
+          </a>
+          <div class="sya">
+          <div class="syaue">
+          <img src="${icon}" alt="${name}" width="40" height="40">
+          </div>
+          <div class="syasita"><p class="b">${sya}</p></div>
         </div>
-        </a>
+        </div>
+        </div>
+        
+      `;} else
+      if(video.type === "channel"){
+      const touko = video.publishedText;
+      const name = syouryaku(video.author,30)
+      const sya = syouryaku(video.author,30)
+      const icon = video.authorThumbnails[0].url
+      const defaultThumbnail = video.authorThumbnails[3].url
+      const samune = defaultThumbnail || "assets/logo.png";
+      const viewCount = fn(video.subCount);
+      document.getElementById('youtube-url').innerHTML = q;
+      text += `
+      
+        <div class="douga">
+          <div class="maru">
+            <a href="https://pontube.onrender.com/w#${video.videoId}">
+          <img src="${samune}" alt="${name}" width="180" height="180">
+          </a>
+          </div>
+          <div class="hai">
+            <a href="https://pontube.onrender.com/w#${video.videoId}">
+          <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}人の登録者</p></div></br>
+          </a>
+          <div class="sya">
+          <div class="syaue">
+          </div>
+        </div>
+        </div>
+        </div>
+        
       `;}
     })
 document.getElementById('do').innerHTML = text;
@@ -177,19 +233,12 @@ search
 // import { geturl } from "./assets/geturl.js";
 console.log(`スクリプトを読み込みました`)
   const ne =  new URLSearchParams(window.location.search)
-  const key = decodeURI(ne.get('q'))
+  const key = ne.get('q')
   console.log(key)
   if(key){
  getkey(key);
   } else{ window.location.href=`https://pontube.onrender.com/home` }
 
-function syouryaku(text,max) {
-  const maxLength = max;
-  if (text.length <= maxLength) {
-    return text;
-  }
-  return text.slice(0, maxLength) + "...";
-}
 
 </script>
 </body>
