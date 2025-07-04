@@ -134,7 +134,6 @@ async function getkey(q) {
       const defaultThumbnail = video.authorThumbnails[3].url
       const samune = defaultThumbnail || "assets/logo.png";
       const viewCount = fn(video.subCount);
-      document.getElementById('youtube-url').innerHTML = q;
       text += `
       
         <div class="douga">
@@ -234,6 +233,9 @@ search
 console.log(`スクリプトを読み込みました`)
   const ne =  new URLSearchParams(window.location.search)
   const key = ne.get('q')
+  document.getElementById('youtube-url').value = key;
+
+
   console.log(key)
   if(key){
  getkey(key);
