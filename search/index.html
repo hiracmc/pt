@@ -83,8 +83,8 @@ async function getkey(q) {
     data.forEach(video => {
       const touko = video.publishedText;
       const name = video.title;
-      const defaultThumbnail = video.videoThumbnails.find(thumb => thumb.quality === 'medium');
-      const samune = defaultThumbnail.url;
+      const defaultThumbnail = video.videoThumbnails?.find(thumb => thumb.quality === 'medium');
+      const samune = defaultThumbnail?.url || "assets/logo.png";
       const times = time(video.lengthSeconds);
       const viewCount = fn(video.viewCount);
       document.getElementById('youtube-url').innerHTML = q;
