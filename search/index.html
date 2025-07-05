@@ -39,6 +39,8 @@ function syouryaku(stext,max) {
   const kekka = result.join('<br>');
   return kekka;
   }
+
+
 function e() {
   const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId(url);
@@ -76,8 +78,7 @@ function extractVideoId(url) {
   }
 }
 
-async function getkey(q) {
-  console.log(q)
+async function kensa(q) {
   const apiUrl = `${baseUri}${q}`;
   const apiUrll = "assets/seatchdata.json";
   try {
@@ -91,7 +92,6 @@ async function getkey(q) {
     let text = "";
 
     data.forEach(video => {
-      console.log(JSON.stringify(video))
       if(video.type === "video"){
       const touko = video.publishedText;
       const sy = video.title;
@@ -189,7 +189,6 @@ function fn(number) {
 }
 
 /**
- * geminiに作ってもらいました
  * @param {number} totalSeconds
  * @returns {string}
  */
@@ -226,13 +225,13 @@ function time(totalSeconds) {
     <form>
 <div class="kensaku">
 
-          <input type="text" id="youtube-url" placeholder="検索" class="kensaku1">
+<input type="text" id="youtube-url" placeholder="検索" class="kensaku1">
 
  <button type="submit" onclick="e()" class="kensaku2"><span class="material-symbols-outlined">
 search
 </span></button>
-</form>
-</div></div>
+</form></div>
+</div>
 </div>
 <div id="do">
 
@@ -247,11 +246,8 @@ console.log(`スクリプトを読み込みました`)
   const key = ne.get('q')
   document.getElementById('youtube-url').value = key;
 
-
   console.log(key)
-  if(key){
- getkey(key);
-  } else{ window.location.href=`https://pontube.onrender.com/home` }
+ kensa(key);
 
 
 </script>
