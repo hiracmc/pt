@@ -106,7 +106,7 @@ async function getkey(q) {
       let ra = "";
       let live = `<p class="titletext"><p>${viewCount}回視聴・${touko}</p></div>`;
       let zika = `<p class=dougazikan>${times}</p>`;
-      if ( video.liveNow === true ){ tagu += `<p class="tagu" style="background-color: #ff3737">■ 配信中</p>`; live = ""; ra = "1"; zika = `<p class=dougazikan>■ 配信中</p>`; }
+      if ( video.liveNow === true ){ tagu += `<p class="tagu" style="background-color: #ff3737">■ 配信中</p>`;live = `<p class="titletext"><p></p></div>`; ra = "1"; zika = `<p class=dougazikan>■ 配信中</p>`; }
       if ( video.premium === true ){ tagu += `<p class="tagu" style="background-color: #ffb066">プレミア公開</p>` }
       if ( video.isNew === true ){ tagu += `<p class="tagu" style="background-color: #ff6666">☆New</p>` }
       if ( video.is4k === true ){ tagu += `<p class="tagu" style="background-color: #ffb766">4K</p>` }
@@ -122,7 +122,7 @@ async function getkey(q) {
             <a href="https://pontube.onrender.com/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
           </a>
-          ${zika}
+        ${zika}
           </div>
           <div class="hai">
             <a href="https://pontube.onrender.com/w#${video.videoId}">
@@ -134,7 +134,7 @@ async function getkey(q) {
           </div>
           <div class="syasita"><p class="b">${sya}</p></div></br>
         </div><div class="tag">${tagu}</div>
-        </div>
+        </div></div>
         </div>
         
       `;} else
