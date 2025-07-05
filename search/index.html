@@ -95,41 +95,53 @@ async function getkey(q) {
       if(video.type === "video"){
       const touko = video.publishedText;
       const sy = video.title;
-      const name = syouryaku(sy,40)
-      const sya = syouryaku(video.author,30)
+      const name = syouryaku(sy,60)
+      const sya = syouryaku(video.author,50)
       const icon = video.authorThumbnails[0].url
       const defaultThumbnail = video.videoThumbnails?.find(thumb => thumb.quality === 'medium');
       const samune = defaultThumbnail?.url || "assets/logo.png";
       const times = time(video.lengthSeconds);
       const viewCount = fn(video.viewCount);
+      let tagu = "";
+      let ra = "";
+      let live = `<p class="titletext"><p>${viewCount}回視聴・${touko}</p></div>`;
+      let zika = `<p class=dougazikan>${times}</p>`;
+      if ( video.liveNow === true ){ tagu += `<p class="tagu" style="background-color: #ff3737">■ 配信中</p>`; live = ""; ra = "1"; zika = `<p class=dougazikan>■ 配信中</p>`; }
+      if ( video.premium === true ){ tagu += `<p class="tagu" style="background-color: #ffb066">プレミア公開</p>` }
+      if ( video.isNew === true ){ tagu += `<p class="tagu" style="background-color: #ff6666">☆New</p>` }
+      if ( video.is4k === true ){ tagu += `<p class="tagu" style="background-color: #ffb766">4K</p>` }
+      if ( video.is8k === true ){ tagu += `<p class="tagu" style="background-color: #b366ff">8K</p>` }
+      if ( video.is3d === true ){ tagu += `<p class="tagu" style="background-color: #66bcff">3D</p>` }
+      if ( video.isVr180 === true ){ tagu += `<p class="tagu" style="background-color: #666bff">180°</p>` }
+      if ( video.isVr360 === true ){ tagu += `<p class="tagu" style="background-color: #666bff">360°</p>` }
       document.getElementById('youtube-url').innerHTML = q;
       text += `
       
-        <div class="douga">
+        <div class="douga${ra}">
           <div class="dougasamune">
             <a href="https://pontube.onrender.com/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
           </a>
-            <p class=dougazikan>${times}</p>
+          ${zika}
           </div>
           <div class="hai">
             <a href="https://pontube.onrender.com/w#${video.videoId}">
-          <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}回視聴・${touko}</p></div></br>
+            <div class="title"><p class="b">${name}</p>${live}</br>
           </a>
           <div class="sya">
           <div class="syaue">
           <img src="${icon}" alt="${name}" width="40" height="40">
           </div>
-          <div class="syasita"><p class="b">${sya}</p></div>
-        </div>
+          <div class="syasita"><p class="b">${sya}</p></div></br>
+        </div><div class="tag">${tagu}</div>
         </div>
         </div>
         
       `;} else
       if(video.type === "channel"){
       const touko = video.publishedText;
-      const name = syouryaku(video.author,30)
-      const sya = syouryaku(video.author,30)
+      const name = syouryaku(video.author,50)
+      const sya = syouryaku(video.author,50)
       const icon = video.authorThumbnails[0].url
       const defaultThumbnail = video.authorThumbnails[3].url
       const samune = defaultThumbnail || "assets/logo.png";
@@ -142,7 +154,7 @@ async function getkey(q) {
           <img src="${samune}" alt="${name}" width="180" height="180">
           </a>
           </div>
-          <div class="hai">
+          <div class="haa">
             <a href="https://pontube.onrender.com/w#${video.videoId}">
           <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}人の登録者</p></div></br>
           </a>
