@@ -13,9 +13,9 @@
 </head>
 <body>
 
-    <a href="https://pontube.onrender.com/">
+
 <img src="./assets/Googii.svg" class="homein">
-    </a>
+
   
   <div id="js-result">
 <div class="kensaku">
@@ -30,7 +30,7 @@ search
 </div>
 <!-- <script src="https://iwb.jp/s/js/tiny-console.js"></script> -->
 <script>
-
+const ip = window.location.origin;
 console.log('ロード')
   const search = document.getElementById('ke');
 
@@ -39,7 +39,7 @@ function Search(event) {
   const key = document.getElementById('kens').value;
   if (key) {
     if(key.toLowerCase() === "ponzu"){
-  const home = "https://pontube.onrender.com";
+  const home = ip;
 window.location.href = home + "/home";
 } else {
   window.location.href = "https://www.google.co.jp/search?q=" + key;
