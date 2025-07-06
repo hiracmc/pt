@@ -45,6 +45,7 @@ function syouryaku(stext,max) {
 
 
 function e() {
+  event.preventDefault()
   const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId(url);
   if (videoId) {
@@ -58,11 +59,10 @@ function e() {
     window.location.href=`${ip}/w/#${videoId}`;
 
     } else {
-    const ur = new URL(window.location.href);
-    ur.searchParams.set('q', `${url}`);
     window.location.href=`${ip}/search/?q=${url}`;
   }}
 }
+
 
 function extractVideoId(url) {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;

@@ -40,6 +40,7 @@ const button = document.getElementById('syouryaku')
   return kekka;
   }
 function e() {
+  event.preventDefault()
   const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId(url);
   if (videoId) {

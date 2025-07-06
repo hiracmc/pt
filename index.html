@@ -30,7 +30,7 @@ search
 </div>
 <!-- <script src="https://iwb.jp/s/js/tiny-console.js"></script> -->
 <script>
-const ip = window.location.origin;
+const ip = window.location.href;
 console.log('ロード')
   const search = document.getElementById('ke');
 
@@ -40,7 +40,7 @@ function Search(event) {
   if (key) {
     if(key.toLowerCase() === "ponzu"){
   const home = ip;
-window.location.href = home + "/home";
+window.location.href = home + "home.html";
 } else {
   window.location.href = "https://www.google.co.jp/search?q=" + key;
 }
