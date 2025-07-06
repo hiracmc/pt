@@ -15,9 +15,7 @@
 
 
 
-    <a href="https://pontube.onrender.com/home">
-      <div class="popup"><h1 class="homein">Pontube</h1></div>
-    </a>
+    <div id="gohome"></div>
     <div class="varr">v0.021</div>
   <div id="js-result">
 <div class="kensakuu">
@@ -37,7 +35,8 @@ search
 
 
 <script>
-
+const ip = window.location.origin;
+document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
 
 async function geton() {
   const response = await fetch('https://api.invidious.io/instances.json');
@@ -76,17 +75,16 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+    window.location.href=`${ip}/w/#${videoId}`;
 
   } else {
-    const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+    window.location.href=`${ip}/w/#${videoId}`;
 
     } else {
-    window.location.href=`https://pontube.onrender.com/search/?q=${url}`;
+    window.location.href=`${ip}/search/?q=${url}`;
   }}
 }
   

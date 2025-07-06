@@ -16,6 +16,9 @@
   
 <script>
 
+const ip = window.location.origin;
+
+
 const server = "https://invidious.nikkosphere.com";
   
 const baseUri = server + "/api/v1/search/?region=JP&type=video&q=";
@@ -46,20 +49,18 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+    window.location.href=`${ip}/w/#${videoId}`;
 
   } else {
-    const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+    window.location.href=`${ip}/w/#${videoId}`;
 
     } else {
-    const url = document.getElementById('youtube-url').value;
     const ur = new URL(window.location.href);
     ur.searchParams.set('q', `${url}`);
-    window.location.href=`https://pontube.onrender.com/search/?q=${url}`;
+    window.location.href=`${ip}/search/?q=${url}`;
   }}
 }
 
@@ -122,13 +123,13 @@ async function kensa(q) {
       
         <div class="douga${ra}">
           <div class="dougasamune">
-            <a href="https://pontube.onrender.com/w#${video.videoId}">
+            <a href="${ip}/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
           </a>
         ${zika}
           </div>
           <div class="hai">
-            <a href="https://pontube.onrender.com/w#${video.videoId}">
+            <a href="${ip}/w#${video.videoId}">
             <div class="title"><p class="b">${name}</p>${live}</br>
           </a>
           <div class="sya">
@@ -153,12 +154,12 @@ async function kensa(q) {
       
         <div class="douga">
           <div class="maru">
-            <a href="https://pontube.onrender.com/w#${video.videoId}">
+            <a href="${ip}/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="180" height="180">
           </a>
           </div>
           <div class="haa">
-            <a href="https://pontube.onrender.com/w#${video.videoId}">
+            <a href="${ip}/w#${video.videoId}">
           <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}人の登録者</p></div></br>
           </a>
           <div class="sya">
@@ -221,9 +222,7 @@ function time(totalSeconds) {
   </script>
 
 <div class="ue">
-    <a href="https://pontube.onrender.com/home">
-      <h1 class="home">Pontube</h1>
-    </a>
+    <div id="gohome"></div>
   <div id="js-result">
     <form>
 <div class="kensaku">
@@ -253,7 +252,7 @@ console.log(`スクリプトを読み込みました`)
   console.log(key)
  kensa(key);
 
-
+document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
 </script>
 </body>
 </html>

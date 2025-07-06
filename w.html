@@ -13,6 +13,7 @@
 </head>
 <body>
 <script>
+  const ip = window.location.origin;
   let ifd = 0;
   let d
 
@@ -43,17 +44,17 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+    window.location.href=`${ip}/w/#${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`https://hiracmc.github.io/fakeapp/#${videoId}`;
+    window.location.href=`${ip}/w/#${videoId}`;
 
     } else {
-    window.location.href=`https://pontube.onrender.com/search/?q=${url}`;
+    window.location.href=`${ip}/search/?q=${url}`;
   }}
 }
 
@@ -77,9 +78,7 @@ function extractVideoId(url) {
   </script>
 
 <div class="ue">
-    <a href="https://pontube.onrender.com/home">
-      <h1 class="home">Pontube</h1>
-    </a>
+    <div id="gohome"></div>
   <div id="js-result">
     <form class="kensaku">
 
@@ -137,7 +136,7 @@ function loadVideo(videoId) {
   const yoko = (window.innerWidth) * 0.6 + 48;
   const tate = yoko * 9 / 16;
 
-  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
+  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube.com/embed/${videoId}?loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
 
 }
 
@@ -249,6 +248,8 @@ function fn(number) {
     }
     return number.toLocaleString();
 }
+
+document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
 </script>
 </body>
 </html>
