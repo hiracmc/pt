@@ -19,10 +19,10 @@
   
   <div id="js-result">
 <div class="kensaku">
+  <form id="gu">
 <button type="submit" onclick="Search()" class="kensaku2"><span class="material-symbols-outlined">
 search
 </span></button>
-  <form id="ke">
   <input type="search" id="kens" class="kensaku1">
   </form>
 
@@ -34,8 +34,7 @@ const ip = window.location.href;
 console.log('ロード')
   const search = document.getElementById('ke');
 
-function Search(event) {
-  console.log('発火')
+function Search() {
   const key = document.getElementById('kens').value;
   if (key) {
     if(key.toLowerCase() === "ponzu"){
@@ -45,7 +44,11 @@ window.location.href = home + "home.html";
   window.location.href = "https://www.google.co.jp/search?q=" + key;
 }
 }}
-  search.addEventListener('search', Search);
+  const formm = document.getElementById('gu');
+    formm.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        Search();
+    });
 
   
 </script>
