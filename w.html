@@ -45,14 +45,14 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/w.html#${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/w.html#${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;

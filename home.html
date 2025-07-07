@@ -2,13 +2,6 @@
 <html>
 <head>
   <title>Google</title>
-  
-<link rel="manifest" href="./manifest.webmanifest">
-<meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Google">
-  
-  
   <link href="./index.css" rel="stylesheet" />
   <link rel="icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon" href="assets/icon.png">
@@ -23,7 +16,7 @@
 
 
     <div id="gohome"></div>
-    <div class="varr">v0.025</div>
+    <div class="varr">v0.028</div>
   <div id="js-result">
     <form id="gu">
 <div class="kensakuu">
@@ -41,7 +34,7 @@ search
 
 
 <script>
-const ip = window.location.origin;
+let ip = window.location.origin;
 document.getElementById('gohome').innerHTML = `<a href="${ip}/home.html"><h1 class="homein">Pontube</h1></a>`;
 
 async function geton() {
@@ -81,13 +74,13 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/w.html#${videoId}`;
 
   } else {
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/w.html#${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;

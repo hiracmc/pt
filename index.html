@@ -40,8 +40,8 @@ function Search() {
   const key = document.getElementById('kens').value;
   if (key) {
     if(key.toLowerCase() === "ponzu"){
-  const home = ip;
-window.location.href = home + "home.html";
+  const home = geturl(ip);
+window.location.href = home + "/home.html";
 } else {
   window.location.href = "https://www.google.co.jp/search?q=" + key;
 }
@@ -53,6 +53,11 @@ window.location.href = home + "home.html";
     });
 
   
+
+  function geturl(url) {
+    const v = url.replace(/\/?\?$/, '');
+    return v;
+  }
 </script>
 </body>
 </html>
