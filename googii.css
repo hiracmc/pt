@@ -58,6 +58,10 @@ text-decoration: none;
   }
 }
 
+#gu{
+	display: flex;
+}
+
 .kensaku{
 display: flex;
 
