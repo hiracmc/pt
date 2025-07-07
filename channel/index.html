@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Google</title>
-  <link href="./index.css" rel="stylesheet" />
+  <link href="/index.css" rel="stylesheet" />
   <link rel="icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
@@ -21,7 +21,7 @@ const ip = window.location.origin;
 
 const server = "https://invidious.nikkosphere.com";
   
-const baseUri = server + "/api/v1/search/?region=JP&q=";
+const baseUri = server + "/api/v1/channels/";
 
 function syouryaku(stext,max) {
   const text = stext || ''; 
@@ -245,9 +245,8 @@ search
 // import { geturl } from "./assets/geturl.js";
 console.log(`スクリプトを読み込みました`)
   const url = new URL(window.location.href);
-  const ne =  url.searchParams.get('q');
+  const ne =  url.searchParams.get('c');
   const key = ne
-  document.getElementById('youtube-url').value = key;
 
   console.log(key)
  kensa(key);

@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Google</title>
-  <link href="./index.css" rel="stylesheet" />
+  <link href="/index.css" rel="stylesheet" />
   <link rel="icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
@@ -45,14 +45,14 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w.html#${videoId}`;
+    window.location.href=`${ip}/w#${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w.html#${videoId}`;
+    window.location.href=`${ip}/w#${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
@@ -250,7 +250,7 @@ function fn(number) {
     return number.toLocaleString();
 }
 
-document.getElementById('gohome').innerHTML = `<a href="${ip}/home.html"><h1 class="home">Pontube</h1></a>`;
+document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
 </script>
 </body>
 </html>
