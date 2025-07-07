@@ -19,12 +19,12 @@
     <div class="varr">v0.025</div>
   <div id="js-result">
 <div class="kensakuu">
-
+<form id="gu">
           <input type="text" id="youtube-url" placeholder="検索" class="kensakuu1">
 
  <button type="submit" onclick="e()" class="kensakuu2"><span class="material-symbols-outlined">
 search
-</span></button> 
+</span></button> </form>
 
     </div></div>
 </div>
@@ -106,6 +106,12 @@ function extractVideoId(url) {
     return null;
   }
 }
+
+  const formm = document.getElementById('gu');
+    formm.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        e();
+    });
 
 </script>
 </body>
