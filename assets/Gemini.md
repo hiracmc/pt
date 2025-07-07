@@ -247,3 +247,116 @@ console.log(window.location.origin); // "https://example.com:8080"
 | `window.location.origin` | `"https://www.example.com:8888"` | プロトコル + ホスト名 + ポート番号 |
 
 ご質問の「ドメインだけを取得したい」という目的には、`window.location.hostname` を使うのが最適です。
+
+
+はい、承知いたしました。
+URLの末尾が `?` または `/?` の場合に、それらの部分を削除するJavaScriptコードを生成します。
+
+ご提示の例：
+*   `https://hiracmc.github.io/pt` → `https://hiracmc.github.io/pt`
+*   `https://hiracmc.github.io/pt/?` → `https://hiracmc.github.io/pt`
+
+これを実現するには、正規表現を使う方法が最も簡潔で効率的です。
+
+### 推奨：正規表現を使用する方法
+
+この方法は、`?` で終わる場合と `/?` で終わる場合の両方を一行で処理できるため、非常にスマートです。
+
+```javascript
+// 対象のURL文字列
+let urlString = "https://hiracmc.github.io/pt/?"; // このURLをテストしたいものに書き換えてください
+
+// 末尾の `/?` または `?` を空文字に置換します
+const cleanedUrl = urlString.replace(/\/?\?$/, '');
+
+console.log(cleanedUrl); // "https://hiracmc.github.io/pt"
+```
+
+**正規表現の解説:** `/\/?\?$/`
+*   `\/?` : `/` が直前に0回または1回出現する（`/?` の `/` にマッチ）。
+*   `\?` : `?` という文字そのものにマッチ（`?` は正規表現で特別な意味を持つため `\` でエスケープします）。
+*   `$` : 文字列の末尾にマッチします。
+
+つまり、「文字列の末尾にある、`/?` または `?`」というパターンに一致し、それを空文字列 `''` で置き換える（=削除する）処理を行っています。
+
+---
+
+### 別解：文字列のendsWithメソッドを使用する方法
+
+正規表現を使わずに、文字列の組み込みメソッドだけで実装することも可能です。コードは少し長くなりますが、処理が直感的で分かりやすいです。
+
+```javascript
+// 対象のURL文字列
+let urlString = "https://hiracmc.github.io/pt/?"; // このURLをテストしたいものに書き換えてください
+
+let cleanedUrl = urlString;
+
+// まず `/?` で終わるかチェック（こちらを先にチェックすることが重要です）
+if (cleanedUrl.endsWith('/?')) {
+  // 末尾の2文字を削除
+  cleanedUrl = cleanedUrl.slice(0, -2);
+} 
+// 次に `?` で終わるかチェック
+else if (cleanedUrl.endsWith('?')) {
+  // 末尾の1文字を削除
+  cleanedUrl = cleanedUrl.slice(0, -1);
+}
+
+console.log(cleanedUrl); // "https://hiracmc.github.io/pt"
+```
+
+---
+
+### 動作サンプル
+
+以下のHTMLをファイルとして保存し、ブラウザで開いてコンソールの出力を確認してみてください。複数のパターンのURLでテストできます。
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Cleaning Test</title>
+</head>
+<body>
+    <h1>コンソールを開いて結果を確認してください</h1>
+
+    <script>
+        function cleanUrlWithRegex(url) {
+            return url.replace(/\/?\?$/, '');
+        }
+
+        function cleanUrlWithMethods(url) {
+            let cleaned = url;
+            if (cleaned.endsWith('/?')) {
+                cleaned = cleaned.slice(0, -2);
+            } else if (cleaned.endsWith('?')) {
+                cleaned = cleaned.slice(0, -1);
+            }
+            return cleaned;
+        }
+
+        const urlsToTest = [
+            'https://hiracmc.github.io/pt',          // 変更なし
+            'https://hiracmc.github.io/pt/?',         // /? を削除
+            'https://hiracmc.github.io/pt?',          // ? を削除
+            'https://hiracmc.github.io/pt/',          // 変更なし
+            'https://hiracmc.github.io/pt?key=val', // クエリがあるので変更なし
+            'https://example.com/page.html?',       // ? を削除
+        ];
+
+        console.log("--- 推奨：正規表現を使用 ---");
+        urlsToTest.forEach(url => {
+            console.log(`"${url}" -> "${cleanUrlWithRegex(url)}"`);
+        });
+
+        console.log("\n--- 別解：文字列メソッドを使用 ---");
+        urlsToTest.forEach(url => {
+            console.log(`"${url}" -> "${cleanUrlWithMethods(url)}"`);
+        });
+    </script>
+</body>
+</html>
+```
+
+どちらの方法も同じ結果を返しますが、一般的には**正規表現を使う方法が簡潔なため推奨**されます。
