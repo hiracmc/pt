@@ -86,10 +86,10 @@ border-radius: 30px;
     text-align:left;
     width: 500px; 
 	padding: 30px -5px; 
-	font-size: 18px;
+	font-size: 20px;
     color: #fff;
     border: none;
-    margin-left: 15px;
+    margin-left: -5px;
     background: #4d5155;
 	/*box-sizing: border-box;*/
     
@@ -105,7 +105,7 @@ text-align:center;
     border: none;
     font-size: 18px;
     color: #9BA3A8;
-  margin-left: -15px;
+  margin-left: -8px;
   background: none;
 }
 
