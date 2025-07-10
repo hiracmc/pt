@@ -181,6 +181,11 @@ text-align:center;
     border-left: 1px solid #686868;
 }
 
+.h1t{
+  color: #fff;
+  margin-left: 50px;
+}
+
 .kensaku2:focus {
   outline: none;
 }

@@ -17,6 +17,42 @@
   let ifd = 0;
   let d
 
+  function rirekiset(newrireki) {
+    console.log(newrireki)
+    const key = 'rireki';
+    const max = 150;
+    if (!newrireki || typeof newrireki.id === "undefined") return;
+
+    try {
+      const Data = localStorage.getItem(key)
+      let dataArray = [];
+      if (Data) {
+  try {
+  const parsedData = JSON.parse(Data);
+  if (Array.isArray(parsedData)) {
+  dataArray = parsedData;
+  }
+  } catch (e) {
+  console.error('Fail', e);
+  }
+  }
+
+  let updatedArray = dataArray.filter(item => item.id !== rirekiItem.id);
+  updatedArray.unshift(newrireki);
+
+  if (updatedArray.length > max) {
+  updatedArray = updatedArray.slice(0, max);
+  }
+  console.log(`a ${updatedArray}`)
+  localStorage.setItem(key, JSON.stringify(updatedArray));
+
+  return updatedArray;
+
+  } catch (e) {
+  return;
+    }
+  }
+
 
   function sw(){
 if(ifd === 1){
@@ -127,6 +163,7 @@ console.log("スクリプトを読み込みました")
    const url = document.getElementById('youtube-url');
 url.textContent = `http://youtu.be/${videoId}`;
  console.log(videoId)
+    rirekiset(videoId)
     loadVideo(videoId);
     loadVideoInfo(videoId);
   }
@@ -137,7 +174,7 @@ function loadVideo(videoId) {
   const yoko = (window.innerWidth) * 0.6 + 48;
   const tate = yoko * 9 / 16;
 
-  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube.com/embed/${videoId}?loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
+  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube-nocookie.com/embed/${videoId}?loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
 
 }
 

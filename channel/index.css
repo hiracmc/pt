@@ -1,0 +1,185 @@
+a {
+  text-decoration: none;
+}
+
+
+.home{
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 2s linear infinite;
+
+font-size: 50px;
+text-align:center;
+font-family: "Righteous", sans-serif;
+
+
+margin-top: 4px;
+margin-left: 53px;
+border: none;
+text-decoration: none;
+}
+
+
+
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+
+
+.kensaku{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    margin-left: 80px;
+    font-size: 16px;
+    margin-top: 13px;
+}
+
+
+
+.kensakuu{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    font-size: 16px;
+    margin-top: 13px;
+    position: absolute;
+  top: 50%;
+    left: 50%;
+  transform: translate(50%, -50%);
+}
+
+.kensaku1{
+    text-align:left;
+    width: 90%;
+	padding: 30px -5px; 
+	font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.kensakuu1{
+    text-align:left;
+    width: 90%;
+	padding: 30px -5px; 
+	font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.kensaku1:focus {
+  outline: none;
+}
+
+.kensakuu1:focus {
+  outline: none;
+}
+
+.kensaku2{
+text-align:center;
+    width: 10%;
+    height: 100%;
+    background: #202020;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    border-left: 1px solid #686868;
+}
+
+.kensakuu2{
+text-align:center;
+    width: 10%;
+    height: 100%;
+    background: #202020;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    border-left: 1px solid #686868;
+}
+
+.h1t{
+  color: #fff;
+  margin-left: 50px;
+}
+
+.kensaku2:focus {
+  outline: none;
+}
+
+.kensakuu2:focus {
+  outline: none;
+}
+
+
+body {
+background-color: #0f0f0f;
+font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiryo,sans-serif;
+}
+
+.ue {
+display: flex;
+text-align:center;
+width: 100vw;
+height: 5vw;
+left: 0;
+  right: 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px -1px;
+  background-color: #0f0f0f;
+}
+
+.ue .var{
+color: #fff;
+margin-left: 5px;
+font-size: 12px;
+}
+
+.banana {
+  position: absolute;
+  left: 5vw;
+  display: inline-block;
+}
+
+.icon{
+  margin-top: 20px;
+  margin-left: 0px;
+  border-radius: 200px;
+}
+
+.ba{
+  display: inline-block;
+}

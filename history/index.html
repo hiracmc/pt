@@ -3,8 +3,8 @@
 <html>
 <head>
   <title>Google</title>
-  <link href="./index.css" rel="stylesheet" />
-  <link rel="icon" href="/assets/favicon.ico">
+  <link href="/search/index.css" rel="stylesheet" />
+  <link rel="icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@ const ip = window.location.origin;
 
 const server = "https://invidious.nikkosphere.com";
   
-const baseUri = server + "/api/v1/channels/";
+const baseUri = server + "/api/v1/search/?region=JP&q=";
 
 function syouryaku(stext,max) {
   const text = stext || ''; 
@@ -84,6 +84,7 @@ function extractVideoId(url) {
 
 async function kensa(q) {
   const apiUrl = `${baseUri}${q}`;
+  const apiUrll = "assets/seatchdata.json";
   try {
     const response = await fetch(apiUrl)
 
@@ -91,45 +92,85 @@ async function kensa(q) {
       throw new Error('APIエラー');
     }
     const data = await response.json();
-    const waru = data.authorBanners[0].width / (window.innerWidth * 0.9);
-    let text = `<div class="ba">
-          <div class="banana">
-          <img src="${data.authorBanners[0].url}" alt="ばなー" width="${data.authorBanners[0].width / waru}" height="${data.authorBanners[0].height / waru}"></br>
-          <img class="icon" src="${data.authorThumbnails[2].url}" alt="ばなー" width="160" height="160"></div>
-          </div>`;
-    /*
+
+    let text = "";
     data.forEach(video => {
       console.log(video.authorId)
+      if(video.type === "video"){
       const touko = video.publishedText;
       const sy = video.title;
       const name = syouryaku(sy,60)
       const sya = syouryaku(video.author,50)
       const icon = video.authorThumbnails[0].url
-      const samune = authorBanners[0].url || "assets/logo.png";
+      const defaultThumbnail = video.videoThumbnails?.find(thumb => thumb.quality === 'medium');
+      const samune = defaultThumbnail?.url || "assets/logo.png";
       const times = time(video.lengthSeconds);
       const viewCount = fn(video.viewCount);
       let tagu = "";
       let ra = "";
       let live = `<p class="titletext"><p>${viewCount}回視聴・${touko}</p></div>`;
       let zika = `<p class=dougazikan>${times}</p>`;
+      if ( video.liveNow === true ){ tagu += `<p class="tagu" style="background-color: #ff3737">■ 配信中</p>`;live = `<p class="titletext"><p></p></div>`; ra = "1"; zika = `<p class=dougazikan>■ 配信中</p>`; }
+      if ( video.premium === true ){ tagu += `<p class="tagu" style="background-color: #ffb066">プレミア公開</p>` }
+      if ( video.isNew === true ){ tagu += `<p class="tagu" style="background-color: #ff6666">☆New</p>` }
+      if ( video.is4k === true ){ tagu += `<p class="tagu" style="background-color: #ffb766">4K</p>` }
+      if ( video.is8k === true ){ tagu += `<p class="tagu" style="background-color: #b366ff">8K</p>` }
+      if ( video.is3d === true ){ tagu += `<p class="tagu" style="background-color: #66bcff">3D</p>` }
+      if ( video.isVr180 === true ){ tagu += `<p class="tagu" style="background-color: #666bff">180°</p>` }
+      if ( video.isVr360 === true ){ tagu += `<p class="tagu" style="background-color: #666bff">360°</p>` }
       document.getElementById('youtube-url').innerHTML = q;
       text += `
       
         <div class="douga${ra}">
           <div class="dougasamune">
+            <a href="${ip}/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
+          </a>
+        ${zika}
           </div>
+          <div class="hai">
+            <a href="${ip}/w#${video.videoId}">
+            <div class="title"><p class="b">${name}</p>${live}</br>
+          </a>
           <div class="sya">
           <div class="syaue">
           <img src="${icon}" alt="${name}" width="40" height="40">
           </div>
           <div class="syasita"><p class="b">${sya}</p></div></br>
-        </div>
+        </div><div class="tag">${tagu}</div>
         </div></div>
         </div>
-        `
+        
+      `;} else
+      if(video.type === "channel"){
+      const touko = video.publishedText;
+      const name = syouryaku(video.author,50)
+      const sya = syouryaku(video.author,50)
+      const icon = video.authorThumbnails[0].url
+      const defaultThumbnail = video.authorThumbnails[3].url
+      const samune = defaultThumbnail || "assets/logo.png";
+      const viewCount = fn(video.subCount);
+      text += `
+      
+        <div class="douga">
+          <div class="maru">
+            <a href="${ip}/w#${video.videoId}">
+          <img src="${samune}" alt="${name}" width="180" height="180">
+          </a>
+          </div>
+          <div class="haa">
+            <a href="${ip}/w#${video.videoId}">
+          <div class="title"><p class="b">${name}</p><p class="titletext"><p>${viewCount}人の登録者</p></div></br>
+          </a>
+          <div class="sya">
+          <div class="syaue">
+          </div>
+        </div>
+        </div>
+        </div>
+        
+      `;}
     })
-        */
 document.getElementById('do').innerHTML = text;
 
   } catch (err) {
@@ -194,6 +235,7 @@ search
 </form></div>
 </div>
 </div>
+<h1 class="h1t">あなたの履歴</h1>
 <div id="do">
 
 </div>
@@ -204,8 +246,9 @@ search
 // import { geturl } from "./assets/geturl.js";
 console.log(`スクリプトを読み込みました`)
   const url = new URL(window.location.href);
-  const ne =  url.searchParams.get('c');
+  const ne =  url.searchParams.get('q');
   const key = ne
+  document.getElementById('youtube-url').value = key;
 
   console.log(key)
  kensa(key);
