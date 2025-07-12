@@ -91,21 +91,32 @@ async function kensa(q) {
       throw new Error('APIエラー');
     }
     const data = await response.json();
+    let bana = ""
+    if (data.authorBanners[0]){
+    console.log("ばななあった")
     const waru = data.authorBanners[0].width / (window.innerWidth * 0.9);
-    let text = `<div class="ba">
+    bana = `<img src="${data.authorBanners[0].url}" alt="ばなー" width="${data.authorBanners[0].width / waru}" height="${data.authorBanners[0].height / waru}"></br>`
+    } else {console.log("このチャンネルにはばなながないようです")}
+    let text = `<div id="sc"><div class="ba">
           <div class="banana">
-          <img src="${data.authorBanners[0].url}" alt="ばなー" width="${data.authorBanners[0].width / waru}" height="${data.authorBanners[0].height / waru}"></br>
-          <img class="icon" src="${data.authorThumbnails[2].url}" alt="ばなー" width="160" height="160"></div>
-          </div>`;
-    /*
-    data.forEach(video => {
-      console.log(video.authorId)
+          
+          ${bana}
+
+          <div id="ic">
+          <img class="icon" src="${data.authorThumbnails[4].url}" alt="ばなー" width="160" height="160">
+          <div class="na">
+          <h1>${data.author}</h1>
+          <p class="touroku">チャンネル登録者数 ${fn(data.subCount)}人</p></br>
+          <p>${syouryaku(data.descriptionHtml,30)}</p>
+          </div></div></div></br></br></div><div class="doo">`;
+
+
+    data.latestVideos.forEach(video => {
       const touko = video.publishedText;
       const sy = video.title;
       const name = syouryaku(sy,60)
-      const sya = syouryaku(video.author,50)
-      const icon = video.authorThumbnails[0].url
-      const samune = authorBanners[0].url || "assets/logo.png";
+      const defaultThumbnail = video.videoThumbnails?.find(thumb => thumb.quality === 'medium');
+      const samune = defaultThumbnail?.url || "assets/logo.png";
       const times = time(video.lengthSeconds);
       const viewCount = fn(video.viewCount);
       let tagu = "";
@@ -114,23 +125,25 @@ async function kensa(q) {
       let zika = `<p class=dougazikan>${times}</p>`;
       document.getElementById('youtube-url').innerHTML = q;
       text += `
-      
+        </div>
         <div class="douga${ra}">
           <div class="dougasamune">
+            <a href="${ip}/w#${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
+          </a>
+          ${zika}
           </div>
           <div class="sya">
-          <div class="syaue">
-          <img src="${icon}" alt="${name}" width="40" height="40">
-          </div>
-          <div class="syasita"><p class="b">${sya}</p></div></br>
+            <a href="${ip}/w#${video.videoId}">
+            <h2>${syouryaku(name,26)}</h2>
+            <p>${fn(video.viewCount)}回視聴・${video.publishedText}</p>
+            </a>
+          </div>  
         </div>
-        </div></div>
         </div>
         `
     })
-        */
-document.getElementById('do').innerHTML = text;
+document.getElementById('do').innerHTML = text + "</div>";
 
   } catch (err) {
     console.error("エラーが発生しました:", err);
@@ -149,6 +162,45 @@ function fn(number) {
         return `${Math.floor(number / 10000)}万`;
     }
     return number;
+}
+
+function dougatya(mozi,nagasa) {
+  console.log('実行')
+  if (typeof mozi !== "string" || mozi === null) {
+    return 0;
+  }
+  let keka = ""
+  let Width = 0;
+  for (let ii = 0; ii < mozi.length; ii++) {
+    const ken1 = mozi[ii];
+    if (ken1 && typeof ken1 === 'string') {
+    if (ken1.match(/[\x00-\x7E\uFF61-\uFF9F]/)) {
+      Width += 0.5;
+    } else {
+      Width += 1.0;
+    }
+  }
+}
+width = 0;
+
+  if (width > nagasa){
+  for (let i = 0; Width < nagasa; i++) {
+    const ken = mozi[i];
+    if (ken && typeof ken === 'string') {
+    if (ken.match(/[\x00-\x7E\uFF61-\uFF9F]/)) {
+      Width += 0.5;
+      keka += mozi[i]
+    } else {
+      Width += 1.0;
+      keka += mozi[i]
+    }
+  } else { return 'none'; }
+
+}
+  return keka + "...";
+} else {
+  return mozi;
+}
 }
 
 /**

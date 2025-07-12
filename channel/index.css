@@ -172,6 +172,7 @@ font-size: 12px;
   position: absolute;
   left: 5vw;
   display: inline-block;
+  margin-top: 25px;
 }
 
 .icon{
@@ -182,4 +183,194 @@ font-size: 12px;
 
 .ba{
   display: inline-block;
+}
+
+#ic{
+display: flex;
+margin-top: 25px;
+}
+
+#ic h1{
+  color: #fff;
+  margin-left: 30px;
+  margin-top: 20px;
+  font-size: 35px;
+  width: 70vw;
+}
+
+#ic p{
+color: #b8b8b8;
+font-size: 18px;
+margin-left: 30px;
+  margin-top: -20px;
+}
+
+.na{
+display: inline-block;
+}
+
+.doo {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 5px;
+  margin-top: 60vh;
+}
+
+#sc{
+  display: inline-block;
+}
+
+@media (min-width: 890px) {
+  .doo {
+  grid-template-columns: repeat(2, 1fr);
+}
+}
+
+@media (min-width: 1222px) {
+  .doo {
+  grid-template-columns: repeat(3, 1fr);
+}
+}
+
+@media (min-width: 1735px) {
+  .doo {
+  grid-template-columns: repeat(4, 1fr);
+}
+}
+
+
+
+
+.douga {
+margin-left: 50px;
+margin-top: 30px;
+font-size: 18px;
+color: #fff;
+  padding: 25px;
+  display: inline-block;
+  background-color: #1d1d1d;
+  border: 4px solid #111111;
+  border-radius: 10px;
+  width: 320px;
+}
+
+.douga1 {
+  margin-left: 50px;
+margin-right: 50px;
+margin-top: 30px;
+font-size: 18px;
+color: #fff;
+width:85vw;
+  padding: 25px;
+  display: flex;
+  background-color: #a12121;
+  border: 4px solid #990404;
+  border-radius: 10px;
+
+
+}
+
+#gu {
+  display: flex;
+  width: 100%;
+}
+
+
+.dougasita {
+  display: inline-block;
+
+}
+
+.hai {
+  display: inline-block;
+  width: 100%;
+}
+
+.tag {
+display: flex;
+margin-top: -10px;
+margin-left: 40px;
+}
+
+.tagu {
+margin-left: 5px;
+padding: 2px 6px;
+border-radius: 5px;
+color: #fff;
+font-weight: bold;
+}
+
+.haa {
+  display: inline-block;
+  margin-left: 80px;
+}
+
+.sya h2 {
+  display: flex;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-left: 0px;
+  position: relative;
+  font-size: 17px;
+}
+
+.sya a{
+  color: #fff;
+}
+
+.sya p{
+position: absolute;
+margin-top: -10px;
+font-weight: none;
+font-size: 14px;
+color: #cfcfcf;
+}
+
+.syaue img {
+  border-radius: 18px;
+}
+
+.dougasamune{
+position: relative;
+display: inline-block;
+}
+
+.dougasamune img{
+border-radius: 8px;
+}
+
+.maru img {
+border-radius: 100px;
+margin-left: 60px;
+}
+
+
+
+.dougasamune .dougazikan {
+position:absolute;
+bottom: -5px;
+right: 4px;
+color: #fff;
+background-color: rgba(0, 0, 0, 0.8);
+padding: 2px 6px;
+border-radius: 5px;
+}
+
+
+.title {
+  color:#e2e2e2;
+  margin-top: 0px;
+  margin-left: 40px;
+  white-space: pre-wrap;
+}
+
+.title .b {
+  color:#e2e2e2;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-weight: bold;
+}
+
+.titletext {
+  margin-top: -10px;
 }
