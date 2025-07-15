@@ -37,7 +37,7 @@ urlの最後に/homeとつけるか、ponzuと検索することで使うこと�
 
 4.Public Git Repositoryを選択して、先ほどフォークしたリポジトリのurlを入力
 
-5.Publish Directoryに「.」を打ち込む
+5.Publish Directoryに「.」を打ち込む(名前は自由でok)
 
 6.保存して完成！🎉
 
