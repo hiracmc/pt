@@ -1,1 +1,4 @@
-<h1 style="color: linear-gradient(to right, #ff0000,#ff9900, #ff0000);font-size: 50px;">Pontube</h1>
+![pontube](https://hiracmc.github.io/pt/assets/Pontube.svg)
+
+Youtubeの動画を検索して表示できるツールです。
+
