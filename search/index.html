@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
 </head>
-<body>
+<body lang="ja">
   
 <script>
 
@@ -21,7 +21,7 @@ const ip = window.location.origin;
 
 const server = "https://invidious.nikkosphere.com";
   
-const baseUri = server + "/api/v1/search/?region=JP&q=";
+const baseUri = server + "/api/v1/search/?region=JP&hl=ja&q=";
 
 function syouryaku(stext,max) {
   const text = stext || ''; 
@@ -130,13 +130,15 @@ async function kensa(q) {
           </div>
           <div class="hai">
             <a href="${ip}/w#${video.videoId}">
-            <div class="title"><p class="b">${name}</p>${live}</br>
+            <div class="title"><p class="b" lang="ja">${name}</p>${live}</br>
           </a>
           <div class="sya">
           <div class="syaue">
+            <a href="${ip}/channel/?c=${video.authorId}">
           <img src="${icon}" alt="${name}" width="40" height="40">
+          </a>
           </div>
-          <div class="syasita"><p class="b">${sya}</p></div></br>
+          <div class="syasita"><a href="${ip}/channel/?c=${video.authorId}"><p class="b">${sya}</p></a></div></br>
         </div><div class="tag">${tagu}</div>
         </div></div>
         </div>
