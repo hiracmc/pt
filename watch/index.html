@@ -81,14 +81,14 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/watch?v=${videoId}`;
+    window.location.href=`${ip}/watch/?v=${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/watch?v=${videoId}`;
+    window.location.href=`${ip}/watch/?v=${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
@@ -160,6 +160,7 @@ const server = "https://invidious.nikkosphere.com";
 console.log("スクリプトを読み込みました")
   const url = new URL(window.location.href);
   const ne =  url.searchParams.get('v');
+  console.log(ne)
   const videoId = ne;
   if(videoId){
    const url = document.getElementById('youtube-url');
