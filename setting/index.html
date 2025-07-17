@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google</title>
+  <link href="./index.css" rel="stylesheet" />
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
+</head>
+<body>
+<div id="back"></div>
+
+<div class="sw">
+  <input type="checkbox" id="switch1">
+  <label for="switch1"><span class="s"></span></label>
+  </br>
+</div>
+
+</div>
+  <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  -->
+
+
+
+
+<script>
+    let ip = window.location.origin;
+    document.getElementById('back').innerHTML = `<a href="${ip}/home"><h2 class="back">&lt;= 戻る</h2></a>`;
+
+  const formm = document.getElementById('gu');
+    formm.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        e();
+    });
+
+</script>
+</body>
+</html>
