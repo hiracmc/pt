@@ -116,7 +116,7 @@ function extractVideoId(url) {
 
 <div class="ue">
     <div id="gohome"></div>
-  <div id="js-result">
+
     <form class="kensaku">
 
           <input type="text" id="youtube-url" placeholder="検索" class="kensaku1">
@@ -143,7 +143,7 @@ search
   </div>
   <div id="komee">コメント</div>
 <div id="komento"></div>
-</div>
+
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
 <script type="module">
 
@@ -262,7 +262,9 @@ async function getkome(videoId) {
       text += `
         <div class="kome">
           <div class="komeue">
+            <a href="${ip}/channel/?c=${comment.authorId}">
           <img src="${icon}" alt="${name}" width="40" height="40">
+          </a>
           </div>
           <div class="komesita"><a href="${ip}/channel/?c=${comment.authorId}"><p class="b">${name}</p></a><p class="kometext"><p>${commentt}</p></div>
         </div>
