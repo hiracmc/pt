@@ -20,12 +20,32 @@ a{
 }
 
 .sw{
-    width: 73px;
+    width: 109.5px;
     position: relative;
 }
 
+.che{
+    position: absolute;
+  right: 50px;
+}
+
+.config{
+    margin-top: 30px;
+    background-color: #0f0f0f;
+    display: flex;
+    padding: 20px;
+}
+
+.config h1{
+    left: 50px;
+}
+
+.config:hover{
+    background-color: #202020;
+}
+
 .sw input[type="checkbox"] {
-height: 40px;
+height: 60px;
   box-sizing: border-box;
   display: none;
 }
@@ -33,12 +53,12 @@ height: 40px;
 .sw label{
     display: block;
     box-sizing: border-box;
-    height: 40px;
+    height: 60px;
     background-color: #3b3b3b;
 /*    
     border: 2px solid #303030;
 */
-    border-radius: 50px;
+    border-radius: 100px;
     transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
     position: relative;
     cursor: pointer;
@@ -46,19 +66,19 @@ height: 40px;
 
 .sw .s{
     position: absolute;
-  width: 34px;             
-  height: 34px;           
+  width: 51px;             
+  height: 51px;           
   background: #999999;  
   background-color: #fff;      
-  top: 3px;             
-  left: 3px;               
-  border-radius: 25px;             
+  top: 4.5px;             
+  left: 4.5px;               
+  border-radius: 70px;             
   transition: .2s; 
-  box-shadow: 0px 3px 2px #6e6e6e;
+  box-shadow: 0px 4.5px 3px #272727;
 }
 
 .sw input[type="checkbox"]:checked + label .s {
-    transform: translateX(33px);
+    transform: translateX(49.5px);
 }
 
 .sw input[type="checkbox"]:checked + label {

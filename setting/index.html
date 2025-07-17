@@ -13,12 +13,31 @@
 </head>
 <body>
 <div id="back"></div>
+<div id="setting">
+                <div class="config">
+            <h1 id="label1" style="color:#fff;">ループモード</h1>
+            <div class="che">
+                <div class="sw">
+                    <input type="checkbox" id="switch1" value="checked">
+                    <label for="switch1"><span class="s"></span></label>
+                </div>
+            </div>
+            </div>
 
-<div class="sw">
-  <input type="checkbox" id="switch1">
-  <label for="switch1"><span class="s"></span></label>
-  </br>
+                <div class="config">
+            <h1 id="label2" style="color:#fff;">ダークモード</h1>
+            <div class="che">
+                <div class="sw">
+                    <input type="checkbox" id="switch2" value="checked">
+                    <label for="switch2"><span class="s"></span></label>
+                </div>
+            </div>
+            </div>
+
+
 </div>
+
+
 
 </div>
   <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -31,11 +50,42 @@
     let ip = window.location.origin;
     document.getElementById('back').innerHTML = `<a href="${ip}/home"><h2 class="back">&lt;= 戻る</h2></a>`;
 
-  const formm = document.getElementById('gu');
-    formm.addEventListener('submit', function(ev) {
-        ev.preventDefault();
-        e();
-    });
+    config()
+
+
+    function NewConfig(type,id,v1,v2,v3,v4) {
+        switch (type) {
+            case 1:
+            const ifcheck = document.getElementById(`switch${id}`);
+            let checkcolor = "";
+            console.log(ifcheck.checked)
+            if (ifcheck.checked){
+                checkcolor = "#42da42"
+            } else{
+                checkcolor = "#fff"
+            }
+            const text = document.getElementById(`label${id}`);
+            text.style.color = checkcolor;
+            
+            break;
+
+            case "check":
+                
+            break;
+        }
+    }
+
+const checkbox1 = document.getElementById("switch1");
+checkbox1.addEventListener('change', function() {config()});
+
+const checkbox2 = document.getElementById("switch2");
+checkbox2.addEventListener('change', function() {config()});
+
+
+function config() {
+    NewConfig(1,1,"ループモード")
+    NewConfig(1,2,"ダークモード")
+}
 
 </script>
 </body>
