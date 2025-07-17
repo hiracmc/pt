@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Google</title>
-  <link href="/index.css" rel="stylesheet" />
+  <link href="./index.css" rel="stylesheet" />
   <link rel="icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
@@ -81,14 +81,14 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/watch?v=${videoId}`;
 
   } else {
     const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/watch?v=${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
@@ -158,7 +158,9 @@ const server = "https://invidious.nikkosphere.com";
   const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id=";
   const come = server + "/api/v1/comments/";
 console.log("スクリプトを読み込みました")
-  const videoId = window.location.hash.slice(1);
+  const url = new URL(window.location.href);
+  const ne =  url.searchParams.get('v');
+  const videoId = ne;
   if(videoId){
    const url = document.getElementById('youtube-url');
 url.textContent = `http://youtu.be/${videoId}`;

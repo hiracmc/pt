@@ -1,0 +1,433 @@
+a {
+  text-decoration: none;
+}
+
+@keyframes popup {
+  0% {
+    transform: translateY(50px) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1.0);
+  }
+  80%, 100% {
+    opacity: 1;
+  }
+}
+
+.home{
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 2s linear infinite;
+
+font-size: 50px;
+text-align:center;
+font-family: "Righteous", sans-serif;
+
+
+margin-top: 4px;
+margin-left: 53px;
+border: none;
+text-decoration: none;
+}
+
+.homein{
+  text-align:center;
+  
+  background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
+  
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 2s linear infinite; 
+  
+margin-top: 20vh;
+
+font-size: 100px;
+font-family: "Righteous", sans-serif;
+
+position: absolute;
+
+
+  left: 50vw;
+  transform: translate(-50%,0px);
+
+border: none;
+text-decoration: none;
+}
+
+.popup{
+animation:popup 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+}
+
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+
+.varr{
+color: #fff;
+font-size: 12px;
+}
+
+
+#channel-info {
+display: flex;
+margin-top: -10px;
+
+
+}
+
+#channel-info img{
+width:56px;
+height: 56px;
+margin-top: 10px;
+margin-bottom: 10px;
+margin-left: 53px;
+border-radius: 26px;
+}
+
+#channel-info .so{
+
+  display: inline-block;
+}
+
+#channel-info p{
+
+margin-left: 15px;
+margin-top: -20px;
+font-size: 14px;
+    color: #cecece;
+
+}
+
+
+.view{
+
+margin-left: -1px;
+margin-top: -5px;
+font-size: 18px;
+    color: #ffffff;
+    font-weight: bold;
+
+}
+
+#channel-info h3{
+
+margin-left: 15px;
+margin-top: 12px;
+font-size: 20px;
+    color: #fff;
+    font-weight: bold;
+    width: 30em;
+}
+
+
+.kensaku{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    margin-left: 80px;
+    font-size: 16px;
+    margin-top: 13px;
+}
+
+.iroiro{
+display: flex;
+
+}
+
+.iroiroo{
+display: flex;
+
+}
+
+#syouryaku{
+width: 200px;
+height: 10px;
+background: #272727;
+border: none;
+margin-top: 20px;
+margin-left: -220px;
+color:#fff;
+font-size: 16px;
+text-align:right;
+font-weight: bold;
+}
+
+#syor .kag {
+width: 60vw;
+height: 30px;
+background: #ebebeb;
+border: none;
+margin-top: -50px;
+margin-left: 75px;
+color:#fff;
+
+}
+
+#syouryaku:hover{
+  color:#e2e2e2;
+}
+
+.kensakuu{
+display: flex;
+
+    width: 700px;
+    height: 30px;
+    padding: 0.5em;
+    text-align:center;
+    border: 1px solid #494949;
+border-radius: 30px;
+    background: #202020;
+    margin: 0.5em 0;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    font-size: 16px;
+    margin-top: 13px;
+}
+
+.kensaku1{
+    text-align:left;
+    width: 90%;
+	padding: 30px -5px; 
+	font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.kensakuu1{
+    text-align:left;
+    width: 90%; 
+	padding: 30px -5px; 
+	font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.kensaku1:focus {
+  outline: none;
+}
+
+.kensakuu1:focus {
+  outline: none;
+}
+
+.kensaku2{
+text-align:center;
+    width: 10%;
+    height: 100%;
+    background: #202020;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    border-left: 1px solid #686868;
+}
+
+.kensakuu2{
+text-align:center;
+    width: 10%;
+    height: 100%;
+    background: #202020;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    border-left: 1px solid #686868;
+}
+
+.kensaku2:focus {
+  outline: none;
+}
+
+.kensakuu2:focus {
+  outline: none;
+}
+
+
+body {
+background-color: #0f0f0f;
+font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiryo,sans-serif;
+}
+
+.ue {
+display: flex;
+text-align:center;
+width: 100vw;
+height: 5vw;
+left: 0;
+  right: 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px -1px;
+  background-color: #0f0f0f;
+}
+
+.ue .var{
+color: #fff;
+margin-left: 5px;
+font-size: 12px;
+}
+
+
+.dougalink{
+    text-align:left;
+    width: 500px; 
+	padding: 30px -5px; 
+	font-size: 18px;
+    color: #fff;
+    border: 1px solid #d3d3d3;
+    margin-left: 10px;
+    background: #202020;
+	/*box-sizing: border-box;*/
+    
+}
+
+.dougalink:focus {
+  outline: none;
+  border: 2px solid #fff;
+}
+
+#video-container{
+margin-top: 30px;
+margin-left: 50px;
+}
+
+
+#video-name{
+margin-left: 50px;
+margin-top: 15px;
+font-size: 20px;
+font-weight: bold;
+color: #fff;
+width: 60vw; 
+}
+
+.setu{
+color: #272727;
+
+}
+
+#description{
+margin-left: 50px;
+margin-top: 8px;
+font-size: 16px;
+color: #fff;
+width:60vw;
+background-color: #272727;
+  padding: 25px;
+  display: inline-block;
+  border-radius: 15px;
+white-space: pre-wrap;
+}
+
+#description a {
+color: #3ea6ff;
+text-decoration: underline;
+}
+
+#description a:hover {
+color: #0088ff;
+text-decoration: underline;
+
+}
+
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 500,
+  'GRAD' 200,
+  'opsz' 40;
+}
+
+
+.kome {
+margin-left: 50px;
+margin-top: 30px;
+font-size: 18px;
+color: #fff;
+width:60vw;
+  padding: 25px;
+  display: flex;
+  background-color: #1d1d1d;
+  border: 4px solid #111111;
+  border-radius: 10px;
+
+}
+
+
+.kome a {
+color: #0088ff;
+text-decoration: underline;
+}
+
+.kome a:hover {
+color: #0074da;
+text-decoration: underline;
+}
+
+.komesita {
+  display: inline-block;
+
+}
+
+.komesita p {
+  color:#e2e2e2;
+  margin-top: -10px;
+  margin-left: 10px;
+  white-space: pre-wrap;
+}
+
+.komesita .b {
+  color:#e2e2e2;
+  margin-top: 0px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.komeue img {
+  border-radius: 25px;
+  width:50px;
+height: 50px;
+}
+
+#komee {
+margin-left: 60px;
+margin-top: 50px;
+font-size: 28px;
+font-weight: bold;
+    color: #ffffff;
+
+
+}

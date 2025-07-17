@@ -50,13 +50,13 @@ function e() {
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/watch?v=${videoId}`;
 
   } else {
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
+    window.location.href=`${ip}/watch?v=${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
@@ -123,13 +123,13 @@ async function kensa(q) {
       
         <div class="douga${ra}">
           <div class="dougasamune">
-            <a href="${ip}/w#${video.videoId}">
+            <a href="${ip}/watch?v=${video.videoId}">
           <img src="${samune}" alt="${name}" width="320" height="180">
           </a>
         ${zika}
           </div>
           <div class="hai">
-            <a href="${ip}/w#${video.videoId}">
+            <a href="${ip}/watch?v=${video.videoId}">
             <div class="title"><p class="b" lang="ja">${name}</p>${live}</br>
           </a>
           <div class="sya">
