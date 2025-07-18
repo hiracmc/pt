@@ -13,44 +13,62 @@ a{
     font-size: 30px;
     transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
     font-family: "Noto Sans JP", sans-serif;
+    user-select: none;
 }
 
 .back:hover{
     text-shadow: 0px 0px 10px #dfdfdf;
 }
 
-.sw{
+.config .sw{
     width: 109.5px;
     position: relative;
-}
-
-.che{
-    position: absolute;
-  right: 50px;
+    top: auto;
+    bottom: auto;
 }
 
 .config{
-    margin-top: 30px;
+    margin: auto;
+    margin-top: 0px;
     background-color: #0f0f0f;
     display: flex;
-    padding: 20px;
+    padding: 40px;
+    border-radius: 5px;
+    width: 70vw;
+}
+
+.config .che{
+    position:relative;
+    margin-left: auto;
 }
 
 .config h1{
-    left: 50px;
+    transition: .4s cubic-bezier(0.45, 0, 0.55, 1);
+    user-select: none;
+}
+
+.config .cd{
+    transition: .4s cubic-bezier(0.45, 0, 0.55, 1);
+    user-select: none;
+    color: #bbbbbb;
+    font-size: 20px;
+}
+
+.uo{
+    display: inline-block;
 }
 
 .config:hover{
     background-color: #202020;
 }
 
-.sw input[type="checkbox"] {
+.config .sw input[type="checkbox"] {
 height: 60px;
   box-sizing: border-box;
   display: none;
 }
 
-.sw label{
+.config .sw label{
     display: block;
     box-sizing: border-box;
     height: 60px;
@@ -59,12 +77,12 @@ height: 60px;
     border: 2px solid #303030;
 */
     border-radius: 100px;
-    transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
+    transition: .3s cubic-bezier(0.45, 0, 0.55, 1);
     position: relative;
     cursor: pointer;
 }
 
-.sw .s{
+.config .sw .s{
     position: absolute;
   width: 51px;             
   height: 51px;           
@@ -72,15 +90,24 @@ height: 60px;
   background-color: #fff;      
   top: 4.5px;             
   left: 4.5px;               
-  border-radius: 70px;             
+  border-radius: 100px;             
   transition: .2s; 
-  box-shadow: 0px 4.5px 3px #272727;
+  box-shadow: 0px 1.5px 5px #000000;
 }
 
-.sw input[type="checkbox"]:checked + label .s {
+.config .sw input[type="checkbox"]:checked + label .s {
     transform: translateX(49.5px);
 }
 
-.sw input[type="checkbox"]:checked + label {
-    background-color: #42da42;
+.config .sw input[type="checkbox"]:checked + label {
+    background-color: #ff2f2f;
 }
+
+.config .sw input[type="checkbox"] + label:hover{
+    box-shadow: 0px 0px 15px #3b3b3b;
+}
+
+.config .sw input[type="checkbox"]:checked + label:hover{
+    box-shadow: 0px 0px 15px #ff2f2f;
+}
+

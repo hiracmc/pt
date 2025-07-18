@@ -15,7 +15,8 @@
 <div id="back"></div>
 <div id="setting">
                 <div class="config">
-            <h1 id="label1" style="color:#fff;">ループモード</h1>
+            <h1 id="label1" style="color:#fff;">ループ再生</h1>
+            <p class="cd">ループ再生をします。作業用にどうぞ。</p>
             <div class="che">
                 <div class="sw">
                     <input type="checkbox" id="switch1" value="checked">
@@ -24,12 +25,25 @@
             </div>
             </div>
 
-                <div class="config">
-            <h1 id="label2" style="color:#fff;">ダークモード</h1>
+
+            <div class="config">
+            <h1 id="label2" style="color:#fff;">Youtubeの埋め込みで再生</h1>
+            <p class="cd">埋め込みで動画を視聴します。こっちのほうが高機能。</p>
             <div class="che">
                 <div class="sw">
-                    <input type="checkbox" id="switch2" value="checked">
+                    <input type="checkbox" id="switch2" value="checked" checked>
                     <label for="switch2"><span class="s"></span></label>
+                </div>
+            </div>
+            </div>
+
+            <div class="config">
+            <h1 id="label3" style="color:#fff;">ベータ</h1>
+            <p class="cd">開発中の機能を使えるようにします。なにがあっても責任はとりません。</p>
+            <div class="che">
+                <div class="sw">
+                    <input type="checkbox" id="switch3" value="checked">
+                    <label for="switch3"><span class="s"></span></label>
                 </div>
             </div>
             </div>
@@ -47,6 +61,7 @@
 
 
 <script>
+
     let ip = window.location.origin;
     document.getElementById('back').innerHTML = `<a href="${ip}/home"><h2 class="back">&lt;= 戻る</h2></a>`;
 
@@ -58,15 +73,53 @@
             case 1:
             const ifcheck = document.getElementById(`switch${id}`);
             let checkcolor = "";
+            let v1 = "";
             console.log(ifcheck.checked)
             if (ifcheck.checked){
-                checkcolor = "#42da42"
+                checkcolor = "#ff2f2f"
+                v1 = "0px 0px 15px #910000"
             } else{
                 checkcolor = "#fff"
             }
             const text = document.getElementById(`label${id}`);
             text.style.color = checkcolor;
+            text.style.textShadow = v1;
             
+            break;
+
+            case "check":
+                
+            break;
+        }
+    }
+
+
+    let se = "";
+    SConfig(1,1,"ループ再生","ループ再生をします。作業用にどうぞ。")
+    SConfig(1,2,"Youtubeの埋め込みで再生","埋め込みで動画を視聴します。こっちのほうが高機能。","checked")
+    SConfig(1,3,"ベータ版","開発中の機能を使えるようにします。なにがあっても責任はとりません。")
+
+    document.getElementById("setting").innerHTML = se;
+    config()
+
+
+    function SConfig(type,id,v1,v2,v3,v4) {
+        switch (type) {
+            case 1:
+            se += `
+            <div class="config">
+                <div class=uo>
+            <h1 id="label${id}" style="color:#fff;">${v1}</h1>
+            <p class="cd">${v2}</p>
+            </div>
+            <div class="che">
+                <div class="sw">
+                    <input type="checkbox" id="switch${id}" value="checked" ${v3}>
+                    <label for="switch${id}"><span class="s"></span></label>
+                </div>
+            </div>
+            </div>
+            `
             break;
 
             case "check":
@@ -81,10 +134,14 @@ checkbox1.addEventListener('change', function() {config()});
 const checkbox2 = document.getElementById("switch2");
 checkbox2.addEventListener('change', function() {config()});
 
+const checkbox3 = document.getElementById("switch3");
+checkbox3.addEventListener('change', function() {config()});
+
 
 function config() {
-    NewConfig(1,1,"ループモード")
-    NewConfig(1,2,"ダークモード")
+    NewConfig(1,1)
+    NewConfig(1,2)
+    NewConfig(1,3)
 }
 
 </script>
