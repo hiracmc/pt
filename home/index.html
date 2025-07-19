@@ -36,8 +36,8 @@ search
 
 <script>
 let ip = window.location.origin;
-document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="homein">Pontube</h1></a>`;
-document.getElementById('gosetting').innerHTML = `<a href="${ip}/setting"><h1 class="set">Setting</h1></a>`;
+document.getElementById('gohome').innerHTML = `<a href="${ip}/home/"><h1 class="homein">Pontube</h1></a>`;
+document.getElementById('gosetting').innerHTML = `<a href="${ip}/setting/"><h1 class="set">Setting</h1></a>`;
 
 async function geton() {
   const response = await fetch('https://api.invidious.io/instances.json');
