@@ -33,6 +33,8 @@
     let ip = window.location.origin;
     document.getElementById('back').innerHTML = `<a href="${ip}/home"><h2 class="back">&lt;= 戻る</h2></a>`;
 
+    if (localStorage.getItem('if_dark') === null){ localStorage.setItem('if_dark', 'true'); }
+    if (localStorage.getItem('if_eme') === null){ localStorage.setItem('if_eme', 'true'); }
 
  
 function NewConfig(type, id, v5, v2, v3, v4) {
