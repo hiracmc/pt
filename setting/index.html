@@ -14,39 +14,7 @@
 <body>
 <div id="back"></div>
 <div id="setting">
-                <div class="config">
-            <h1 id="label1" style="color:#fff;">ループ再生</h1>
-            <p class="cd">ループ再生をします。作業用にどうぞ。</p>
-            <div class="che">
-                <div class="sw">
-                    <input type="checkbox" id="switch1" value="checked">
-                    <label for="switch1"><span class="s"></span></label>
-                </div>
-            </div>
-            </div>
 
-
-            <div class="config">
-            <h1 id="label2" style="color:#fff;">Youtubeの埋め込みで再生</h1>
-            <p class="cd">埋め込みで動画を視聴します。こっちのほうが高機能。</p>
-            <div class="che">
-                <div class="sw">
-                    <input type="checkbox" id="switch2" value="checked" checked>
-                    <label for="switch2"><span class="s"></span></label>
-                </div>
-            </div>
-            </div>
-
-            <div class="config">
-            <h1 id="label3" style="color:#fff;">ベータ</h1>
-            <p class="cd">開発中の機能を使えるようにします。なにがあっても責任はとりません。</p>
-            <div class="che">
-                <div class="sw">
-                    <input type="checkbox" id="switch3" value="checked">
-                    <label for="switch3"><span class="s"></span></label>
-                </div>
-            </div>
-            </div>
 
 
 </div>
@@ -65,47 +33,72 @@
     let ip = window.location.origin;
     document.getElementById('back').innerHTML = `<a href="${ip}/home"><h2 class="back">&lt;= 戻る</h2></a>`;
 
-    config()
 
-
-    function NewConfig(type,id,v1,v2,v3,v4) {
-        switch (type) {
-            case 1:
+ 
+function NewConfig(type, id, v5, v2, v3, v4) {
+    switch (type) {
+        case 1:
             const ifcheck = document.getElementById(`switch${id}`);
+            if (!ifcheck) return;
+            
             let checkcolor = "";
             let v1 = "";
-            console.log(ifcheck.checked)
-            if (ifcheck.checked){
+            
+            if (ifcheck.checked) {
                 checkcolor = "#ff2f2f"
                 v1 = "0px 0px 15px #910000"
-            } else{
+            } else {
                 checkcolor = "#fff"
             }
             const text = document.getElementById(`label${id}`);
-            text.style.color = checkcolor;
-            text.style.textShadow = v1;
-            
+            if (text) {
+                text.style.color = checkcolor;
+                text.style.textShadow = v1;
+            }
             break;
 
-            case "check":
-                
+        case "check":
             break;
-        }
     }
+}
 
+let se = "";
 
-    let se = "";
-    SConfig(1,1,"ループ再生","ループ再生をします。作業用にどうぞ。")
-    SConfig(1,2,"Youtubeの埋め込みで再生","埋め込みで動画を視聴します。こっちのほうが高機能。","checked")
-    SConfig(1,3,"ベータ版","開発中の機能を使えるようにします。なにがあっても責任はとりません。")
+config_load()
+
+function config_load() {
+    se += `<div class="setting_ut"><h1>機能</h1><input type="checkbox" id="sut" checked><label for="sut"></label></input></div><div id="ki">`
+    config_kinou()
+    se += "</div></div></br>"
+
+    se += `<div class="setting_th"><h1>見た目</h1><input type="checkbox" id="the" checked><label for="the"></label></input></div><div id="mi">`
+    config_tema()
+    se += "</div></div>"
 
     document.getElementById("setting").innerHTML = se;
-    config()
+    setupEventListeners();
+    applyInitialStyles();
+}
 
+function config_kinou() {
+    SConfig(1, 1, "ループ再生", "ループ再生をします。作業用にどうぞ。", "if_loop")
+    SConfig(1, 2, "Youtubeの埋め込みで再生", "埋め込みで動画を視聴します。こっちのほうが高機能。", "if_eme")
+    SConfig(1, 3, "ベータ版", "開発中の機能を使えるようにします。なんかあっても責任はとりません。", "if_beta")
+}
 
-    function SConfig(type,id,v1,v2,v3,v4) {
-        switch (type) {
-            case 1:
+function config_tema() {
+    SConfig(1, 4, "ダークモード", "節電できるからおすすめ。", "if_dark")
+}
+
+function SConfig(type, id, v1, v2, v3, v4) {
+    let chec = "";
+    const che = localStorage.getItem(v3);
+
+    if (che === "true") {
+        chec = "checked"
+    }
+    switch (type) {
+        case 1:
             se += `
             <div class="config">
                 <div class=uo>
@@ -114,7 +107,7 @@
             </div>
             <div class="che">
                 <div class="sw">
-                    <input type="checkbox" id="switch${id}" value="checked" ${v3}>
+                    <input type="checkbox" id="switch${id}" value="checked" ${chec} data-storage="${v3}">
                     <label for="switch${id}"><span class="s"></span></label>
                 </div>
             </div>
@@ -122,28 +115,63 @@
             `
             break;
 
-            case "check":
-                
+        case "check":
             break;
-        }
     }
-
-const checkbox1 = document.getElementById("switch1");
-checkbox1.addEventListener('change', function() {config()});
-
-const checkbox2 = document.getElementById("switch2");
-checkbox2.addEventListener('change', function() {config()});
-
-const checkbox3 = document.getElementById("switch3");
-checkbox3.addEventListener('change', function() {config()});
-
-
-function config() {
-    NewConfig(1,1)
-    NewConfig(1,2)
-    NewConfig(1,3)
 }
 
+function setupEventListeners() {
+    const kino = document.getElementById("sut");
+    kino.addEventListener('change', function() { 
+        toggleSectionVisibility("ki", kino.checked);
+    });
+
+    const mita = document.getElementById("the");
+    mita.addEventListener('change', function() { 
+        toggleSectionVisibility("mi", mita.checked);
+    });
+
+    setupDynamicCheckboxListeners();
+}
+
+function setupDynamicCheckboxListeners() {
+    for (let i = 1; i <= 4; i++) {
+        const checkbox = document.getElementById(`switch${i}`);
+        if (checkbox) {
+            checkbox.removeEventListener('change', handleCheckboxChange);
+            checkbox.addEventListener('change', handleCheckboxChange);
+        }
+    }
+}
+
+function handleCheckboxChange(event) {
+    const checkbox = event.target;
+    const id = checkbox.id.replace('switch', '');
+    const storageKey = checkbox.getAttribute('data-storage');
+
+    localStorage.setItem(storageKey, `${checkbox.checked}`);
+    NewConfig(1, parseInt(id), storageKey);
+}
+
+function toggleSectionVisibility(sectionId, isVisible) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    
+    if (isVisible) {
+        section.style.display = "block";
+    } else {
+        section.style.display = "none";
+    }
+}
+
+function applyInitialStyles() {
+    for (let i = 1; i <= 4; i++) {
+        const checkbox = document.getElementById(`switch${i}`);
+        if (checkbox) {
+            NewConfig(1, i);
+        }
+    }
+}
 </script>
 </body>
 </html>
