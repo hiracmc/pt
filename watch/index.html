@@ -146,16 +146,94 @@ search
 
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
 <script type="module">
+async function getData(add) {
+  let link = [
+  "https://iv.melmac.space",
+  "https://invidious.reallyaweso.me",
+  "https://invidious.adminforge.de",
+  "https://invidious.esmailelbob.xyz",
+  "https://invidious.nerdvpn.de",
+  "https://invidious.perennialte.ch",
+  "https://invidious.dhusch.de",
+  "https://invidious.0011.lt",
+  "https://invidious.materialio.us",
+  "https://usa-proxy2.poketube.fun",
+  "https://invidious.darkness.service",
+  "https://invidious.flokinet.to",
+  "https://invidious.fdn.fr",
+  "https://iv.duti.dev",
+  "https://yt.artemislena.eu",
+  "https://invidious.projectsegfau.lt",
+  "https://id.420129.xyz",
+  "https://invidious.jing.rocks",
+  "https://nyc1.iv.ggtyler.dev",
+  "https://inv.in.projectsegfau.lt",
+  "https://invidious.drgns.space",
+  "https://cal1.iv.ggtyler.dev",
+  "https://invidious.nikkosphere.com",
+  "https://inv.us.projectsegfau.lt",
+  "https://lekker.gay",
+  "https://youtube.mosesmang.com",
+  "https://invidious.privacyredirect.com",
+  "https://invidious.lunivers.trade",
+  "https://invidious.incogniweb.net",
+  "https://invid-api.poketube.fun",
+  "https://inv.tux.pizza",
+  "https://invidious.ducks.party",
+  "https://pol1.iv.ggtyler.dev",
+  "https://invidious.protokolla.fi",
+  "https://invidious.einfachzocken.eu",
+  "https://yewtu.be",
+  "https://iv.datura.network",
+  "https://invidious.f5.si",
+  "https://invidious.privacydev.net",
+  "https://eu-proxy.poketube.fun",
+  "https://yt.drgnz.club",
+  "https://inv.nadeko.net",
+  "https://invidious.private.coffee"
+];
 
 
-// import { geturl } from "./assets/geturl.js";
+  const li = `/api/v1/${add}`;
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const promises = link.map(async urll => {
+    const url = urll + li;
+    
+    try {
+      const response = await fetch(url, { signal });
+      
+      if (response.ok) {
+        console.log(`このインスタンスのデータを使用します ${url}`);
+        const data = await response.json();
+        controller.abort();
+        return { from: urll, data: data };
+      } else {
+        throw new Error(`接続に失敗 ${response.status}  ${url}`);
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        throw error;
+      }
+      throw new Error(`接続エラー: ${error.message}`);
+    }
+  });
+
+  try {
+    const result = await Promise.any(promises);
+    return result.data;
+  } catch (error) {
+    console.error("\nすべてのサーバーへの接続に失敗しました。。");
+    return null;
+  }
+}
+
 
 const server = "https://invidious.nikkosphere.com";
   
   const baseUri = server + "/api/v1/videos/";
   console.log(baseUri)
-  const getc = "https://script.google.com/macros/s/AKfycbww6z3czhraDQl-_9_UeaaIAvgO7EQ-DpAs9zxiTJJ2uKMbhDSA3hEHAR-mfd76pY0S/exec?id=";
-  const getsc = "https://script.google.com/macros/s/AKfycbxAQddNFMquRs13y_2APY7IyA7Ut8m-1KPoB4lUBa-bo9ohn8lSnGN6MNdmUHmQTzKh/exec?id=";
   const come = server + "/api/v1/comments/";
 console.log("スクリプトを読み込みました")
   const url = new URL(window.location.href);
@@ -192,13 +270,10 @@ function syouryaku(text,max) {
 async function loadVideoInfo(videoId) {
   const apiUrl = `${baseUri}${videoId}`;
   try {
-    const response = await fetch(apiUrl)
-
-    if (!response.ok) {
-      throw new Error('APIエラー');
-    }
+    const response = await getData(`videos/${videoId}`)
+    console.log(response)
 console.log(`動画の説明を読み込みます…${videoId}`)
-    const data = await response.json();
+    const data = await response;
 
     const {
       title,
@@ -243,12 +318,10 @@ const text = d;
 async function getkome(videoId) {
   const apiUrl = `${come}${videoId}`;
   try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error('APIエラー');
-    }
-
-    const data = await response.json();
+    const response = await getData(`comments/${videoId}`)
+    console.log(response)
+console.log(`動画の説明を読み込みます…${videoId}`)
+    const data = await response;
     console.log(data)
     let text = "";
 
