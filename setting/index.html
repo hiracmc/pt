@@ -35,6 +35,11 @@
 
     if (localStorage.getItem('if_dark') === null){ localStorage.setItem('if_dark', 'true'); }
     if (localStorage.getItem('if_eme') === null){ localStorage.setItem('if_eme', 'true'); }
+    if (localStorage.getItem('if_back') === ""){
+
+    } else {
+        document.body.style.backgroundImage = `url('${localStorage.getItem('if_back')}')`
+    }
 
  
 function NewConfig(type, id, v5, v2, v3, v4) {
@@ -166,7 +171,7 @@ function handleCheckboxChange(event) {
     if (localStorage.getItem('if_back') === ""){
 
     } else {
-        document.body.style.backgroundImage = `${localStorage.getItem('if_back')}`
+        document.body.style.backgroundImage = `url('${localStorage.getItem('if_back')}')`
     }
     if (checkbox.type === "url"){
     localStorage.setItem(storageKey, `${checkbox.value}`);
