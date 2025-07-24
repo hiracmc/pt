@@ -39,6 +39,12 @@
 
     } else {
         document.body.style.backgroundImage = `url('${localStorage.getItem('if_back')}')`
+        document.body.style.backgroundRepeat = "no-repeat"
+        document.body.style.backgroundPosition = "center"
+        document.body.style.backgroundAttachment = "fixed"
+        document.body.style.backgroundSize = "cover"
+        document.body.style.margin = "0"
+        document.body.style.minHeight = "100vh"
     }
 
  
@@ -130,7 +136,7 @@ function SConfig(type, id, v1, v2, v3, v4) {
             <h1 id="label${id}" style="color:#fff;">${v1}</h1>
             <p class="cd">${v2}</p>
             </div>
-            <input type="url" id="switch${id}" class="textbar" data-storage="${v3}" required  size="40" placeholder="URLを入力" value="${customimg}"/>
+            <input type="url" id="switch${id}" class="textbar" data-storage="${v3}" required  placeholder="URLを入力" value="${customimg}"/>
             </div>
             `
             break;
@@ -168,15 +174,21 @@ function handleCheckboxChange(event) {
     const checkbox = event.target;
     const id = checkbox.id.replace('switch', '');
     const storageKey = checkbox.getAttribute('data-storage');
-    if (localStorage.getItem('if_back') === ""){
-
-    } else {
-        document.body.style.backgroundImage = `url('${localStorage.getItem('if_back')}')`
-    }
     if (checkbox.type === "url"){
     localStorage.setItem(storageKey, `${checkbox.value}`);
     } else {
         localStorage.setItem(storageKey, `${checkbox.checked}`);
+    }
+    if (localStorage.getItem('if_back') === ""){
+
+    } else {
+        document.body.style.backgroundImage = `url('${localStorage.getItem('if_back')}')`
+        document.body.style.backgroundRepeat = "no-repeat"
+        document.body.style.backgroundPosition = "center"
+        document.body.style.backgroundAttachment = "fixed"
+        document.body.style.backgroundSize = "cover"
+        document.body.style.margin = "0"
+        document.body.style.minHeight = "100vh"
     }
     NewConfig(1, parseInt(id), storageKey);
 }
