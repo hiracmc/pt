@@ -8,7 +8,7 @@
   <script src="https://kit.fontawesome.com/fe8f095141.js" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
 </head>
 <body>
@@ -85,20 +85,21 @@ function config_load() {
 function config_kinou() {
     SConfig(1, 1, "ループ再生", "ループ再生をします。作業用にどうぞ。", "if_loop")
     SConfig(1, 2, "Youtubeの埋め込みで再生", "埋め込みで動画を視聴します。こっちのほうが高機能。", "if_eme")
-    SConfig(1, 3, "ベータ版", "開発中の機能を使えるようにします。なんかあっても責任はとりません。", "if_beta")
+    SConfig(1, 3, "ベータ版", "開発中の機能を使えるようにします。不安定。", "if_beta")
 }
 
 function config_tema() {
-    SConfig(1, 4, "ダークモード", "節電できるからおすすめ。", "if_dark")
+    SConfig(2, 4, "カスタム背景", "画像のURLを入力してください", "if_back")
 }
 
 function SConfig(type, id, v1, v2, v3, v4) {
     let chec = "";
     const che = localStorage.getItem(v3);
-
+    const customimg = localStorage.getItem("if_back");
     if (che === "true") {
         chec = "checked"
     }
+
     switch (type) {
         case 1:
             se += `
@@ -113,6 +114,18 @@ function SConfig(type, id, v1, v2, v3, v4) {
                     <label for="switch${id}"><span class="s"></span></label>
                 </div>
             </div>
+            </div>
+            `
+            break;
+
+            case 2:
+            se += `
+            <div class="config">
+                <div class=uo>
+            <h1 id="label${id}" style="color:#fff;">${v1}</h1>
+            <p class="cd">${v2}</p>
+            </div>
+            <input type="url" id="switch${id}" class="textbar" data-storage="${v3}" required  size="40" placeholder="URLを入力" value="${customimg}"/>
             </div>
             `
             break;
@@ -150,8 +163,16 @@ function handleCheckboxChange(event) {
     const checkbox = event.target;
     const id = checkbox.id.replace('switch', '');
     const storageKey = checkbox.getAttribute('data-storage');
+    if (localStorage.getItem('if_back') === ""){
 
-    localStorage.setItem(storageKey, `${checkbox.checked}`);
+    } else {
+        document.body.style.backgroundImage = `${localStorage.getItem('if_back')}`
+    }
+    if (checkbox.type === "url"){
+    localStorage.setItem(storageKey, `${checkbox.value}`);
+    } else {
+        localStorage.setItem(storageKey, `${checkbox.checked}`);
+    }
     NewConfig(1, parseInt(id), storageKey);
 }
 
@@ -174,6 +195,7 @@ function applyInitialStyles() {
         }
     }
 }
+
 </script>
 </body>
 </html>

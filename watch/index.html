@@ -242,19 +242,8 @@ console.log("スクリプトを読み込みました")
 url.textContent = `http://youtu.be/${videoId}`;
  console.log(videoId)
     rirekiset(videoId)
-    loadVideo(videoId);
     loadVideoInfo(videoId);
   }
-
-
-function loadVideo(videoId) {
-  const container = document.getElementById('video-container');
-  const yoko = (window.innerWidth) * 0.6 + 48;
-  const tate = yoko * 9 / 16;
-
-  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube-nocookie.com/embed/${videoId}?loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
-
-}
 
 function syouryaku(text,max) {
   const maxLength = max;
@@ -267,10 +256,28 @@ function syouryaku(text,max) {
 async function loadVideoInfo(videoId) {
   const apiUrl = `${baseUri}${videoId}`;
   try {
-    const response = await getData(`videos/${videoId}`)
-    console.log(response)
+    const response = getData(`videos/${videoId}`)
 console.log(`動画の説明を読み込みます…${videoId}`)
     const data = await response;
+
+
+
+    const container = document.getElementById('video-container');
+  const yoko = (window.innerWidth) * 0.6 + 48;
+  const tate = yoko * 9 / 16;
+  if (localStorage.getItem('if_eme') === "true"){
+  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube-nocookie.com/embed/${videoId}?loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
+  } else {
+    const omg = await data.formatStreams?.map(stream => stream.url) || [];
+    console.log(`${omg}`)
+    let loop = ""
+    if(localStorage.getItem('if_loop') === "true"){
+      loop = "loop"
+    }
+    container.innerHTML = `<video src="${omg}" width="${yoko}" height="${tate}" ${loop} poster="${data.videoThumbnails[3].url}" controls>動画の読み込みに失敗しました</video>`;
+  }
+
+
 
     const {
       title,
@@ -296,8 +303,6 @@ const text = d;
   document.getElementById('description').innerHTML = syoi(text) + ` .....`;
   const button = document.getElementById('syouryaku')
   button.innerText = "もっと見る";
-
-
 
     getkome(videoId)
   } catch (err) {
