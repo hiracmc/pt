@@ -14,7 +14,7 @@
 
 
     <div id="gohome"></div>
-    <div class="varr">v0.04</div>
+    <div class="varr">v0.041</div>
     <div id="gosetting"></div>
 
     <form id="gu">
@@ -32,8 +32,14 @@
 
 <script>
 let ip = window.location.origin;
-document.getElementById('gohome').innerHTML = `<a href="${ip}/home/"><h1 class="homein">Pontube</h1></a>`;
 document.getElementById('gosetting').innerHTML = `<a href="${ip}/setting/"><h1 class="set">Setting</h1></a>`;
+    if (localStorage.getItem('if_back') === ""){
+        document.body.style.backgroundImage = `none`
+        document.getElementById('gohome').innerHTML = `<a href="${ip}/home/"><div class="om"><h1 class="homein">Pontube</h1></div></a>`;
+    } else {
+        document.body.style.backgroundImage = `url('${localStorage.getItem('if_back')}')`
+        document.getElementById('gohome').innerHTML = `<a href="${ip}/home/"><div class="om"><h1 class="homein1">Pontube</h1></div></a>`;
+    }
 
 async function geton() {
   const response = await fetch('https://api.invidious.io/instances.json');

@@ -18,7 +18,7 @@ a {
   color: #fff;
   font-family: "TikTok Sans", sans-serif;
   font-size: 30px;
-  text-shadow: 0px 0px 5px #ececec;
+  /*text-shadow: 0px 0px 5px #ececec;*/
 }
 
 .set:hover{
@@ -52,11 +52,30 @@ font-size: 50px;
 text-align:center;
 font-family: "Righteous", sans-serif;
 
-
 margin-top: 4px;
 margin-left: 53px;
 border: none;
 text-decoration: none;
+}
+
+.homein1{
+  text-align:center;
+  text-shadow: 0px 0px 20px #000;
+  
+  color: rgba(255, 0, 0);
+
+margin-top: 20vh;
+
+font-size: 100px;
+font-family: "Righteous", sans-serif;
+
+position: absolute;
+
+
+  left: 50vw;
+  transform: translate(-50%,0px);
+text-decoration: none;
+
 }
 
 .homein{
@@ -81,10 +100,10 @@ position: absolute;
 
   left: 50vw;
   transform: translate(-50%,0px);
-
-border: none;
 text-decoration: none;
+
 }
+
 
 .popup{
 animation:popup 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -104,7 +123,9 @@ animation:popup 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 
 .varr{
 color: #fff;
-font-size: 12px;
+font-size: 17px;
+font-family: "TikTok Sans", sans-serif;
+text-shadow: 0px 0px 10px #000;
 }
 
 
@@ -222,8 +243,10 @@ display: flex;
     padding: 0.5em;
     text-align:center;
     border: 1px solid #494949;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 border-radius: 30px;
-    background: #202020;
+    background: rgba(17, 17, 17, 0.8);
     margin: 0.5em 0;
     position: absolute;
   top: 50%;
@@ -231,7 +254,10 @@ border-radius: 30px;
   transform: translate(-50%, -50%);
     font-size: 16px;
     margin-top: 13px;
+    box-shadow: 0px 1px 10px #000;
+    transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
 }
+
 
 .kensaku1{
     text-align:left;
@@ -241,7 +267,6 @@ border-radius: 30px;
     color: #fff;
     border: none;
     margin-left: 10px;
-    background: #202020;
 	/*box-sizing: border-box;*/
     
 }
@@ -254,9 +279,9 @@ border-radius: 30px;
     color: #fff;
     border: none;
     margin-left: 10px;
-    background: #202020;
+    background: none;
 	/*box-sizing: border-box;*/
-    
+    font-family: "TikTok Sans", sans-serif;
 }
 
 .kensaku1:focus {
@@ -282,11 +307,11 @@ text-align:center;
 text-align:center;
     width: 10%;
     height: 100%;
-    background: #202020;
     border: none;
     font-size: 18px;
     color: #fff;
     border-left: 1px solid #686868;
+    background: none;
 }
 
 .kensaku2:focus {
@@ -301,6 +326,14 @@ text-align:center;
 body {
 background-color: #0f0f0f;
 font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiryo,sans-serif;
+transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
+min-height: 100vh;
+margin: 0;
+background-attachment: fixed;
+background-position: center center;
+background-size: cover;
+margin: 0;
+min-height: 100vh;
 }
 
 .ue {
