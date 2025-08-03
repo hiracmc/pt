@@ -20,7 +20,7 @@
 
 
 
-  <dialog id="log" class="dialog">
+  <dialog id="log" class="dialog" style="display: none;">
     <div id="loghai">
     <div id="dialog-container">
         <header>
@@ -86,6 +86,7 @@ async function getlog() {
 
   async function open() {
     log.showModal();
+    log.style.display = "block";
     document.documentElement.style.overflow = "hidden";
   }
 
