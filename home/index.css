@@ -120,12 +120,130 @@ animation:popup 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
 
+.dialog::backdrop {
+        backdrop-filter: blur(8px);
+    }
+
+    .dialog {
+        box-shadow: 0px 20px 36px 0px rgba(0, 0, 0, 0.6);
+        width: 30vw;
+        height: 70vh;
+        position: relative;
+        border: none;
+        border-radius: 10px;
+        background-color: #ffffffc9;
+        backdrop-filter: blur(30px);
+
+        display: block;
+        position: fixed;
+        inset-inline: 0;
+        inset-block: 0;
+
+        animation-name: fadeOut;
+        animation-fill-mode: forwards;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
+
+    }
+
+    .logtitle{
+      margin-top: 0px;
+margin-left: 0px;
+  font-size: 20px;
+  font-weight: bold;
+    }
+
+    hr {
+  border: none; 
+  height: 1px; 
+  background-color: #646464; 
+  margin: 2em 0; 
+}
+
+    .logv{
+      margin-top: 30px;
+      font-family: "TikTok Sans", sans-serif;
+    }
+
+    .logall p{
+      margin-top: 0px;
+      font-family: "TikTok Sans", sans-serif;
+      font-size: 15px;
+    }
+
+    .dialog .logtozi{
+      position: absolute;
+      top: 16px;
+right: 14px;
+      background: none;
+      border: none;
+    }
+
+    .tozitozi {
+      transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
+  width: 20px;
+  height: 20px;
+
+  background-color: #1b1b1b; 
+    
+  mask-image: url('https://hiracmc.github.io/psvg/svg/psvg_close.svg');
+  -webkit-mask-image: url('https://hiracmc.github.io/psvg/svg/psvg_close.svg');
+
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.tozitozi :hover{
+background-color: #363636; 
+}
+
+.dekkalog{
+  margin-top: 14px;
+margin-left: 10px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+
+
+    @keyframes fadeIn {
+        from {
+          transform: scale(0.8);
+            opacity: 0;
+        }
+        to {
+          transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+          transform: scale(1);
+            opacity: 1;
+        }
+        to {
+          transform: scale(0.8);
+            opacity: 0;
+        }
+    }
+
+    .dialog[open]{
+        animation-name: fadeIn;
+        animation-fill-mode: forwards;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
+    }
 
 .varr{
+
 color: #fff;
 font-size: 17px;
 font-family: "TikTok Sans", sans-serif;
 text-shadow: 0px 0px 10px #000;
+margin-top: 10px;
+margin-left: 10px;
 }
 
 

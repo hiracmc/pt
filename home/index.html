@@ -14,7 +14,30 @@
 
 
     <div id="gohome"></div>
-    <div class="varr">v0.041</div>
+    <div class="varr"><a href="#" id="va">v0.041</a></div>
+
+
+
+
+
+  <dialog id="log" class="dialog">
+    <div id="loghai">
+    <div id="dialog-container">
+        <header>
+            <span class="dekkalog">更新履歴</span>
+            <button id="close" type="button" class="logtozi">
+                <div class="tozitozi"></div>
+            </button>
+        </header>
+        <div id="clog"></div>
+    </div>
+    </div>
+  </dialog>
+
+
+
+
+
     <div id="gosetting"></div>
 
     <form id="gu">
@@ -27,7 +50,55 @@
   <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   -->
 
+<script>
+  const opens = document.getElementById('va');
+  const log = document.getElementById('log');
 
+  log.addEventListener('click', (event) => {
+  if(event.target.closest('#loghai') === null) {
+    log.close();
+  }
+});
+
+async function getlog() {
+  try {
+    const logdata = await fetch("../../assets/log.json");
+    if (!logdata.ok) {
+      throw new Error(`${logdata.status}`);
+    }
+    const data = await logdata.json();
+    console.log(data)
+    const htm = document.getElementById('clog');
+    let html = "";
+    data.forEach(d => {
+      html += `<div class="logall"><div class="logv">v${d.ver}</div>
+      <div class="logtitle">${d.title}</div>
+      <p>${d.text}</p></div><hr>`
+    });
+    htm.innerHTML = html;
+    
+  } catch (error) {
+    console.error("チェンジログの取得に失敗しました:", error);
+  }
+}
+  
+  getlog()
+
+  async function open() {
+    log.showModal();
+    document.documentElement.style.overflow = "hidden";
+  }
+
+  const closeButton = document.getElementById('close');
+
+  closeButton?.addEventListener('click', () => {
+    log.close();
+    document.documentElement.removeAttribute("style");
+  });
+
+
+  opens.addEventListener('click', open);
+</script>
 
 
 <script>
