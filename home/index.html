@@ -72,9 +72,11 @@ async function getlog() {
     const htm = document.getElementById('clog');
     let html = "";
     data.forEach(d => {
+      let link = "";
+    if (d.link) { link = '<a href="' + d.link + '" style="font-size: 18px; font-weight: bold;">リンク</a>'; }
       html += `<div class="logall"><div class="logv">v${d.ver}</div>
       <div class="logtitle">${d.title}</div>
-      <p>${d.text}</p></div><hr>`
+      <p>${d.text}</p></dr>${link}</div><hr>`
     });
     htm.innerHTML = html;
     

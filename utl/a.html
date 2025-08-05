@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アニメーション付きカスタム右クリックメニュー</title>
+    <style>
+        #workspace {
+            width: 100vw;
+            height: 100vh;
+            background-color: #0f0f0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            color: #888;
+            user-select: none;
+        }
+        #custom-menu {
+            position: absolute;
+            background-color: #1a1a1a;
+            border: 1px solid #1f1f1f;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            padding: 5px 0;
+            min-width: 150px;
+            z-index: 1000;
+            
+
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: top;
+            pointer-events: none;
+
+
+            transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+        }
+
+
+        #custom-menu.show {
+            opacity: 1;
+            transform: scaleY(1);
+            pointer-events: auto;
+        }
+
+
+        #custom-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #custom-menu ul li {
+            padding: 8px 15px;
+            cursor: pointer;
+            color: rgb(255, 255, 255);
+        }
+
+        #custom-menu ul li:hover {
+            background-color: #3f9cff;
+        }
+        
+        #custom-menu .separator {
+            height: 0.1px;
+            background-color: #2b2b2b;
+            margin: 1px 0;
+        }
+        #custom-menu .separator:hover {
+            background-color: #2b2b2b;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="workspace">
+        このエリアで右クリックしてください
+    </div>
+
+    <div id="custom-menu">
+        <ul>
+            <li data-action="new">Youtubeのリンクをコピー</li>
+            <li data-action="copy">Pontubeのリンクをコピー</li>
+            <li data-action="paste">お気に入りに追加</li>
+        </ul>
+    </div>
+
+    <script>
+        const workspace = document.getElementById('workspace');
+        const menu = document.getElementById('custom-menu');
+
+        workspace.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+
+            const { clientX: mouseX, clientY: mouseY } = e;
+            const { normalizedX, normalizedY } = normalizePosition(mouseX, mouseY);
+            
+            menu.style.top = `${normalizedY}px`;
+            menu.style.left = `${normalizedX}px`;
+            
+
+            menu.classList.add('show');
+        });
+
+        document.addEventListener('click', (e) => {
+
+            if (!menu.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                menu.classList.remove('show');
+            }
+        });
+
+        function normalizePosition(mouseX, mouseY) {
+            const menuWidth = menu.offsetWidth;
+            const menuHeight = menu.offsetHeight;
+            const scopeWidth = window.innerWidth;
+            const scopeHeight = window.innerHeight;
+            
+            let normalizedX = mouseX;
+            let normalizedY = mouseY;
+            
+            if ((mouseX + menuWidth) > scopeWidth) {
+                normalizedX = scopeWidth - menuWidth;
+            }
+            if ((mouseY + menuHeight) > scopeHeight) {
+                normalizedY = scopeHeight - menuHeight;
+            }
+            
+            return { normalizedX, normalizedY };
+        }
+
+        menu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                const action = e.target.getAttribute('data-action');
+                if (action) {
+                    alert(`「${e.target.innerText}」が選択されました (action: ${action})`);
+                }
+                menu.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

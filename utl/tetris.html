@@ -191,7 +191,7 @@
 
         let dasTimer = 0;
         let dasDelay = 90;
-        let arrRate = 2;
+        let arrRate = 1;
         let dasDirection = 0;
         let isFirstDasMove = true;
 
@@ -204,25 +204,22 @@
         let dropAnimation = 0;
         let dropAnimationTimer = 0;
 
-        // 回転エフェクト用変数
         let rotationEffect = 0;
         let rotationTimer = 0;
         let rotationDuration = 300;
 
-        // T-SPIN関連変数
         let lastMovedBeforeLock = false;
         let tSpinText = '';
         let tSpinTimer = 0;
         let tSpinDuration = 2000;
 
-        // PERFECT CLEAR関連変数
         let perfectClearText = '';
         let perfectClearTimer = 0;
         let perfectClearDuration = 3000;
 
-        // ライン消去時の音階用変数
         let consecutiveLineClears = 0;
         let lastLineClearTime = 0;
+        let comboActive = false;
 
         function shuffleBag() {
             const pieces = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
@@ -241,10 +238,7 @@
         }
 
         function initializeGame() {
-            // ゲームボードをクリア
             gameBoard = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
-            
-            // 次のピースを準備
             nextPieces = [];
             tetrominoBag = [];
             for (let i = 0; i < 7; i++) {
@@ -264,7 +258,7 @@
             canHold = true;
             lockDelay = 0;
             moveResetCounter = 0;
-            lastMovedBeforeLock = false; // T-SPINフラグをリセット
+            lastMovedBeforeLock = false;
 
             if (isCollision(currentPiece, currentX, currentY, currentRotation)) {
                 gameOver();
@@ -288,14 +282,11 @@
             return false;
         }
 
-        // 正しいSRSオフセットテーブル（ガイドラインに基づく、Y座標を反転）
         function getSRSKickTests(piece, fromRotation, toRotation) {
-            // O piece は特別な処理
             if (piece === 'O') {
-                return [[0, 0]]; // O piece は回転しない
+                return [[0, 0]];
             }
 
-            // I piece のキックテーブル（Y座標を-1倍）
             const iKickTests = {
                 '0->1': [[0, 0], [-2, 0], [1, 0], [-2, 1], [1, -2]],
                 '1->0': [[0, 0], [2, 0], [-1, 0], [2, -1], [-1, 2]],
@@ -307,7 +298,6 @@
                 '0->3': [[0, 0], [-1, 0], [2, 0], [-1, -2], [2, 1]]
             };
 
-            // その他のpiece (T, S, Z, J, L) のキックテーブル（Y座標を-1倍）
             const standardKickTests = {
                 '0->1': [[0, 0], [-1, 0], [-1, -1], [0, 2], [-1, 2]],
                 '1->0': [[0, 0], [1, 0], [1, 1], [0, -2], [1, -2]],
@@ -345,16 +335,38 @@
                     currentRotation = newRotation;
                     resetLockDelay();
                     
-                    // 回転エフェクトを開始
-                    startRotationEffect(direction);
+                    if (currentPiece === 'T' && checkTSpinPotential()) {
+                        startRotationEffect(direction);
+                    }
                     
-                    // T-SPIN検出のためのフラグ設定
                     lastMovedBeforeLock = true;
                     
                     return true;
                 }
             }
             return false;
+        }
+
+        function checkTSpinPotential() {
+            const centerX = currentX + 1;
+            const centerY = currentY + 1;
+
+            const corners = [
+                [centerX - 1, centerY - 1],
+                [centerX + 1, centerY - 1],
+                [centerX - 1, centerY + 1],
+                [centerX + 1, centerY + 1]
+            ];
+
+            let filledCorners = 0;
+            for (const [x, y] of corners) {
+                if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT || 
+                    (y >= 0 && gameBoard[y][x] !== 0)) {
+                    filledCorners++;
+                }
+            }
+
+            return filledCorners >= 3;
         }
 
         function resetLockDelay() {
@@ -370,7 +382,6 @@
                 currentY += deltaY;
                 if (deltaY === 0) {
                     resetLockDelay();
-                    // 横移動の場合、T-SPINのフラグをリセット
                     if (currentPiece === 'T') {
                         lastMovedBeforeLock = false;
                     }
@@ -405,7 +416,6 @@
             }
             startDropAnimation();
             
-            // T-SPIN判定とライン消去
             const isTSpin = checkTSpin();
             clearLines(isTSpin);
             spawnNewPiece();
@@ -420,46 +430,48 @@
             }
 
             if (linesFound.length > 0) {
-                // ラインを削除（上から下へ処理するため、インデックスが変わらないように逆順でソート）
+                const currentTime = Date.now();
+                
+                if (currentTime - lastLineClearTime < 5000) {
+                    consecutiveLineClears++;
+                    comboActive = true;
+                } else {
+                    consecutiveLineClears = 1;
+                    comboActive = false;
+                }
+                lastLineClearTime = currentTime;
+
                 linesFound.sort((a, b) => b - a);
                 
-                // 各ラインを削除し、上に新しい空のラインを追加
                 for (let y of linesFound) {
                     gameBoard.splice(y, 1);
                 }
                 
-                // 削除した分だけ上に新しい空のラインを追加
                 for (let i = 0; i < linesFound.length; i++) {
                     gameBoard.unshift(Array(BOARD_WIDTH).fill(0));
                 }
 
                 linesCleared += linesFound.length;
                 
-                // PERFECT CLEAR判定
                 const isPerfectClear = checkPerfectClear();
                 
-                // スコア計算（T-SPINボーナス含む）
                 let lineScore = [0, 40, 100, 300, 1200][linesFound.length] * level;
                 if (isTSpin) {
                     const tSpinBonus = [0, 800, 1200, 1600][linesFound.length] * level;
                     lineScore = tSpinBonus;
                     
-                    // T-SPINテキスト表示
                     const lineNames = ['', 'SINGLE', 'DOUBLE', 'TRIPLE'];
                     tSpinText = `T-SPIN ${lineNames[linesFound.length]}`;
                     tSpinTimer = 0;
                 }
                 
-                // PERFECT CLEARボーナス
                 if (isPerfectClear) {
                     const perfectClearBonus = calculatePerfectClearBonus(linesFound.length, isTSpin);
                     lineScore += perfectClearBonus;
                     
-                    // PERFECT CLEARテキスト表示
                     perfectClearText = 'PERFECT CLEAR!';
                     perfectClearTimer = 0;
                     
-                    // 特別なエフェクト
                     startScreenShake(15, 1000);
                     playPerfectClearSound();
                 }
@@ -473,13 +485,15 @@
                     startScreenShake(linesFound.length * 2, 300);
                 }
                 
-                // 音を再生（PERFECT CLEARの場合は専用音を再生済み）
                 if (!isPerfectClear) {
                     playLineClearSound(linesFound.length);
                 }
             } else {
-                // ライン消去がない場合は連続カウンターをリセット
-                consecutiveLineClears = 0;
+                const currentTime = Date.now();
+                if (currentTime - lastLineClearTime > 5000) {
+                    consecutiveLineClears = 0;
+                    comboActive = false;
+                }
             }
         }
 
@@ -518,9 +532,8 @@
             }
         }
 
-        // 回転エフェクト関数
         function startRotationEffect(direction) {
-            rotationEffect = direction * 5; // 5度回転
+            rotationEffect = direction * 5;
             rotationTimer = 0;
         }
 
@@ -535,22 +548,19 @@
             }
         }
 
-        // T-SPIN判定関数
         function checkTSpin() {
             if (currentPiece !== 'T' || !lastMovedBeforeLock) {
                 return false;
             }
 
-            // Tピースの中心位置を計算
             const centerX = currentX + 1;
             const centerY = currentY + 1;
 
-            // T字の4つの角をチェック
             const corners = [
-                [centerX - 1, centerY - 1], // 左上
-                [centerX + 1, centerY - 1], // 右上
-                [centerX - 1, centerY + 1], // 左下
-                [centerX + 1, centerY + 1]  // 右下
+                [centerX - 1, centerY - 1],
+                [centerX + 1, centerY - 1],
+                [centerX - 1, centerY + 1],
+                [centerX + 1, centerY + 1]
             ];
 
             let filledCorners = 0;
@@ -561,29 +571,15 @@
                 }
             }
 
-            // 3つ以上の角が埋まっていればT-SPIN
             return filledCorners >= 3;
         }
 
-        // 音再生関数
         function playLineClearSound(lineCount) {
-            const currentTime = Date.now();
-            
-            // 連続ライン消去の判定（1秒以内）
-            if (currentTime - lastLineClearTime < 1000) {
-                consecutiveLineClears++;
-            } else {
-                consecutiveLineClears = 1;
-            }
-            lastLineClearTime = currentTime;
-
-            // 音階計算（ド = 261.63Hz から始まる）
-            const baseFrequency = 261.63; // ド
+            const baseFrequency = 261.63;
             const semitoneRatio = Math.pow(2, 1/12);
-            const pitch = Math.min(consecutiveLineClears - 1, 11); // 1オクターブ内
+            const pitch = Math.min(consecutiveLineClears - 1, 11);
             const frequency = baseFrequency * Math.pow(semitoneRatio, pitch);
 
-            // Web Audio APIで音を再生
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
@@ -605,9 +601,7 @@
             }
         }
 
-        // PERFECT CLEAR判定関数
         function checkPerfectClear() {
-            // 全てのセルが空かどうかチェック
             for (let y = 0; y < BOARD_HEIGHT; y++) {
                 for (let x = 0; x < BOARD_WIDTH; x++) {
                     if (gameBoard[y][x] !== 0) {
@@ -618,31 +612,27 @@
             return true;
         }
 
-        // PERFECT CLEARボーナス計算
         function calculatePerfectClearBonus(linesCleared, isTSpin) {
-            // 基本ボーナス
             let bonus = 0;
             
             if (linesCleared === 1) {
-                bonus = isTSpin ? 1200 : 800; // T-SPIN PERFECT CLEAR SINGLE / PERFECT CLEAR SINGLE
+                bonus = isTSpin ? 1200 : 800;
             } else if (linesCleared === 2) {
-                bonus = isTSpin ? 2000 : 1200; // T-SPIN PERFECT CLEAR DOUBLE / PERFECT CLEAR DOUBLE
+                bonus = isTSpin ? 2000 : 1200;
             } else if (linesCleared === 3) {
-                bonus = isTSpin ? 2600 : 1800; // T-SPIN PERFECT CLEAR TRIPLE / PERFECT CLEAR TRIPLE
+                bonus = isTSpin ? 2600 : 1800;
             } else if (linesCleared === 4) {
-                bonus = 2000; // PERFECT CLEAR TETRIS
+                bonus = 2000;
             }
             
             return bonus * level;
         }
 
-        // PERFECT CLEAR専用音再生
         function playPerfectClearSound() {
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // 複数の周波数で和音を作る
-                const frequencies = [523.25, 659.25, 783.99]; // ド、ミ、ソ（1オクターブ上）
+                const frequencies = [523.25, 659.25, 783.99];
                 const oscillators = [];
                 const gainNodes = [];
 
@@ -656,7 +646,6 @@
                     oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
                     oscillator.type = 'sine';
 
-                    // 音量を調整（和音なので少し小さめに）
                     gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
 
@@ -667,9 +656,8 @@
                     gainNodes.push(gainNode);
                 });
 
-                // 追加で高音でキラキラ効果
                 setTimeout(() => {
-                    const sparkleFreqs = [1046.5, 1318.5, 1567.98]; // 2オクターブ上のド、ミ、ソ
+                    const sparkleFreqs = [1046.5, 1318.5, 1567.98];
                     sparkleFreqs.forEach((freq, index) => {
                         setTimeout(() => {
                             const osc = audioContext.createOscillator();
@@ -727,6 +715,8 @@
             level = 1;
             linesCleared = 0;
             dropInterval = 1000;
+            consecutiveLineClears = 0;
+            comboActive = false;
             initializeGame();
         }
 
