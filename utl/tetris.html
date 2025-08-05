@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>単語帳web</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .side-panel {
+            color: white;
+            width: 120px;
+        }
+        .hold-box, .next-box {
+            border: 2px solid #444;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #111;
+        }
+        .hold-box h3, .next-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .preview-canvas {
+            display: block;
+            margin: 0 auto;
+        }
+        .game-board {
+            position: relative;
+        }
+        #gameCanvas {
+            border: 2px solid #444;
+            background-color: #000;
+            display: block;
+        }
+        .score-info {
+            color: white;
+            font-size: 14px;
+        }
+        .score-info div {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="side-panel">
+            <div class="hold-box">
+                <h3>HOLD</h3>
+                <canvas id="holdCanvas" width="80" height="80" class="preview-canvas"></canvas>
+            </div>
+            <div class="score-info">
+                <div>SCORE: <span id="score">0</span></div>
+                <div>LEVEL: <span id="level">1</span></div>
+                <div>LINES: <span id="lines">0</span></div>
+            </div>
+        </div>
+        
+        <div class="game-board">
+            <canvas id="gameCanvas" width="300" height="600"></canvas>
+        </div>
+        
+        <div class="side-panel">
+            <div class="next-box">
+                <h3>NEXT</h3>
+                <canvas id="nextCanvas" width="80" height="320" class="preview-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const context = canvas.getContext('2d');
+        const holdCanvas = document.getElementById('holdCanvas');
+        const holdContext = holdCanvas.getContext('2d');
+        const nextCanvas = document.getElementById('nextCanvas');
+        const nextContext = nextCanvas.getContext('2d');
+
+        const BOARD_WIDTH = 10;
+        const BOARD_HEIGHT = 40;
+        const VISIBLE_HEIGHT = 20;
+        const CELL_SIZE = 30;
+
+        const tetrominoShapes = {
+            I: [
+                [[0,0,0,0], [1,1,1,1], [0,0,0,0], [0,0,0,0]],
+                [[0,0,1,0], [0,0,1,0], [0,0,1,0], [0,0,1,0]],
+                [[0,0,0,0], [0,0,0,0], [1,1,1,1], [0,0,0,0]],
+                [[0,1,0,0], [0,1,0,0], [0,1,0,0], [0,1,0,0]]
+            ],
+            O: [
+                [[0,1,1,0], [0,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,1,0], [0,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,1,0], [0,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,1,0], [0,1,1,0], [0,0,0,0], [0,0,0,0]]
+            ],
+            T: [
+                [[0,1,0,0], [1,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,0,0], [0,1,1,0], [0,1,0,0], [0,0,0,0]],
+                [[0,0,0,0], [1,1,1,0], [0,1,0,0], [0,0,0,0]],
+                [[0,1,0,0], [1,1,0,0], [0,1,0,0], [0,0,0,0]]
+            ],
+            S: [
+                [[0,1,1,0], [1,1,0,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,0,0], [0,1,1,0], [0,0,1,0], [0,0,0,0]],
+                [[0,0,0,0], [0,1,1,0], [1,1,0,0], [0,0,0,0]],
+                [[1,0,0,0], [1,1,0,0], [0,1,0,0], [0,0,0,0]]
+            ],
+            Z: [
+                [[1,1,0,0], [0,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,0,1,0], [0,1,1,0], [0,1,0,0], [0,0,0,0]],
+                [[0,0,0,0], [1,1,0,0], [0,1,1,0], [0,0,0,0]],
+                [[0,1,0,0], [1,1,0,0], [1,0,0,0], [0,0,0,0]]
+            ],
+            J: [
+                [[1,0,0,0], [1,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,1,0], [0,1,0,0], [0,1,0,0], [0,0,0,0]],
+                [[0,0,0,0], [1,1,1,0], [0,0,1,0], [0,0,0,0]],
+                [[0,1,0,0], [0,1,0,0], [1,1,0,0], [0,0,0,0]]
+            ],
+            L: [
+                [[0,0,1,0], [1,1,1,0], [0,0,0,0], [0,0,0,0]],
+                [[0,1,0,0], [0,1,0,0], [0,1,1,0], [0,0,0,0]],
+                [[0,0,0,0], [1,1,1,0], [1,0,0,0], [0,0,0,0]],
+                [[1,1,0,0], [0,1,0,0], [0,1,0,0], [0,0,0,0]]
+            ]
+        };
+
+        const tetrominoColors = {
+            I: '#00FFFF',
+            O: '#FFFF00', 
+            T: '#800080',
+            S: '#00FF00',
+            Z: '#FF0000',
+            J: '#0000FF',
+            L: '#FFA500'
+        };
+
+        const spawnPositions = {
+            I: { x: 3, y: 18 },
+            O: { x: 4, y: 18 },
+            T: { x: 3, y: 19 },
+            S: { x: 3, y: 19 },
+            Z: { x: 3, y: 19 },
+            J: { x: 3, y: 19 },  
+            L: { x: 3, y: 19 }
+        };
+
+        let gameBoard = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+        let currentPiece = null;
+        let currentX = 0;
+        let currentY = 0;
+        let currentRotation = 0;
+        let heldPiece = null;
+        let canHold = true;
+        let nextPieces = [];
+        let tetrominoBag = [];
+        let score = 0;
+        let level = 1;
+        let linesCleared = 0;
+        let dropTimer = 0;
+        let dropInterval = 1000;
+        let lockDelay = 0;
+        let lockDelayMax = 500;
+        let moveResetCounter = 0;
+        let lastTime = 0;
+
+        const keys = {
+            left: false,
+            right: false,
+            down: false,
+            up: false,
+            z: false,
+            x: false,
+            c: false
+        };
+
+        let dasTimer = 0;
+        let dasDelay = 90;
+        let arrRate = 2;
+        let dasDirection = 0;
+        let isFirstDasMove = true;
+
+        let screenShakeX = 0;
+        let screenShakeY = 0;
+        let shakeTimer = 0;
+        let shakeDuration = 0;
+        let shakeIntensity = 0;
+
+        let dropAnimation = 0;
+        let dropAnimationTimer = 0;
+
+        // 回転エフェクト用変数
+        let rotationEffect = 0;
+        let rotationTimer = 0;
+        let rotationDuration = 300;
+
+        // T-SPIN関連変数
+        let lastMovedBeforeLock = false;
+        let tSpinText = '';
+        let tSpinTimer = 0;
+        let tSpinDuration = 2000;
+
+        // PERFECT CLEAR関連変数
+        let perfectClearText = '';
+        let perfectClearTimer = 0;
+        let perfectClearDuration = 3000;
+
+        // ライン消去時の音階用変数
+        let consecutiveLineClears = 0;
+        let lastLineClearTime = 0;
+
+        function shuffleBag() {
+            const pieces = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
+            for (let i = pieces.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+            }
+            return pieces;
+        }
+
+        function getNextPiece() {
+            if (tetrominoBag.length === 0) {
+                tetrominoBag = shuffleBag();
+            }
+            return tetrominoBag.pop();
+        }
+
+        function initializeGame() {
+            // ゲームボードをクリア
+            gameBoard = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+            
+            // 次のピースを準備
+            nextPieces = [];
+            tetrominoBag = [];
+            for (let i = 0; i < 7; i++) {
+                nextPieces.push(getNextPiece());
+            }
+            spawnNewPiece();
+        }
+
+        function spawnNewPiece() {
+            currentPiece = nextPieces.shift();
+            nextPieces.push(getNextPiece());
+            
+            const spawnPos = spawnPositions[currentPiece];
+            currentX = spawnPos.x;
+            currentY = spawnPos.y;
+            currentRotation = 0;
+            canHold = true;
+            lockDelay = 0;
+            moveResetCounter = 0;
+            lastMovedBeforeLock = false; // T-SPINフラグをリセット
+
+            if (isCollision(currentPiece, currentX, currentY, currentRotation)) {
+                gameOver();
+            }
+        }
+
+        function isCollision(piece, x, y, rotation) {
+            const shape = tetrominoShapes[piece][rotation];
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    if (shape[row][col]) {
+                        const newX = x + col;
+                        const newY = y + row;
+                        if (newX < 0 || newX >= BOARD_WIDTH || newY >= BOARD_HEIGHT || 
+                            (newY >= 0 && gameBoard[newY][newX])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        // 正しいSRSオフセットテーブル（ガイドラインに基づく、Y座標を反転）
+        function getSRSKickTests(piece, fromRotation, toRotation) {
+            // O piece は特別な処理
+            if (piece === 'O') {
+                return [[0, 0]]; // O piece は回転しない
+            }
+
+            // I piece のキックテーブル（Y座標を-1倍）
+            const iKickTests = {
+                '0->1': [[0, 0], [-2, 0], [1, 0], [-2, 1], [1, -2]],
+                '1->0': [[0, 0], [2, 0], [-1, 0], [2, -1], [-1, 2]],
+                '1->2': [[0, 0], [-1, 0], [2, 0], [-1, -2], [2, 1]],
+                '2->1': [[0, 0], [1, 0], [-2, 0], [1, 2], [-2, -1]],
+                '2->3': [[0, 0], [2, 0], [-1, 0], [2, -1], [-1, 2]],
+                '3->2': [[0, 0], [-2, 0], [1, 0], [-2, 1], [1, -2]],
+                '3->0': [[0, 0], [1, 0], [-2, 0], [1, 2], [-2, -1]],
+                '0->3': [[0, 0], [-1, 0], [2, 0], [-1, -2], [2, 1]]
+            };
+
+            // その他のpiece (T, S, Z, J, L) のキックテーブル（Y座標を-1倍）
+            const standardKickTests = {
+                '0->1': [[0, 0], [-1, 0], [-1, -1], [0, 2], [-1, 2]],
+                '1->0': [[0, 0], [1, 0], [1, 1], [0, -2], [1, -2]],
+                '1->2': [[0, 0], [1, 0], [1, 1], [0, -2], [1, -2]],
+                '2->1': [[0, 0], [-1, 0], [-1, -1], [0, 2], [-1, 2]],
+                '2->3': [[0, 0], [1, 0], [1, -1], [0, 2], [1, 2]],
+                '3->2': [[0, 0], [-1, 0], [-1, 1], [0, -2], [-1, -2]],
+                '3->0': [[0, 0], [-1, 0], [-1, 1], [0, -2], [-1, -2]],
+                '0->3': [[0, 0], [1, 0], [1, -1], [0, 2], [1, 2]]
+            };
+
+            const key = `${fromRotation}->${toRotation}`;
+            
+            if (piece === 'I') {
+                return iKickTests[key] || [[0, 0]];
+            } else {
+                return standardKickTests[key] || [[0, 0]];
+            }
+        }
+
+        function tryRotate(direction) {
+            const newRotation = direction === 1 ? 
+                (currentRotation + 1) % 4 : 
+                (currentRotation + 3) % 4;
+
+            const kickTests = getSRSKickTests(currentPiece, currentRotation, newRotation);
+
+            for (const [offsetX, offsetY] of kickTests) {
+                const testX = currentX + offsetX;
+                const testY = currentY + offsetY;
+
+                if (!isCollision(currentPiece, testX, testY, newRotation)) {
+                    currentX = testX;
+                    currentY = testY;
+                    currentRotation = newRotation;
+                    resetLockDelay();
+                    
+                    // 回転エフェクトを開始
+                    startRotationEffect(direction);
+                    
+                    // T-SPIN検出のためのフラグ設定
+                    lastMovedBeforeLock = true;
+                    
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function resetLockDelay() {
+            if (moveResetCounter < 15) {
+                lockDelay = 0;
+                moveResetCounter++;
+            }
+        }
+
+        function movePiece(deltaX, deltaY) {
+            if (!isCollision(currentPiece, currentX + deltaX, currentY + deltaY, currentRotation)) {
+                currentX += deltaX;
+                currentY += deltaY;
+                if (deltaY === 0) {
+                    resetLockDelay();
+                    // 横移動の場合、T-SPINのフラグをリセット
+                    if (currentPiece === 'T') {
+                        lastMovedBeforeLock = false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        function hardDrop() {
+            let dropDistance = 0;
+            while (!isCollision(currentPiece, currentX, currentY + dropDistance + 1, currentRotation)) {
+                dropDistance++;
+            }
+            currentY += dropDistance;
+            score += dropDistance * 2;
+            lockPiece();
+        }
+
+        function lockPiece() {
+            const shape = tetrominoShapes[currentPiece][currentRotation];
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    if (shape[row][col]) {
+                        const x = currentX + col;
+                        const y = currentY + row;
+                        if (y >= 0 && y < BOARD_HEIGHT && x >= 0 && x < BOARD_WIDTH) {
+                            gameBoard[y][x] = currentPiece;
+                        }
+                    }
+                }
+            }
+            startDropAnimation();
+            
+            // T-SPIN判定とライン消去
+            const isTSpin = checkTSpin();
+            clearLines(isTSpin);
+            spawnNewPiece();
+        }
+
+        function clearLines(isTSpin = false) {
+            let linesFound = [];
+            for (let y = 0; y < BOARD_HEIGHT; y++) {
+                if (gameBoard[y].every(cell => cell !== 0)) {
+                    linesFound.push(y);
+                }
+            }
+
+            if (linesFound.length > 0) {
+                // ラインを削除（上から下へ処理するため、インデックスが変わらないように逆順でソート）
+                linesFound.sort((a, b) => b - a);
+                
+                // 各ラインを削除し、上に新しい空のラインを追加
+                for (let y of linesFound) {
+                    gameBoard.splice(y, 1);
+                }
+                
+                // 削除した分だけ上に新しい空のラインを追加
+                for (let i = 0; i < linesFound.length; i++) {
+                    gameBoard.unshift(Array(BOARD_WIDTH).fill(0));
+                }
+
+                linesCleared += linesFound.length;
+                
+                // PERFECT CLEAR判定
+                const isPerfectClear = checkPerfectClear();
+                
+                // スコア計算（T-SPINボーナス含む）
+                let lineScore = [0, 40, 100, 300, 1200][linesFound.length] * level;
+                if (isTSpin) {
+                    const tSpinBonus = [0, 800, 1200, 1600][linesFound.length] * level;
+                    lineScore = tSpinBonus;
+                    
+                    // T-SPINテキスト表示
+                    const lineNames = ['', 'SINGLE', 'DOUBLE', 'TRIPLE'];
+                    tSpinText = `T-SPIN ${lineNames[linesFound.length]}`;
+                    tSpinTimer = 0;
+                }
+                
+                // PERFECT CLEARボーナス
+                if (isPerfectClear) {
+                    const perfectClearBonus = calculatePerfectClearBonus(linesFound.length, isTSpin);
+                    lineScore += perfectClearBonus;
+                    
+                    // PERFECT CLEARテキスト表示
+                    perfectClearText = 'PERFECT CLEAR!';
+                    perfectClearTimer = 0;
+                    
+                    // 特別なエフェクト
+                    startScreenShake(15, 1000);
+                    playPerfectClearSound();
+                }
+                
+                score += lineScore;
+
+                level = Math.floor(linesCleared / 10) + 1;
+                dropInterval = Math.max(50, 1000 - (level - 1) * 50);
+
+                if (!isPerfectClear) {
+                    startScreenShake(linesFound.length * 2, 300);
+                }
+                
+                // 音を再生（PERFECT CLEARの場合は専用音を再生済み）
+                if (!isPerfectClear) {
+                    playLineClearSound(linesFound.length);
+                }
+            } else {
+                // ライン消去がない場合は連続カウンターをリセット
+                consecutiveLineClears = 0;
+            }
+        }
+
+        function startScreenShake(intensity, duration) {
+            shakeIntensity = intensity;
+            shakeDuration = duration;
+            shakeTimer = 0;
+        }
+
+        function updateScreenShake(deltaTime) {
+            if (shakeTimer < shakeDuration) {
+                shakeTimer += deltaTime;
+                const progress = shakeTimer / shakeDuration;
+                const currentIntensity = shakeIntensity * (1 - progress);
+                
+                screenShakeX = (Math.random() - 0.5) * currentIntensity;
+                screenShakeY = (Math.random() - 0.5) * currentIntensity;
+            } else {
+                screenShakeX = 0;
+                screenShakeY = 0;
+            }
+        }
+
+        function startDropAnimation() {
+            dropAnimation = 8;
+            dropAnimationTimer = 0;
+        }
+
+        function updateDropAnimation(deltaTime) {
+            if (dropAnimation > 0) {
+                dropAnimationTimer += deltaTime;
+                if (dropAnimationTimer >= 50) {
+                    dropAnimation--;
+                    dropAnimationTimer = 0;
+                }
+            }
+        }
+
+        // 回転エフェクト関数
+        function startRotationEffect(direction) {
+            rotationEffect = direction * 5; // 5度回転
+            rotationTimer = 0;
+        }
+
+        function updateRotationEffect(deltaTime) {
+            if (Math.abs(rotationEffect) > 0.1) {
+                rotationTimer += deltaTime;
+                const progress = Math.min(rotationTimer / rotationDuration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                rotationEffect = rotationEffect * (1 - easeOut);
+            } else {
+                rotationEffect = 0;
+            }
+        }
+
+        // T-SPIN判定関数
+        function checkTSpin() {
+            if (currentPiece !== 'T' || !lastMovedBeforeLock) {
+                return false;
+            }
+
+            // Tピースの中心位置を計算
+            const centerX = currentX + 1;
+            const centerY = currentY + 1;
+
+            // T字の4つの角をチェック
+            const corners = [
+                [centerX - 1, centerY - 1], // 左上
+                [centerX + 1, centerY - 1], // 右上
+                [centerX - 1, centerY + 1], // 左下
+                [centerX + 1, centerY + 1]  // 右下
+            ];
+
+            let filledCorners = 0;
+            for (const [x, y] of corners) {
+                if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT || 
+                    (y >= 0 && gameBoard[y][x] !== 0)) {
+                    filledCorners++;
+                }
+            }
+
+            // 3つ以上の角が埋まっていればT-SPIN
+            return filledCorners >= 3;
+        }
+
+        // 音再生関数
+        function playLineClearSound(lineCount) {
+            const currentTime = Date.now();
+            
+            // 連続ライン消去の判定（1秒以内）
+            if (currentTime - lastLineClearTime < 1000) {
+                consecutiveLineClears++;
+            } else {
+                consecutiveLineClears = 1;
+            }
+            lastLineClearTime = currentTime;
+
+            // 音階計算（ド = 261.63Hz から始まる）
+            const baseFrequency = 261.63; // ド
+            const semitoneRatio = Math.pow(2, 1/12);
+            const pitch = Math.min(consecutiveLineClears - 1, 11); // 1オクターブ内
+            const frequency = baseFrequency * Math.pow(semitoneRatio, pitch);
+
+            // Web Audio APIで音を再生
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // PERFECT CLEAR判定関数
+        function checkPerfectClear() {
+            // 全てのセルが空かどうかチェック
+            for (let y = 0; y < BOARD_HEIGHT; y++) {
+                for (let x = 0; x < BOARD_WIDTH; x++) {
+                    if (gameBoard[y][x] !== 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // PERFECT CLEARボーナス計算
+        function calculatePerfectClearBonus(linesCleared, isTSpin) {
+            // 基本ボーナス
+            let bonus = 0;
+            
+            if (linesCleared === 1) {
+                bonus = isTSpin ? 1200 : 800; // T-SPIN PERFECT CLEAR SINGLE / PERFECT CLEAR SINGLE
+            } else if (linesCleared === 2) {
+                bonus = isTSpin ? 2000 : 1200; // T-SPIN PERFECT CLEAR DOUBLE / PERFECT CLEAR DOUBLE
+            } else if (linesCleared === 3) {
+                bonus = isTSpin ? 2600 : 1800; // T-SPIN PERFECT CLEAR TRIPLE / PERFECT CLEAR TRIPLE
+            } else if (linesCleared === 4) {
+                bonus = 2000; // PERFECT CLEAR TETRIS
+            }
+            
+            return bonus * level;
+        }
+
+        // PERFECT CLEAR専用音再生
+        function playPerfectClearSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 複数の周波数で和音を作る
+                const frequencies = [523.25, 659.25, 783.99]; // ド、ミ、ソ（1オクターブ上）
+                const oscillators = [];
+                const gainNodes = [];
+
+                frequencies.forEach((freq, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    oscillator.type = 'sine';
+
+                    // 音量を調整（和音なので少し小さめに）
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 1.5);
+
+                    oscillators.push(oscillator);
+                    gainNodes.push(gainNode);
+                });
+
+                // 追加で高音でキラキラ効果
+                setTimeout(() => {
+                    const sparkleFreqs = [1046.5, 1318.5, 1567.98]; // 2オクターブ上のド、ミ、ソ
+                    sparkleFreqs.forEach((freq, index) => {
+                        setTimeout(() => {
+                            const osc = audioContext.createOscillator();
+                            const gain = audioContext.createGain();
+                            
+                            osc.connect(gain);
+                            gain.connect(audioContext.destination);
+                            
+                            osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+                            osc.type = 'sine';
+                            
+                            gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                            
+                            osc.start(audioContext.currentTime);
+                            osc.stop(audioContext.currentTime + 0.3);
+                        }, index * 100);
+                    });
+                }, 200);
+
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        function holdPiece() {
+            if (!canHold) return;
+
+            if (heldPiece === null) {
+                heldPiece = currentPiece;
+                spawnNewPiece();
+            } else {
+                const temp = currentPiece;
+                currentPiece = heldPiece;
+                heldPiece = temp;
+
+                const spawnPos = spawnPositions[currentPiece];
+                currentX = spawnPos.x;
+                currentY = spawnPos.y;
+                currentRotation = 0;
+                lockDelay = 0;
+                moveResetCounter = 0;
+            }
+            canHold = false;
+        }
+
+        function gameOver() {
+            alert('Game Over! Score: ' + score);
+            gameBoard = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+            currentPiece = null;
+            heldPiece = null;
+            nextPieces = [];
+            tetrominoBag = [];
+            score = 0;
+            level = 1;
+            linesCleared = 0;
+            dropInterval = 1000;
+            initializeGame();
+        }
+
+        function drawCell(ctx, x, y, size, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, size, size);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, size, size);
+        }
+
+        function drawPiece(ctx, piece, x, y, size, rotation = 0) {
+            const shape = tetrominoShapes[piece][rotation];
+            const color = tetrominoColors[piece];
+            
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    if (shape[row][col]) {
+                        drawCell(ctx, x + col * size, y + row * size, size, color);
+                    }
+                }
+            }
+        }
+
+        function drawGhostPiece() {
+            let ghostY = currentY;
+            while (!isCollision(currentPiece, currentX, ghostY + 1, currentRotation)) {
+                ghostY++;
+            }
+
+            if (ghostY !== currentY) {
+                const shape = tetrominoShapes[currentPiece][currentRotation];
+                const baseColor = tetrominoColors[currentPiece];
+                
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        if (shape[row][col]) {
+                            const x = currentX + col;
+                            const y = ghostY + row;
+                            if (y >= BOARD_HEIGHT - VISIBLE_HEIGHT && y < BOARD_HEIGHT) {
+                                context.fillStyle = baseColor + '40';
+                                context.fillRect(
+                                    x * CELL_SIZE, 
+                                    (y - (BOARD_HEIGHT - VISIBLE_HEIGHT)) * CELL_SIZE + dropAnimation, 
+                                    CELL_SIZE, 
+                                    CELL_SIZE
+                                );
+                                context.strokeStyle = baseColor + '80';
+                                context.lineWidth = 2;
+                                context.strokeRect(
+                                    x * CELL_SIZE, 
+                                    (y - (BOARD_HEIGHT - VISIBLE_HEIGHT)) * CELL_SIZE + dropAnimation, 
+                                    CELL_SIZE, 
+                                    CELL_SIZE
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function render() {
+            context.save();
+            context.translate(canvas.width / 2, canvas.height / 2);
+            context.rotate(rotationEffect * Math.PI / 180);
+            context.translate(-canvas.width / 2 + screenShakeX, -canvas.height / 2 + screenShakeY);
+            
+            context.clearRect(-screenShakeX, -screenShakeY, canvas.width + Math.abs(screenShakeX) * 2, canvas.height + Math.abs(screenShakeY) * 2);
+
+            for (let y = BOARD_HEIGHT - VISIBLE_HEIGHT; y < BOARD_HEIGHT; y++) {
+                for (let x = 0; x < BOARD_WIDTH; x++) {
+                    if (gameBoard[y][x]) {
+                        drawCell(
+                            context,
+                            x * CELL_SIZE,
+                            (y - (BOARD_HEIGHT - VISIBLE_HEIGHT)) * CELL_SIZE + dropAnimation,
+                            CELL_SIZE,
+                            tetrominoColors[gameBoard[y][x]]
+                        );
+                    }
+                }
+            }
+
+            if (currentPiece) {
+                drawGhostPiece();
+                
+                const shape = tetrominoShapes[currentPiece][currentRotation];
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        if (shape[row][col]) {
+                            const x = currentX + col;
+                            const y = currentY + row;
+                            if (y >= BOARD_HEIGHT - VISIBLE_HEIGHT && y < BOARD_HEIGHT) {
+                                drawCell(
+                                    context,
+                                    x * CELL_SIZE,
+                                    (y - (BOARD_HEIGHT - VISIBLE_HEIGHT)) * CELL_SIZE + dropAnimation,
+                                    CELL_SIZE,
+                                    tetrominoColors[currentPiece]
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            context.restore();
+
+            // PERFECT CLEARテキストの描画（T-SPINより優先）
+            if (perfectClearTimer < perfectClearDuration && perfectClearText) {
+                context.save();
+                context.fillStyle = '#FF1493'; // ディープピンク
+                context.font = 'bold 32px Arial';
+                context.textAlign = 'center';
+                const opacity = 1 - (perfectClearTimer / perfectClearDuration);
+                context.globalAlpha = opacity;
+                
+                // テキストにグロー効果を追加
+                context.shadowColor = '#FF1493';
+                context.shadowBlur = 20;
+                context.fillText(perfectClearText, canvas.width / 2, canvas.height / 2 - 50);
+                
+                // 虹色効果
+                const hue = (perfectClearTimer / 50) % 360;
+                context.fillStyle = `hsl(${hue}, 100%, 60%)`;
+                context.shadowBlur = 10;
+                context.fillText(perfectClearText, canvas.width / 2, canvas.height / 2 - 50);
+                
+                context.restore();
+            }
+            // T-SPINテキストの描画（PERFECT CLEARがない場合のみ）
+            else if (tSpinTimer < tSpinDuration && tSpinText) {
+                context.save();
+                context.fillStyle = '#FFD700';
+                context.font = 'bold 24px Arial';
+                context.textAlign = 'left';
+                const opacity = 1 - (tSpinTimer / tSpinDuration);
+                context.globalAlpha = opacity;
+                context.fillText(tSpinText, 10, canvas.height / 2);
+                context.restore();
+            }
+
+            holdContext.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
+            if (heldPiece) {
+                drawPiece(holdContext, heldPiece, 10, 10, 15);
+            }
+
+            nextContext.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+            for (let i = 0; i < Math.min(4, nextPieces.length); i++) {
+                drawPiece(nextContext, nextPieces[i], 10, 10 + i * 70, 15);
+            }
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('lines').textContent = linesCleared;
+        }
+
+        function update(currentTime) {
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            updateScreenShake(deltaTime);
+            updateDropAnimation(deltaTime);
+            updateRotationEffect(deltaTime);
+
+            // T-SPINテキストのタイマー更新
+            if (tSpinTimer < tSpinDuration) {
+                tSpinTimer += deltaTime;
+            }
+
+            // PERFECT CLEARテキストのタイマー更新
+            if (perfectClearTimer < perfectClearDuration) {
+                perfectClearTimer += deltaTime;
+            }
+
+            if (currentPiece) {
+                handleDAS(deltaTime);
+
+                dropTimer += deltaTime;
+                
+                if (keys.down) {
+                    if (dropTimer >= 25) {
+                        let dropCount = 0;
+                        while (dropCount < 20 && movePiece(0, 1)) {
+                            score += 1;
+                            dropCount++;
+                        }
+                        dropTimer = 0;
+                    }
+                } else if (dropTimer >= dropInterval) {
+                    if (!movePiece(0, 1)) {
+                        lockDelay += deltaTime;
+                        if (lockDelay >= lockDelayMax) {
+                            lockPiece();
+                        }
+                    } else {
+                        lockDelay = 0;
+                        moveResetCounter = 0;
+                    }
+                    dropTimer = 0;
+                }
+
+                if (isCollision(currentPiece, currentX, currentY + 1, currentRotation)) {
+                    lockDelay += deltaTime;
+                    if (lockDelay >= lockDelayMax) {
+                        lockPiece();
+                    }
+                }
+            }
+
+            render();
+            requestAnimationFrame(update);
+        }
+
+        function handleDAS(deltaTime) {
+            const leftPressed = keys.left;
+            const rightPressed = keys.right;
+            
+            if (leftPressed && rightPressed) {
+                return;
+            }
+            
+            if (leftPressed) {
+                if (dasDirection !== -1) {
+                    dasDirection = -1;
+                    dasTimer = 0;
+                    isFirstDasMove = true;
+                    movePiece(-1, 0);
+                } else {
+                    dasTimer += deltaTime;
+                    if (dasTimer >= dasDelay && isFirstDasMove) {
+                        isFirstDasMove = false;
+                        dasTimer = 0;
+                    }
+                    if (!isFirstDasMove && dasTimer >= arrRate) {
+                        movePiece(-1, 0);
+                        dasTimer = 0;
+                    }
+                }
+            } else if (rightPressed) {
+                if (dasDirection !== 1) {
+                    dasDirection = 1;
+                    dasTimer = 0;
+                    isFirstDasMove = true;
+                    movePiece(1, 0);
+                } else {
+                    dasTimer += deltaTime;
+                    if (dasTimer >= dasDelay && isFirstDasMove) {
+                        isFirstDasMove = false;
+                        dasTimer = 0;
+                    }
+                    if (!isFirstDasMove && dasTimer >= arrRate) {
+                        movePiece(1, 0);
+                        dasTimer = 0;
+                    }
+                }
+            } else {
+                dasDirection = 0;
+                dasTimer = 0;
+                isFirstDasMove = true;
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!currentPiece) return;
+
+            switch(e.code) {
+                case 'ArrowLeft':
+                    keys.left = true;
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    keys.right = true;
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    keys.down = true;
+                    e.preventDefault();
+                    break;
+                case 'ArrowUp':
+                    if (!keys.up) {
+                        hardDrop();
+                        keys.up = true;
+                    }
+                    e.preventDefault();
+                    break;
+                case 'KeyZ':
+                    if (!keys.z) {
+                        tryRotate(-1);
+                        keys.z = true;
+                    }
+                    e.preventDefault();
+                    break;
+                case 'KeyX':
+                    if (!keys.x) {
+                        tryRotate(1);
+                        keys.x = true;
+                    }
+                    e.preventDefault();
+                    break;
+                case 'KeyC':
+                    if (!keys.c) {
+                        holdPiece();
+                        keys.c = true;
+                    }
+                    e.preventDefault();
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            switch(e.code) {
+                case 'ArrowLeft':
+                    keys.left = false;
+                    break;
+                case 'ArrowRight':
+                    keys.right = false;
+                    break;
+                case 'ArrowDown':
+                    keys.down = false;
+                    break;
+                case 'ArrowUp':
+                    keys.up = false;
+                    break;
+                case 'KeyZ':
+                    keys.z = false;
+                    break;
+                case 'KeyX':
+                    keys.x = false;
+                    break;
+                case 'KeyC':
+                    keys.c = false;
+                    break;
+            }
+        });
+
+        initializeGame();
+        requestAnimationFrame(update);
+        initializeGame();
+        requestAnimationFrame(update);
+    </script>

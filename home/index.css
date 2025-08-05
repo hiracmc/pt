@@ -125,8 +125,9 @@ animation:popup 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     .dialog {
+      transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
         box-shadow: 0px 20px 36px 0px rgba(0, 0, 0, 0.6);
-        width: 30vw;
+        width: 50vw;
         height: 70vh;
         position: relative;
         border: none;
@@ -238,7 +239,6 @@ margin-left: 10px;
 
 .varr{
 
-color: #fff;
 font-size: 17px;
 font-family: "TikTok Sans", sans-serif;
 text-shadow: 0px 0px 10px #000;
@@ -246,6 +246,11 @@ margin-top: 10px;
 margin-left: 10px;
 }
 
+.varr a{
+
+color: #fff;
+
+}
 
 #channel-info {
 display: flex;

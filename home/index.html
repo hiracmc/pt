@@ -14,7 +14,7 @@
 
 
     <div id="gohome"></div>
-    <div class="varr"><a href="#" id="va">v0.041</a></div>
+    <div class="varr"><a href="#" id="va">v0.043</a></div>
 
 
 
@@ -46,6 +46,7 @@
  <button type="submit" onclick="e()" class="kensakuu2"><img src="https://hiracmc.github.io/psvg/svg/psvg_search.svg" width="20px" height="20px"></button>
 
     </div></form>
+    <div class="okini"></div>
 </div>
   <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   -->
@@ -146,23 +147,25 @@ url.textContent = `http://youtu.be/${videoId}`;
     
   }
 function e() {
+  event.preventDefault()
   const url = document.getElementById('youtube-url').value;
+  if (url){
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/watch?v=${videoId}`;
+    window.location.href=`${ip}/watch/?v=${videoId}`;
 
   } else {
+    const url = document.getElementById('youtube-url').value;
   const videoId = extractVideoId2(url);
     if(videoId){
     const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/watch?v=${videoId}`;
+    window.location.href=`${ip}/watch/?v=${videoId}`;
 
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
   }}
-}
-  
+}}
 
 function extractVideoId(url) {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;

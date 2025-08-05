@@ -131,6 +131,7 @@ function syouryaku(stext,max) {
 function e() {
   event.preventDefault()
   const url = document.getElementById('youtube-url').value;
+  if (url){
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
@@ -145,7 +146,7 @@ function e() {
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
   }}
-}
+}}
 
 
 function extractVideoId(url) {

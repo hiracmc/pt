@@ -77,6 +77,7 @@ const button = document.getElementById('syouryaku')
 function e() {
   event.preventDefault()
   const url = document.getElementById('youtube-url').value;
+  if (url){
   const videoId = extractVideoId(url);
   if (videoId) {
     const location = window.location.hash.slice(0);
@@ -92,7 +93,7 @@ function e() {
     } else {
     window.location.href=`${ip}/search/?q=${url}`;
   }}
-}
+}}
 
 function extractVideoId(url) {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
@@ -125,6 +126,7 @@ function extractVideoId(url) {
 
     </div>
 </div>
+  <div id="sippa"><h1></h1></div>
   <div id="video-container"></div>
   <div id="video-name"><h1>読み込み中</h1></div>
   <div id="video-link"><h2></h2></div>
@@ -138,13 +140,13 @@ function extractVideoId(url) {
       <div class="kag"></div></div>
         <button type="submit" onclick="sw()" id="syouryaku">もっと見る</button>
   </div>
-  <div id="komee">コメント</div>
+  <div id="komee">読み込み中...</div>
 <div id="komento"></div>
 
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
 <script type="module">
 async function getData(add) {
-  let link = [
+   let link = [
   "https://iv.melmac.space",
   "https://invidious.reallyaweso.me",
   "https://invidious.adminforge.de",
@@ -221,14 +223,14 @@ async function getData(add) {
     const result = await Promise.any(promises);
     return result.data;
   } catch (error) {
-    console.error("\nすべてのサーバーへの接続に失敗しました。。");
+    console.error("\nすべてのサーバーへの接続に失敗しました。");
+    document.getElementById('sippa').innerHTML = `<h1 style="color : #fff;font-size:16px; margin-left: 40px;">動画の情報の読み込みに失敗しました。再読み込みボタンをしてもう一度試してください</h1>`;
     return null;
   }
 }
 
 
 const server = "https://invidious.nikkosphere.com";
-  
   const baseUri = server + "/api/v1/videos/";
   console.log(baseUri)
   const come = server + "/api/v1/comments/";
