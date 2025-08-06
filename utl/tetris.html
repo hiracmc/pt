@@ -54,6 +54,69 @@
         .score-info div {
             margin-bottom: 5px;
         }
+        .game-over-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .game-over-screen {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+        .game-over-screen h2 {
+            margin-top: 0;
+            color: #ff4444;
+            font-size: 24px;
+        }
+        .game-over-screen .stats {
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .game-over-screen .stats div {
+            margin: 5px 0;
+        }
+        .retry-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .retry-button:hover {
+            background-color: #45a049;
+        }
+        .ai-control {
+            margin-top: 20px;
+        }
+        .ai-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .ai-button:hover {
+            background-color: #1976D2;
+        }
+        .ai-button.active {
+            background-color: #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +142,21 @@
                 <h3>NEXT</h3>
                 <canvas id="nextCanvas" width="80" height="320" class="preview-canvas"></canvas>
             </div>
+            <div class="ai-control">
+                <button id="aiToggle" class="ai-button">CPU: OFF</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-over-overlay" id="gameOverOverlay">
+        <div class="game-over-screen">
+            <h2>GAME OVER</h2>
+            <div class="stats">
+                <div>Final Score: <span id="finalScore">0</span></div>
+                <div>Level Reached: <span id="finalLevel">1</span></div>
+                <div>Lines Cleared: <span id="finalLines">0</span></div>
+            </div>
+            <button class="retry-button" onclick="retryGame()">RETRY</button>
         </div>
     </div>
 
@@ -178,6 +256,7 @@
         let lockDelayMax = 500;
         let moveResetCounter = 0;
         let lastTime = 0;
+        let gameRunning = true;
 
         const keys = {
             left: false,
@@ -186,7 +265,10 @@
             up: false,
             z: false,
             x: false,
-            c: false
+            c: false,
+            shift: false,
+            f: false,
+            i: false
         };
 
         let dasTimer = 0;
@@ -206,7 +288,7 @@
 
         let rotationEffect = 0;
         let rotationTimer = 0;
-        let rotationDuration = 300;
+        let rotationDuration = 600;
 
         let lastMovedBeforeLock = false;
         let tSpinText = '';
@@ -220,6 +302,9 @@
         let consecutiveLineClears = 0;
         let lastLineClearTime = 0;
         let comboActive = false;
+        let aiMode = false;
+        let aiMoveTimer = 0;
+        let aiMoveDelay = 200;
 
         function shuffleBag() {
             const pieces = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
@@ -241,6 +326,17 @@
             gameBoard = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
             nextPieces = [];
             tetrominoBag = [];
+            score = 0;
+            level = 1;
+            linesCleared = 0;
+            dropInterval = 1000;
+            consecutiveLineClears = 0;
+            comboActive = false;
+            heldPiece = null;
+            canHold = true;
+            gameRunning = true;
+            document.getElementById('gameOverOverlay').style.display = 'none';
+            
             for (let i = 0; i < 7; i++) {
                 nextPieces.push(getNextPiece());
             }
@@ -347,6 +443,43 @@
             return false;
         }
 
+        function try180Rotate() {
+            const newRotation = (currentRotation + 2) % 4;
+            
+            const kickTests180 = [
+                [0, 0],
+                [0, 1],
+                [1, 1],
+                [-1, 1],
+                [1, 0],
+                [-1, 0],
+                [0, -1],
+                [1, -1],
+                [-1, -1]
+            ];
+
+            for (const [offsetX, offsetY] of kickTests180) {
+                const testX = currentX + offsetX;
+                const testY = currentY + offsetY;
+
+                if (!isCollision(currentPiece, testX, testY, newRotation)) {
+                    currentX = testX;
+                    currentY = testY;
+                    currentRotation = newRotation;
+                    resetLockDelay();
+                    
+                    if (currentPiece === 'T' && checkTSpinPotential()) {
+                        startRotationEffect(2);
+                    }
+                    
+                    lastMovedBeforeLock = true;
+                    
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function checkTSpinPotential() {
             const centerX = currentX + 1;
             const centerY = currentY + 1;
@@ -417,8 +550,28 @@
             startDropAnimation();
             
             const isTSpin = checkTSpin();
+            const linesBeforeClear = countFullLines();
             clearLines(isTSpin);
+            
+            if (linesBeforeClear === 0) {
+                const currentTime = Date.now();
+                if (currentTime - lastLineClearTime > 5000) {
+                    consecutiveLineClears = 0;
+                    comboActive = false;
+                }
+            }
+            
             spawnNewPiece();
+        }
+
+        function countFullLines() {
+            let count = 0;
+            for (let y = 0; y < BOARD_HEIGHT; y++) {
+                if (gameBoard[y].every(cell => cell !== 0)) {
+                    count++;
+                }
+            }
+            return count;
         }
 
         function clearLines(isTSpin = false) {
@@ -533,7 +686,7 @@
         }
 
         function startRotationEffect(direction) {
-            rotationEffect = direction * 5;
+            rotationEffect = direction * 2.5;
             rotationTimer = 0;
         }
 
@@ -705,19 +858,177 @@
         }
 
         function gameOver() {
-            alert('Game Over! Score: ' + score);
-            gameBoard = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
-            currentPiece = null;
-            heldPiece = null;
-            nextPieces = [];
-            tetrominoBag = [];
-            score = 0;
-            level = 1;
-            linesCleared = 0;
-            dropInterval = 1000;
-            consecutiveLineClears = 0;
-            comboActive = false;
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalLevel').textContent = level;
+            document.getElementById('finalLines').textContent = linesCleared;
+            document.getElementById('gameOverOverlay').style.display = 'flex';
+        }
+
+        function retryGame() {
             initializeGame();
+        }
+
+        function toggleAI() {
+            aiMode = !aiMode;
+            const button = document.getElementById('aiToggle');
+            if (aiMode) {
+                button.textContent = 'CPU: ON';
+                button.classList.add('active');
+            } else {
+                button.textContent = 'CPU: OFF';
+                button.classList.remove('active');
+            }
+        }
+
+        function evaluatePosition(piece, x, y, rotation, board) {
+            const testBoard = board.map(row => [...row]);
+            const shape = tetrominoShapes[piece][rotation];
+            
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    if (shape[row][col]) {
+                        const boardX = x + col;
+                        const boardY = y + row;
+                        if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH) {
+                            testBoard[boardY][boardX] = piece;
+                        }
+                    }
+                }
+            }
+
+            let score = 0;
+            let completedLines = 0;
+            
+            for (let y = 0; y < BOARD_HEIGHT; y++) {
+                if (testBoard[y].every(cell => cell !== 0)) {
+                    completedLines++;
+                }
+            }
+
+            let aggregateHeight = 0;
+            let holes = 0;
+            let bumpiness = 0;
+            let heights = [];
+
+            for (let x = 0; x < BOARD_WIDTH; x++) {
+                let height = 0;
+                let foundBlock = false;
+                
+                for (let y = 0; y < BOARD_HEIGHT; y++) {
+                    if (testBoard[y][x] !== 0) {
+                        height = BOARD_HEIGHT - y;
+                        foundBlock = true;
+                        break;
+                    }
+                }
+                
+                heights.push(height);
+                aggregateHeight += height;
+
+                if (foundBlock) {
+                    for (let y = BOARD_HEIGHT - height; y < BOARD_HEIGHT; y++) {
+                        if (testBoard[y][x] === 0) {
+                            holes++;
+                        }
+                    }
+                }
+            }
+
+            for (let i = 0; i < heights.length - 1; i++) {
+                bumpiness += Math.abs(heights[i] - heights[i + 1]);
+            }
+
+            const isTSpin = piece === 'T' && checkTSpinForAI(piece, x, y, rotation, testBoard);
+            
+            if (completedLines === 1) {
+                score += 300;
+            } else if (completedLines === 2) {
+                score += 300;
+            } else if (completedLines === 3) {
+                score += 350;
+            } else if (completedLines === 4) {
+                score += 3000;
+            }
+            
+            if (isTSpin) {
+                score += completedLines * 2000;
+            }
+            
+            score -= aggregateHeight * 0.5;
+            score -= holes * 150;
+            score -= bumpiness * 0.2;
+
+            return score;
+        }
+
+        function checkTSpinForAI(piece, x, y, rotation, board) {
+            if (piece !== 'T') return false;
+
+            const centerX = x + 1;
+            const centerY = y + 1;
+
+            const corners = [
+                [centerX - 1, centerY - 1],
+                [centerX + 1, centerY - 1],
+                [centerX - 1, centerY + 1],
+                [centerX + 1, centerY + 1]
+            ];
+
+            let filledCorners = 0;
+            for (const [cx, cy] of corners) {
+                if (cx < 0 || cx >= BOARD_WIDTH || cy < 0 || cy >= BOARD_HEIGHT || 
+                    (cy >= 0 && board[cy][cx] !== 0)) {
+                    filledCorners++;
+                }
+            }
+
+            return filledCorners >= 3;
+        }
+
+        function findBestMove() {
+            let bestScore = -Infinity;
+            let bestMove = null;
+
+            for (let rotation = 0; rotation < 4; rotation++) {
+                for (let x = 0; x < BOARD_WIDTH; x++) {
+                    let y = 0;
+                    while (y < BOARD_HEIGHT && !isCollision(currentPiece, x, y, rotation)) {
+                        y++;
+                    }
+                    y--;
+
+                    if (y >= 0 && !isCollision(currentPiece, x, y, rotation)) {
+                        const score = evaluatePosition(currentPiece, x, y, rotation, gameBoard);
+                        
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMove = { x, y, rotation };
+                        }
+                    }
+                }
+            }
+
+            return bestMove;
+        }
+
+        function executeAIMove() {
+            const bestMove = findBestMove();
+            if (!bestMove) return;
+
+            while (currentRotation !== bestMove.rotation) {
+                tryRotate(1);
+            }
+
+            while (currentX !== bestMove.x) {
+                if (currentX < bestMove.x) {
+                    movePiece(1, 0);
+                } else {
+                    movePiece(-1, 0);
+                }
+            }
+
+            hardDrop();
         }
 
         function drawCell(ctx, x, y, size, color) {
@@ -826,21 +1137,18 @@
 
             context.restore();
 
-            // PERFECT CLEARテキストの描画（T-SPINより優先）
             if (perfectClearTimer < perfectClearDuration && perfectClearText) {
                 context.save();
-                context.fillStyle = '#FF1493'; // ディープピンク
+                context.fillStyle = '#FF1493';
                 context.font = 'bold 32px Arial';
                 context.textAlign = 'center';
                 const opacity = 1 - (perfectClearTimer / perfectClearDuration);
                 context.globalAlpha = opacity;
                 
-                // テキストにグロー効果を追加
                 context.shadowColor = '#FF1493';
                 context.shadowBlur = 20;
                 context.fillText(perfectClearText, canvas.width / 2, canvas.height / 2 - 50);
                 
-                // 虹色効果
                 const hue = (perfectClearTimer / 50) % 360;
                 context.fillStyle = `hsl(${hue}, 100%, 60%)`;
                 context.shadowBlur = 10;
@@ -848,7 +1156,6 @@
                 
                 context.restore();
             }
-            // T-SPINテキストの描画（PERFECT CLEARがない場合のみ）
             else if (tSpinTimer < tSpinDuration && tSpinText) {
                 context.save();
                 context.fillStyle = '#FFD700';
@@ -876,6 +1183,11 @@
         }
 
         function update(currentTime) {
+            if (!gameRunning) {
+                requestAnimationFrame(update);
+                return;
+            }
+
             const deltaTime = currentTime - lastTime;
             lastTime = currentTime;
 
@@ -883,47 +1195,53 @@
             updateDropAnimation(deltaTime);
             updateRotationEffect(deltaTime);
 
-            // T-SPINテキストのタイマー更新
             if (tSpinTimer < tSpinDuration) {
                 tSpinTimer += deltaTime;
             }
 
-            // PERFECT CLEARテキストのタイマー更新
             if (perfectClearTimer < perfectClearDuration) {
                 perfectClearTimer += deltaTime;
             }
 
             if (currentPiece) {
-                handleDAS(deltaTime);
+                if (aiMode) {
+                    aiMoveTimer += deltaTime;
+                    if (aiMoveTimer >= aiMoveDelay) {
+                        executeAIMove();
+                        aiMoveTimer = 0;
+                    }
+                } else {
+                    handleDAS(deltaTime);
 
-                dropTimer += deltaTime;
-                
-                if (keys.down) {
-                    if (dropTimer >= 25) {
-                        let dropCount = 0;
-                        while (dropCount < 20 && movePiece(0, 1)) {
-                            score += 1;
-                            dropCount++;
+                    dropTimer += deltaTime;
+                    
+                    if (keys.down) {
+                        if (dropTimer >= 25) {
+                            let dropCount = 0;
+                            while (dropCount < 20 && movePiece(0, 1)) {
+                                score += 1;
+                                dropCount++;
+                            }
+                            dropTimer = 0;
+                        }
+                    } else if (dropTimer >= dropInterval) {
+                        if (!movePiece(0, 1)) {
+                            lockDelay += deltaTime;
+                            if (lockDelay >= lockDelayMax) {
+                                lockPiece();
+                            }
+                        } else {
+                            lockDelay = 0;
+                            moveResetCounter = 0;
                         }
                         dropTimer = 0;
                     }
-                } else if (dropTimer >= dropInterval) {
-                    if (!movePiece(0, 1)) {
+
+                    if (isCollision(currentPiece, currentX, currentY + 1, currentRotation)) {
                         lockDelay += deltaTime;
                         if (lockDelay >= lockDelayMax) {
                             lockPiece();
                         }
-                    } else {
-                        lockDelay = 0;
-                        moveResetCounter = 0;
-                    }
-                    dropTimer = 0;
-                }
-
-                if (isCollision(currentPiece, currentX, currentY + 1, currentRotation)) {
-                    lockDelay += deltaTime;
-                    if (lockDelay >= lockDelayMax) {
-                        lockPiece();
                     }
                 }
             }
@@ -982,7 +1300,21 @@
         }
 
         document.addEventListener('keydown', (e) => {
-            if (!currentPiece) return;
+            if (e.code === 'KeyF' && !keys.f) {
+                keys.f = true;
+                retryGame();
+                e.preventDefault();
+                return;
+            }
+
+            if (e.code === 'KeyI' && !keys.i) {
+                keys.i = true;
+                toggleAI();
+                e.preventDefault();
+                return;
+            }
+
+            if (!gameRunning || !currentPiece || aiMode) return;
 
             switch(e.code) {
                 case 'ArrowLeft':
@@ -1025,6 +1357,14 @@
                     }
                     e.preventDefault();
                     break;
+                case 'ShiftLeft':
+                case 'ShiftRight':
+                    if (!keys.shift) {
+                        try180Rotate();
+                        keys.shift = true;
+                    }
+                    e.preventDefault();
+                    break;
             }
         });
 
@@ -1051,11 +1391,23 @@
                 case 'KeyC':
                     keys.c = false;
                     break;
+                case 'ShiftLeft':
+                case 'ShiftRight':
+                    keys.shift = false;
+                    break;
+                case 'KeyF':
+                    keys.f = false;
+                    break;
+                case 'KeyI':
+                    keys.i = false;
+                    break;
             }
         });
 
-        initializeGame();
-        requestAnimationFrame(update);
+        document.getElementById('aiToggle').addEventListener('click', toggleAI);
+
         initializeGame();
         requestAnimationFrame(update);
     </script>
+</body>
+</html>

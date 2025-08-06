@@ -21,7 +21,7 @@
             background-color: #1a1a1a;
             border: 1px solid #1f1f1f;
             border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.1);
             padding: 5px 0;
             min-width: 150px;
             z-index: 1000;
@@ -61,12 +61,16 @@
         }
         
         #custom-menu .separator {
-            height: 0.1px;
+            height: 2px;
             background-color: #2b2b2b;
             margin: 1px 0;
         }
         #custom-menu .separator:hover {
             background-color: #2b2b2b;
+        }
+        #custom-menu img{
+            width: 13px;
+            
         }
     </style>
 </head>
@@ -78,9 +82,10 @@
 
     <div id="custom-menu">
         <ul>
-            <li data-action="new">Youtubeのリンクをコピー</li>
-            <li data-action="copy">Pontubeのリンクをコピー</li>
-            <li data-action="paste">お気に入りに追加</li>
+            <li data-action="youtubecopy"> Youtubeのリンクをコピー</li>
+            <li data-action="pontubecopy"> Pontubeのリンクをコピー</li>
+            <div class="separator"></div>
+            <li data-action="love"> お気に入りに追加</li>
         </ul>
     </div>
 
