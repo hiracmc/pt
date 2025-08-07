@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Desktop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0c0c0c;
+            background-image: url('');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        .desktop {
+            width: 100%;
+            height: calc(100vh - 48px);
+            position: relative;
+            background: transparent;
+        }
+
+        .context-menu {
+            position: absolute;
+            background: rgba(32, 32, 32, 0.95);
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 200px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+        }
+
+        .context-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .app {
+            position: absolute;
+            width: 64px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .app:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .app-icon {
+            width: 32px;
+            height: 32px;
+            background: #0078d4;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .app-name {
+            font-size: 11px;
+            text-align: center;
+            word-wrap: break-word;
+            line-height: 1.2;
+            max-width: 60px;
+        }
+
+        .window {
+            position: absolute;
+            background: #202020;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            min-width: 400px;
+            min-height: 300px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .window.maximized {
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100vh - 48px) !important;
+            border-radius: 0;
+        }
+
+        .window-header {
+            background: #2d2d2d;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            cursor: move;
+            justify-content: space-between;
+        }
+
+        .window-title {
+            font-size: 12px;
+            color: #ffffff;
+            flex: 1;
+            text-align: center;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-control {
+            width: 32px;
+            height: 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background: transparent;
+        }
+
+        .window-control:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .window-control.close:hover {
+            background: #e81123;
+        }
+
+        .window-content {
+            height: calc(100% - 32px);
+            padding: 16px;
+            overflow: auto;
+            background: #1a1a1a;
+        }
+
+        .window-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: rgba(32, 32, 32, 0.95);
+            border-top: 1px solid #404040;
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 8px;
+            z-index: 9999;
+        }
+
+        .taskbar-item {
+            width: 40px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .taskbar-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .taskbar-item.active {
+            background: rgba(0, 120, 212, 0.3);
+            border-bottom: 2px solid #0078d4;
+        }
+
+        .dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+            min-width: 300px;
+        }
+
+        .dialog-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .dialog-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .dialog-input:focus {
+            outline: none;
+            border-color: #0078d4;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .dialog-button {
+            padding: 8px 16px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #404040;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dialog-button:hover {
+            background: #505050;
+        }
+
+        .dialog-button.primary {
+            background: #0078d4;
+            border-color: #0078d4;
+        }
+
+        .dialog-button.primary:hover {
+            background: #106ebe;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+        }
+
+        .textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #0078d4;
+        }
+
+        .settings-section {
+            margin-bottom: 24px;
+        }
+
+        .settings-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .selection-box {
+            position: absolute;
+            border: 1px solid #0078d4;
+            background: rgba(0, 120, 212, 0.1);
+            pointer-events: none;
+            z-index: 500;
+        }
+
+        .app.selected {
+            background: rgba(0, 120, 212, 0.3) !important;
+            border: 1px solid #0078d4;
+        }
+
+        .app.selected .app-icon {
+            background: #0078d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop" id="desktop"></div>
+    
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="showBookmarkDialog()">
+            🔗 新しいブックマーク
+        </div>
+        <div class="context-menu-item" onclick="createTextFile()">
+            📄 新しいテキストファイル
+        </div>
+    </div>
+
+    <div class="context-menu" id="appContextMenu">
+        <div class="context-menu-item" onclick="openApp()">
+            📂 開く
+        </div>
+        <div class="context-menu-item" onclick="editApp()">
+            ✏️ 編集
+        </div>
+        <div class="context-menu-item" onclick="renameApp()">
+            🏷️ 名前の変更
+        </div>
+        <div class="context-menu-item" onclick="deleteApp()">
+            🗑️ 削除
+        </div>
+    </div>
+
+    <div class="taskbar" id="taskbar">
+        <div class="taskbar-item" onclick="openSettings()">⚙️</div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        let apps = [];
+        let windows = [];
+        let nextWindowId = 1;
+        let nextAppId = 1;
+        let draggedApp = null;
+        let draggedWindow = null;
+        let contextMenuApp = null;
+        let selectedApps = []; // 選択されたアプリの配列
+        let isSelecting = false; // 選択モード
+        let selectionStart = null; // 選択開始点
+        let selectionBox = null; // 選択ボックス要素
+        let settings = {
+            backgroundImage: '',
+            tabTitle: 'Virtual Desktop'
+        };
+
+        // グリッドサイズとスナップ機能
+        const GRID_SIZE = 80;
+        
+        function initializeDesktop() {
+            // 設定とアプリデータを読み込み
+            loadSettings();
+            loadAppsFromStorage();
+            
+            // デスクトップの右クリックイベント
+            const desktop = document.getElementById('desktop');
+            desktop.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showContextMenu(e.clientX, e.clientY);
+            });
+
+            // デスクトップクリックでコンテキストメニューを閉じる
+            desktop.addEventListener('click', (e) => {
+                hideContextMenus();
+                clearSelection();
+            });
+
+            // ドキュメント全体でコンテキストメニューを閉じる
+            document.addEventListener('click', hideContextMenus);
+
+            // 選択機能の初期化
+            initializeSelection();
+        }
+
+        function loadSettings() {
+            try {
+                const savedSettings = localStorage.getItem('virtualDesktop_settings');
+                if (savedSettings) {
+                    settings = { ...settings, ...JSON.parse(savedSettings) };
+                }
+            } catch (e) {
+                console.warn('設定の読み込みに失敗しました:', e);
+            }
+            
+            document.title = settings.tabTitle;
+            document.body.style.backgroundImage = settings.backgroundImage ? `url('${settings.backgroundImage}')` : '';
+        }
+
+        function saveSettings() {
+            try {
+                localStorage.setItem('virtualDesktop_settings', JSON.stringify(settings));
+            } catch (e) {
+                console.warn('設定の保存に失敗しました:', e);
+            }
+        }
+
+        function saveAppsToStorage() {
+            try {
+                localStorage.setItem('virtualDesktop_apps', JSON.stringify(apps));
+                localStorage.setItem('virtualDesktop_nextAppId', nextAppId.toString());
+            } catch (e) {
+                console.warn('アプリデータの保存に失敗しました:', e);
+            }
+        }
+
+        function loadAppsFromStorage() {
+            try {
+                const savedApps = localStorage.getItem('virtualDesktop_apps');
+                const savedNextAppId = localStorage.getItem('virtualDesktop_nextAppId');
+                
+                if (savedApps) {
+                    apps = JSON.parse(savedApps);
+                    apps.forEach(app => renderApp(app));
+                }
+                
+                if (savedNextAppId) {
+                    nextAppId = parseInt(savedNextAppId, 10);
+                }
+                
+                // 保存されたデータがない場合のみデモアプリを作成
+                if (!savedApps || apps.length === 0) {
+                    createDemoApps();
+                }
+            } catch (e) {
+                console.warn('アプリデータの読み込みに失敗しました:', e);
+                createDemoApps();
+            }
+        }
+
+        function createDemoApps() {
+            createApp('bookmark', 'Google', 'https://www.google.com', 50, 50);
+            createApp('text', 'メモ', 'これはテキストファイルです。\n\n内容を編集できます。', 150, 50);
+        }
+
+        function initializeSelection() {
+            const desktop = document.getElementById('desktop');
+            let selectionTimeout = null;
+            
+            desktop.addEventListener('mousedown', (e) => {
+                if (e.button === 0 && e.target === desktop) { // 左クリック、デスクトップ上
+                    // 短時間の待機後に選択を開始（ドラッグ判定のため）
+                    selectionTimeout = setTimeout(() => {
+                        startSelection(e);
+                    }, 150);
+                    
+                    // マウス移動で即座に選択開始
+                    const mouseMoveHandler = (moveEvent) => {
+                        const distance = Math.sqrt(
+                            Math.pow(moveEvent.clientX - e.clientX, 2) + 
+                            Math.pow(moveEvent.clientY - e.clientY, 2)
+                        );
+                        
+                        if (distance > 5) { // 5px以上動いたら選択開始
+                            clearTimeout(selectionTimeout);
+                            startSelection(e);
+                            desktop.removeEventListener('mousemove', mouseMoveHandler);
+                        }
+                    };
+                    
+                    desktop.addEventListener('mousemove', mouseMoveHandler);
+                    
+                    const mouseUpHandler = () => {
+                        clearTimeout(selectionTimeout);
+                        desktop.removeEventListener('mousemove', mouseMoveHandler);
+                        desktop.removeEventListener('mouseup', mouseUpHandler);
+                    };
+                    
+                    desktop.addEventListener('mouseup', mouseUpHandler);
+                }
+            });
+
+            document.addEventListener('mousemove', updateSelection);
+            document.addEventListener('mouseup', endSelection);
+        }
+
+        function startSelection(e) {
+            if (draggedApp || draggedWindow) return; // ドラッグ中は選択しない
+            
+            isSelecting = true;
+            selectionStart = {
+                x: e.clientX,
+                y: e.clientY
+            };
+
+            // 選択ボックスを作成
+            selectionBox = document.createElement('div');
+            selectionBox.className = 'selection-box';
+            selectionBox.style.left = e.clientX + 'px';
+            selectionBox.style.top = e.clientY + 'px';
+            selectionBox.style.width = '0px';
+            selectionBox.style.height = '0px';
+            document.body.appendChild(selectionBox);
+
+            clearSelection(); // 既存の選択をクリア
+            e.preventDefault();
+        }
+
+        function updateSelection(e) {
+            if (!isSelecting || !selectionBox || !selectionStart) return;
+
+            const currentX = e.clientX;
+            const currentY = e.clientY;
+            const startX = selectionStart.x;
+            const startY = selectionStart.y;
+
+            // 選択ボックスのサイズと位置を更新
+            const left = Math.min(startX, currentX);
+            const top = Math.min(startY, currentY);
+            const width = Math.abs(currentX - startX);
+            const height = Math.abs(currentY - startY);
+
+            selectionBox.style.left = left + 'px';
+            selectionBox.style.top = top + 'px';
+            selectionBox.style.width = width + 'px';
+            selectionBox.style.height = height + 'px';
+
+            // 選択範囲内のアプリを特定
+            const selectedAppIds = [];
+            apps.forEach(app => {
+                const appElement = document.getElementById('app-' + app.id);
+                if (appElement) {
+                    const appRect = appElement.getBoundingClientRect();
+                    const appCenterX = appRect.left + appRect.width / 2;
+                    const appCenterY = appRect.top + appRect.height / 2;
+
+                    // アプリの中心が選択範囲内にあるかチェック
+                    if (appCenterX >= left && appCenterX <= left + width &&
+                        appCenterY >= top && appCenterY <= top + height) {
+                        selectedAppIds.push(app.id);
+                    }
+                }
+            });
+
+            // 選択状態を更新
+            updateAppSelection(selectedAppIds);
+        }
+
+        function endSelection(e) {
+            if (!isSelecting) return;
+
+            isSelecting = false;
+            selectionStart = null;
+
+            // 選択ボックスを削除
+            if (selectionBox) {
+                selectionBox.remove();
+                selectionBox = null;
+            }
+        }
+
+        function updateAppSelection(selectedAppIds) {
+            // 全てのアプリの選択状態をリセット
+            apps.forEach(app => {
+                const appElement = document.getElementById('app-' + app.id);
+                if (appElement) {
+                    if (selectedAppIds.includes(app.id)) {
+                        appElement.classList.add('selected');
+                    } else {
+                        appElement.classList.remove('selected');
+                    }
+                }
+            });
+
+            selectedApps = apps.filter(app => selectedAppIds.includes(app.id));
+        }
+
+        function clearSelection() {
+            selectedApps = [];
+            apps.forEach(app => {
+                const appElement = document.getElementById('app-' + app.id);
+                if (appElement) {
+                    appElement.classList.remove('selected');
+                }
+            });
+        }
+
+        function isAppSelected(app) {
+            return selectedApps.some(selectedApp => selectedApp.id === app.id);
+        }
+
+        function showContextMenu(x, y) {
+            const menu = document.getElementById('contextMenu');
+            menu.style.left = x + 'px';
+            menu.style.top = y + 'px';
+            menu.style.display = 'block';
+        }
+
+        function showAppContextMenu(x, y, app) {
+            contextMenuApp = app;
+            const menu = document.getElementById('appContextMenu');
+            menu.style.left = x + 'px';
+            menu.style.top = y + 'px';
+            menu.style.display = 'block';
+        }
+
+        function hideContextMenus() {
+            document.getElementById('contextMenu').style.display = 'none';
+            document.getElementById('appContextMenu').style.display = 'none';
+        }
+
+        function snapToGrid(x, y) {
+            return {
+                x: Math.round(x / GRID_SIZE) * GRID_SIZE,
+                y: Math.round(y / GRID_SIZE) * GRID_SIZE
+            };
+        }
+
+        function isPositionOccupied(x, y, excludeApp = null) {
+            return apps.some(app => 
+                app !== excludeApp && 
+                Math.abs(app.x - x) < GRID_SIZE && 
+                Math.abs(app.y - y) < GRID_SIZE
+            );
+        }
+
+        function findNearestFreePosition(x, y, excludeApp = null) {
+            const snapped = snapToGrid(x, y);
+            
+            if (!isPositionOccupied(snapped.x, snapped.y, excludeApp)) {
+                return snapped;
+            }
+
+            // 近くの空いている位置を探す
+            const searchRadius = 5;
+            for (let radius = 1; radius <= searchRadius; radius++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                    for (let dy = -radius; dy <= radius; dy++) {
+                        if (Math.abs(dx) === radius || Math.abs(dy) === radius) {
+                            const testX = snapped.x + dx * GRID_SIZE;
+                            const testY = snapped.y + dy * GRID_SIZE;
+                            
+                            if (testX >= 0 && testY >= 0 && 
+                                testX < window.innerWidth - 64 && 
+                                testY < window.innerHeight - 128 &&
+                                !isPositionOccupied(testX, testY, excludeApp)) {
+                                return { x: testX, y: testY };
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return snapped; // 見つからない場合は元の位置
+        }
+
+        function createApp(type, name, content, x = 100, y = 100) {
+            const app = {
+                id: nextAppId++,
+                type: type,
+                name: name,
+                content: content,
+                x: x,
+                y: y
+            };
+
+            const position = findNearestFreePosition(x, y);
+            app.x = position.x;
+            app.y = position.y;
+
+            apps.push(app);
+            renderApp(app);
+            saveAppsToStorage(); // 作成時に保存
+            return app;
+        }
+
+        function renderApp(app) {
+            const desktop = document.getElementById('desktop');
+            const appElement = document.createElement('div');
+            appElement.className = 'app';
+            appElement.id = 'app-' + app.id;
+            appElement.style.left = app.x + 'px';
+            appElement.style.top = app.y + 'px';
+
+            const icon = document.createElement('div');
+            icon.className = 'app-icon';
+            
+            if (app.type === 'bookmark') {
+                try {
+                    const url = new URL(app.content);
+                    icon.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${url.hostname}" width="16" height="16" onerror="this.style.display='none'; this.nextSibling.style.display='block';" style="display: block;"><span style="display: none;">🔗</span>`;
+                } catch {
+                    icon.textContent = '🔗';
+                }
+            } else {
+                icon.textContent = app.content.charAt(0) || '📄';
+            }
+
+            const name = document.createElement('div');
+            name.className = 'app-name';
+            name.textContent = app.name;
+
+            appElement.appendChild(icon);
+            appElement.appendChild(name);
+
+            // ダブルクリックイベント
+            appElement.addEventListener('dblclick', (e) => {
+                openAppWindow(app);
+                e.stopPropagation();
+            });
+
+            // シングルクリックで選択
+            appElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if (e.ctrlKey || e.metaKey) {
+                    // Ctrl/Cmd + クリックで複数選択
+                    if (isAppSelected(app)) {
+                        selectedApps = selectedApps.filter(selectedApp => selectedApp.id !== app.id);
+                        appElement.classList.remove('selected');
+                    } else {
+                        selectedApps.push(app);
+                        appElement.classList.add('selected');
+                    }
+                } else {
+                    // 通常のクリックで単一選択
+                    clearSelection();
+                    selectedApps = [app];
+                    appElement.classList.add('selected');
+                }
+            });
+
+            // 右クリックイベント
+            appElement.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // 右クリックしたアプリが選択されていない場合、そのアプリのみを選択
+                if (!isAppSelected(app)) {
+                    clearSelection();
+                    selectedApps = [app];
+                    appElement.classList.add('selected');
+                }
+                
+                showAppContextMenu(e.clientX, e.clientY, app);
+            });
+
+            // ドラッグイベント
+            let isDragging = false;
+            let startX, startY, originalX, originalY;
+
+            appElement.addEventListener('mousedown', (e) => {
+                if (e.button === 0) { // 左クリック
+                    // 選択されていないアプリをドラッグする場合、そのアプリのみを選択
+                    if (!isAppSelected(app)) {
+                        clearSelection();
+                        selectedApps = [app];
+                        appElement.classList.add('selected');
+                    }
+                    
+                    isDragging = true;
+                    draggedApp = app;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    originalX = app.x;
+                    originalY = app.y;
+                    
+                    // 選択された全てのアプリのドラッグ準備
+                    selectedApps.forEach(selectedApp => {
+                        const selectedElement = document.getElementById('app-' + selectedApp.id);
+                        if (selectedElement) {
+                            selectedElement.style.zIndex = '999';
+                        }
+                    });
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && draggedApp === app) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    
+                    // 選択された全てのアプリを同時に移動
+                    selectedApps.forEach(selectedApp => {
+                        const selectedElement = document.getElementById('app-' + selectedApp.id);
+                        if (selectedElement) {
+                            const newX = Math.max(0, Math.min(selectedApp.x + deltaX, window.innerWidth - 64));
+                            const newY = Math.max(0, Math.min(selectedApp.y + deltaY, window.innerHeight - 128));
+                            
+                            selectedElement.style.left = newX + 'px';
+                            selectedElement.style.top = newY + 'px';
+                        }
+                    });
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (isDragging && draggedApp === app) {
+                    isDragging = false;
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    
+                    // 全ての選択されたアプリの最終位置を計算
+                    const validMoves = [];
+                    let allMovesValid = true;
+                    
+                    selectedApps.forEach(selectedApp => {
+                        const newX = Math.max(0, Math.min(selectedApp.x + deltaX, window.innerWidth - 64));
+                        const newY = Math.max(0, Math.min(selectedApp.y + deltaY, window.innerHeight - 128));
+                        const finalPosition = findNearestFreePosition(newX, newY, selectedApp);
+                        
+                        // 他の選択されたアプリ以外との重複をチェック
+                        const wouldOverlap = apps.some(otherApp => 
+                            !selectedApps.includes(otherApp) &&
+                            Math.abs(otherApp.x - finalPosition.x) < GRID_SIZE && 
+                            Math.abs(otherApp.y - finalPosition.y) < GRID_SIZE
+                        );
+                        
+                        if (wouldOverlap) {
+                            allMovesValid = false;
+                        }
+                        
+                        validMoves.push({
+                            app: selectedApp,
+                            position: finalPosition,
+                            element: document.getElementById('app-' + selectedApp.id)
+                        });
+                    });
+                    
+                    if (allMovesValid) {
+                        // 全ての移動が有効な場合のみ適用
+                        validMoves.forEach(move => {
+                            move.app.x = move.position.x;
+                            move.app.y = move.position.y;
+                            move.element.style.left = move.position.x + 'px';
+                            move.element.style.top = move.position.y + 'px';
+                        });
+                    } else {
+                        // 重複がある場合は全て元の位置に戻す
+                        selectedApps.forEach(selectedApp => {
+                            const selectedElement = document.getElementById('app-' + selectedApp.id);
+                            if (selectedElement) {
+                                selectedElement.style.left = selectedApp.x + 'px';
+                                selectedElement.style.top = selectedApp.y + 'px';
+                            }
+                        });
+                    }
+                    
+                    // z-indexをリセット
+                    selectedApps.forEach(selectedApp => {
+                        const selectedElement = document.getElementById('app-' + selectedApp.id);
+                        if (selectedElement) {
+                            selectedElement.style.zIndex = '';
+                        }
+                    });
+                    
+                    draggedApp = null;
+                    saveAppsToStorage(); // 移動時に保存
+                }
+            });
+
+            desktop.appendChild(appElement);
+        }
+
+        function openAppWindow(app) {
+            const existingWindow = windows.find(w => w.appId === app.id);
+            if (existingWindow) {
+                focusWindow(existingWindow.element);
+                return;
+            }
+
+            const windowElement = document.createElement('div');
+            windowElement.className = 'window';
+            windowElement.id = 'window-' + nextWindowId;
+            
+            const windowObj = {
+                id: nextWindowId++,
+                appId: app.id,
+                app: app,
+                element: windowElement,
+                isMaximized: false,
+                originalState: null
+            };
+
+            windows.push(windowObj);
+
+            // ウィンドウの位置を設定
+            windowElement.style.left = Math.max(0, app.x + 50) + 'px';
+            windowElement.style.top = Math.max(0, app.y + 50) + 'px';
+            windowElement.style.width = '600px';
+            windowElement.style.height = '400px';
+
+            const header = document.createElement('div');
+            header.className = 'window-header';
+
+            const title = document.createElement('div');
+            title.className = 'window-title';
+            title.textContent = app.name;
+
+            const controls = document.createElement('div');
+            controls.className = 'window-controls';
+
+            const maximizeBtn = document.createElement('button');
+            maximizeBtn.className = 'window-control maximize';
+            maximizeBtn.innerHTML = '🗖';
+            maximizeBtn.onclick = () => toggleMaximize(windowObj);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'window-control close';
+            closeBtn.innerHTML = '✕';
+            closeBtn.onclick = () => closeWindow(windowObj);
+
+            controls.appendChild(maximizeBtn);
+            controls.appendChild(closeBtn);
+
+            header.appendChild(title);
+            header.appendChild(controls);
+
+            const content = document.createElement('div');
+            content.className = 'window-content';
+
+            if (app.type === 'bookmark') {
+                const iframe = document.createElement('iframe');
+                iframe.className = 'window-iframe';
+                iframe.src = app.content;
+                content.appendChild(iframe);
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.className = 'textarea';
+                textarea.style.width = '100%';
+                textarea.style.height = '100%';
+                textarea.style.border = 'none';
+                textarea.style.resize = 'none';
+                textarea.style.outline = 'none';
+                textarea.value = app.content;
+                
+                // テキストが変更されたときにアプリのcontentを更新
+                textarea.addEventListener('input', () => {
+                    app.content = textarea.value;
+                    updateAppDisplay(app);
+                    saveAppsToStorage(); // テキスト変更時に保存
+                });
+                
+                content.appendChild(textarea);
+            }
+
+            windowElement.appendChild(header);
+            windowElement.appendChild(content);
+
+            // ドラッグ機能
+            let isDragging = false;
+            let startX, startY, originalX, originalY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (e.target !== maximizeBtn && e.target !== closeBtn && !windowObj.isMaximized) {
+                    isDragging = true;
+                    draggedWindow = windowObj;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    originalX = windowElement.offsetLeft;
+                    originalY = windowElement.offsetTop;
+                    focusWindow(windowElement);
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && draggedWindow === windowObj && !windowObj.isMaximized) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    const newX = Math.max(0, originalX + deltaX);
+                    const newY = Math.max(0, originalY + deltaY);
+                    
+                    windowElement.style.left = newX + 'px';
+                    windowElement.style.top = newY + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                draggedWindow = null;
+            });
+
+            // ウィンドウクリックでフォーカス
+            windowElement.addEventListener('mousedown', () => focusWindow(windowElement));
+
+            document.getElementById('desktop').appendChild(windowElement);
+            focusWindow(windowElement);
+            updateTaskbar();
+        }
+
+        function toggleMaximize(windowObj) {
+            const windowElement = windowObj.element;
+            const maximizeBtn = windowElement.querySelector('.maximize');
+            
+            if (windowObj.isMaximized) {
+                // 復元
+                windowElement.classList.remove('maximized');
+                windowElement.style.left = windowObj.originalState.left;
+                windowElement.style.top = windowObj.originalState.top;
+                windowElement.style.width = windowObj.originalState.width;
+                windowElement.style.height = windowObj.originalState.height;
+                maximizeBtn.innerHTML = '🗖';
+                windowObj.isMaximized = false;
+            } else {
+                // 最大化
+                windowObj.originalState = {
+                    left: windowElement.style.left,
+                    top: windowElement.style.top,
+                    width: windowElement.style.width,
+                    height: windowElement.style.height
+                };
+                windowElement.classList.add('maximized');
+                maximizeBtn.innerHTML = '🗗';
+                windowObj.isMaximized = true;
+            }
+        }
+
+        function closeWindow(windowObj) {
+            windowObj.element.remove();
+            windows = windows.filter(w => w.id !== windowObj.id);
+            updateTaskbar();
+        }
+
+        function focusWindow(windowElement) {
+            const allWindows = document.querySelectorAll('.window');
+            allWindows.forEach((w, index) => {
+                w.style.zIndex = 1000 + index;
+            });
+            windowElement.style.zIndex = 1000 + allWindows.length;
+        }
+
+        function updateTaskbar() {
+            const taskbar = document.getElementById('taskbar');
+            taskbar.innerHTML = '<div class="taskbar-item" onclick="openSettings()">⚙️</div>';
+
+            windows.forEach(window => {
+                const item = document.createElement('div');
+                item.className = 'taskbar-item';
+                
+                if (window.app.type === 'bookmark') {
+                    try {
+                        const url = new URL(window.app.content);
+                        item.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${url.hostname}" width="16" height="16" onerror="this.textContent='🔗'" style="display: block;">`;
+                    } catch {
+                        item.textContent = '🔗';
+                    }
+                } else {
+                    item.textContent = window.app.content.charAt(0) || '📄';
+                }
+                
+                item.onclick = () => focusWindow(window.element);
+                taskbar.appendChild(item);
+            });
+        }
+
+        function showBookmarkDialog() {
+            hideContextMenus();
+            showDialog('新しいブックマーク', [
+                { label: 'URL', type: 'text', key: 'url', placeholder: 'https://example.com' },
+                { label: '名前', type: 'text', key: 'name', placeholder: 'サイト名' }
+            ], (data) => {
+                if (data.url && data.name) {
+                    createApp('bookmark', data.name, data.url, Math.random() * 400 + 100, Math.random() * 300 + 100);
+                }
+            });
+        }
+
+        function createTextFile() {
+            hideContextMenus();
+            const fileName = '新しいテキストファイル';
+            createApp('text', fileName, '', Math.random() * 400 + 100, Math.random() * 300 + 100);
+        }
+
+        function openApp() {
+            hideContextMenus();
+            if (contextMenuApp) {
+                openAppWindow(contextMenuApp);
+            }
+        }
+
+        function editApp() {
+            hideContextMenus();
+            if (!contextMenuApp) return;
+
+            if (contextMenuApp.type === 'bookmark') {
+                showDialog('ブックマークを編集', [
+                    { label: 'URL', type: 'text', key: 'url', value: contextMenuApp.content },
+                    { label: '名前', type: 'text', key: 'name', value: contextMenuApp.name }
+                ], (data) => {
+                    if (data.url && data.name) {
+                        contextMenuApp.content = data.url;
+                        contextMenuApp.name = data.name;
+                        updateAppDisplay(contextMenuApp);
+                        saveAppsToStorage(); // 編集時に保存
+                    }
+                });
+            } else {
+                showDialog('テキストファイルを編集', [
+                    { label: '内容', type: 'textarea', key: 'content', value: contextMenuApp.content }
+                ], (data) => {
+                    contextMenuApp.content = data.content || '';
+                    updateAppDisplay(contextMenuApp);
+                    saveAppsToStorage(); // 編集時に保存
+                    
+                    // 開いているウィンドウも更新
+                    const window = windows.find(w => w.appId === contextMenuApp.id);
+                    if (window) {
+                        const textarea = window.element.querySelector('.window-content textarea');
+                        if (textarea) {
+                            textarea.value = contextMenuApp.content;
+                        }
+                    }
+                });
+            }
+        }
+
+        function renameApp() {
+            hideContextMenus();
+            if (!contextMenuApp) return;
+
+            showDialog('名前を変更', [
+                { label: '新しい名前', type: 'text', key: 'name', value: contextMenuApp.name }
+            ], (data) => {
+                if (data.name) {
+                    contextMenuApp.name = data.name;
+                    updateAppDisplay(contextMenuApp);
+                    saveAppsToStorage(); // 名前変更時に保存
+                    
+                    // 開いているウィンドウのタイトルも更新
+                    const window = windows.find(w => w.appId === contextMenuApp.id);
+                    if (window) {
+                        const title = window.element.querySelector('.window-title');
+                        title.textContent = data.name;
+                    }
+                }
+            });
+        }
+
+        function deleteApp() {
+            hideContextMenus();
+            if (!contextMenuApp) return;
+
+            const appsToDelete = selectedApps.length > 1 ? selectedApps : [contextMenuApp];
+            const appNames = appsToDelete.map(app => app.name).join(', ');
+            const message = appsToDelete.length > 1 
+                ? `選択された${appsToDelete.length}個のアプリを削除しますか？\n(${appNames})` 
+                : `"${contextMenuApp.name}"を削除しますか？`;
+
+            showDialog('削除の確認', [
+                { label: message, type: 'label' }
+            ], (data) => {
+                appsToDelete.forEach(appToDelete => {
+                    // ウィンドウを閉じる
+                    const window = windows.find(w => w.appId === appToDelete.id);
+                    if (window) {
+                        closeWindow(window);
+                    }
+                    
+                    // アプリを削除
+                    const appElement = document.getElementById('app-' + appToDelete.id);
+                    if (appElement) {
+                        appElement.remove();
+                    }
+                    
+                    apps = apps.filter(app => app.id !== appToDelete.id);
+                });
+                
+                clearSelection();
+                saveAppsToStorage(); // 削除時に保存
+            }, 'delete');
+        }
+
+        function updateAppDisplay(app) {
+            const appElement = document.getElementById('app-' + app.id);
+            if (!appElement) return;
+
+            const icon = appElement.querySelector('.app-icon');
+            const name = appElement.querySelector('.app-name');
+
+            if (app.type === 'bookmark') {
+                try {
+                    const url = new URL(app.content);
+                    icon.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${url.hostname}" width="16" height="16" onerror="this.style.display='none'; this.nextSibling.style.display='block';" style="display: block;"><span style="display: none;">🔗</span>`;
+                } catch {
+                    icon.textContent = '🔗';
+                }
+            } else {
+                icon.textContent = app.content.charAt(0) || '📄';
+            }
+
+            name.textContent = app.name;
+        }
+
+        function openSettings() {
+            showDialog('設定', [
+                { label: '背景画像のURL', type: 'text', key: 'backgroundImage', value: settings.backgroundImage, placeholder: '画像のURL（空白で黒色）' },
+                { label: 'タブの名前', type: 'text', key: 'tabTitle', value: settings.tabTitle, placeholder: 'Virtual Desktop' }
+            ], (data) => {
+                settings.backgroundImage = data.backgroundImage || '';
+                settings.tabTitle = data.tabTitle || 'Virtual Desktop';
+                loadSettings();
+                saveSettings(); // 設定変更時に保存
+            });
+        }
+
+        function showDialog(title, fields, onConfirm, type = 'normal') {
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'block';
+
+            const dialog = document.createElement('div');
+            dialog.className = 'dialog';
+
+            const dialogTitle = document.createElement('div');
+            dialogTitle.className = 'dialog-title';
+            dialogTitle.textContent = title;
+            dialog.appendChild(dialogTitle);
+
+            const form = {};
+            
+            fields.forEach(field => {
+                if (field.type === 'label') {
+                    const label = document.createElement('div');
+                    label.style.marginBottom = '16px';
+                    label.style.fontSize = '14px';
+                    label.textContent = field.label;
+                    dialog.appendChild(label);
+                } else if (field.type === 'textarea') {
+                    const label = document.createElement('label');
+                    label.className = 'settings-label';
+                    label.textContent = field.label;
+                    dialog.appendChild(label);
+
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'textarea';
+                    textarea.value = field.value || '';
+                    textarea.placeholder = field.placeholder || '';
+                    form[field.key] = textarea;
+                    dialog.appendChild(textarea);
+                } else {
+                    const label = document.createElement('label');
+                    label.className = 'settings-label';
+                    label.textContent = field.label;
+                    dialog.appendChild(label);
+
+                    const input = document.createElement('input');
+                    input.className = 'dialog-input';
+                    input.type = field.type;
+                    input.value = field.value || '';
+                    input.placeholder = field.placeholder || '';
+                    form[field.key] = input;
+                    dialog.appendChild(input);
+                }
+            });
+
+            const buttons = document.createElement('div');
+            buttons.className = 'dialog-buttons';
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'dialog-button';
+            cancelBtn.textContent = 'キャンセル';
+            cancelBtn.onclick = () => closeDialog();
+
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'dialog-button primary';
+            confirmBtn.textContent = type === 'delete' ? '削除' : 'OK';
+            confirmBtn.onclick = () => {
+                const data = {};
+                Object.keys(form).forEach(key => {
+                    data[key] = form[key].value;
+                });
+                onConfirm(data);
+                closeDialog();
+            };
+
+            buttons.appendChild(cancelBtn);
+            buttons.appendChild(confirmBtn);
+            dialog.appendChild(buttons);
+
+            overlay.appendChild(dialog);
+
+            // 最初の入力欄にフォーカス
+            const firstInput = dialog.querySelector('input, textarea');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 100);
+            }
+
+            function closeDialog() {
+                overlay.style.display = 'none';
+                overlay.innerHTML = '';
+            }
+
+            // Escapeキーでダイアログを閉じる
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeDialog();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+
+            // Enterキーで確定（テキストエリア以外）
+            const enterHandler = (e) => {
+                if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                    confirmBtn.click();
+                }
+            };
+            dialog.addEventListener('keydown', enterHandler);
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', initializeDesktop);
+
+        // ウィンドウリサイズ時の処理
+        window.addEventListener('resize', () => {
+            apps.forEach(app => {
+                const maxX = window.innerWidth - 64;
+                const maxY = window.innerHeight - 128;
+                if (app.x > maxX) app.x = Math.max(0, maxX);
+                if (app.y > maxY) app.y = Math.max(0, maxY);
+                
+                const appElement = document.getElementById('app-' + app.id);
+                if (appElement) {
+                    appElement.style.left = app.x + 'px';
+                    appElement.style.top = app.y + 'px';
+                }
+            });
+            saveAppsToStorage(); // リサイズ時に位置を保存
+        });
+
+        // デモ用のサンプルアプリを作成（削除）
+        // 初回起動時のみloadAppsFromStorage内で作成される
+    </script>
+</body>
+</html>
