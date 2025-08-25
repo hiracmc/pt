@@ -9,8 +9,7 @@
 
 
 <br><br><br>
-<br><br>
-Youtubeの動画を検索して表示できるツールです。
+
 
 <br><br><br>
 
@@ -52,6 +51,7 @@ urlの最後に/homeとつけるか、ponzuと検索することでホームに�
 5.Publish Directoryに「.」を打ち込む(名前は自由でok)
 
 6.保存して完成！🎉
+
 
 
 
