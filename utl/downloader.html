@@ -107,6 +107,7 @@ const form = document.getElementById('form');
       const data = await res;
         const omg = await data.formatStreams?.map(stream => stream.url);
       const omgg = await data.adaptiveFormats[0].url
+      console.log(omgg)
       document.getElementById('data').innerHTML =`
       <a href="${omg}" download>動画としてDL</a>
       <a href="${omgg}" download>音声としてDL</a>
