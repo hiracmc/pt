@@ -306,8 +306,23 @@ width:85vw;
   background-color: #1d1d1d;
   border: 4px solid #111111;
   border-radius: 10px;
-
+animation-name: syutu;         
+  animation-duration: 1s;        
+  animation-iteration-count: 1;    
+  animation-fill-mode: forwards;
 }
+
+@keyframes syutu {
+  from {
+    opacity: 0;
+    transform: translateY(10px); 
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 .douga1 {
   margin-left: 50px;
@@ -321,7 +336,10 @@ width:85vw;
   background-color: #a12121;
   border: 4px solid #990404;
   border-radius: 10px;
-
+animation-name: syutu;         
+  animation-duration: 1s;        
+  animation-iteration-count: 1;    
+  animation-fill-mode: forwards;
 
 }
 

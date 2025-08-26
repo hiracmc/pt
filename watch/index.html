@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=thumb_up" />
+
 </head>
 <body>
 <script>
@@ -16,41 +18,7 @@
   let ifd = 0;
   let d
 
-  function rirekiset(newrireki) {
-    console.log(newrireki)
-    const key = 'rireki';
-    const max = 150;
-    if (!newrireki || typeof newrireki.id === "undefined") return;
 
-    try {
-      const Data = localStorage.getItem(key)
-      let dataArray = [];
-      if (Data) {
-  try {
-  const parsedData = JSON.parse(Data);
-  if (Array.isArray(parsedData)) {
-  dataArray = parsedData;
-  }
-  } catch (e) {
-  console.error('Fail', e);
-  }
-  }
-
-  let updatedArray = dataArray.filter(item => item.id !== rirekiItem.id);
-  updatedArray.unshift(newrireki);
-
-  if (updatedArray.length > max) {
-  updatedArray = updatedArray.slice(0, max);
-  }
-  console.log(`a ${updatedArray}`)
-  localStorage.setItem(key, JSON.stringify(updatedArray));
-
-  return updatedArray;
-
-  } catch (e) {
-  return;
-    }
-  }
 
 
   function sw(){
@@ -160,7 +128,6 @@ console.log("スクリプトを読み込みました")
    const url = document.getElementById('youtube-url');
 url.textContent = `http://youtu.be/${videoId}`;
  console.log(videoId)
-    rirekiset(videoId)
     loadVideoInfo(videoId);
   }
 
@@ -261,6 +228,8 @@ console.log(`動画の説明を読み込みます…${videoId}`)
           </a>
           </div>
           <div class="komesita"><a href="${ip}/channel/?c=${comment.authorId}"><p class="b">${name}</p></a><p class="kometext"><p>${commentt}</p></div>
+thumb_up
+</span>
         </div>
       `;
     })

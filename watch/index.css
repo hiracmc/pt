@@ -383,19 +383,41 @@ width:60vw;
   display: flex;
   background-color: #1d1d1d;
   border: 4px solid #111111;
+  position: relative;
   border-radius: 10px;
+  animation-name: syutu;         
+  animation-duration: 1s;        
+  animation-iteration-count: 1;    
+  animation-fill-mode: forwards;
 
 }
 
+.material-symbols-outlined {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  
+}
+
+@keyframes syutu {
+  from {
+    opacity: 0;
+    transform: translateY(10px); 
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .kome a {
 color: #0088ff;
-text-decoration: underline;
+text-decoration: none;
 }
 
 .kome a:hover {
 color: #0074da;
-text-decoration: underline;
+text-decoration: none;
 }
 
 .komesita {
