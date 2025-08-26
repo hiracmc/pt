@@ -4,6 +4,7 @@
   <title>わかりやすい数学</title>
 </head>
 <body>
+  かんたんだうんろーだー
 youtube動画の「id」を入力してください
 (http://youtu.be/trfjV9iIeJkならtrfjV9iIeJk)
 <form id="form">
@@ -106,7 +107,7 @@ const form = document.getElementById('form');
        const res = await getData(`videos/${key}`);
       const data = await res;
         const omg = await data.formatStreams?.map(stream => stream.url);
-      const omgg = await data.adaptiveFormats[0].url
+      const omgg = await data.adaptiveFormats[0].url;
       console.log(omgg)
       document.getElementById('data').innerHTML =`
       <a href="${omg}" download>動画としてDL</a>
