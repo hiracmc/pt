@@ -454,3 +454,22 @@ font-weight: bold;
 
 
 }
+
+.dougasamune{
+position: relative;
+display: inline-block;
+}
+
+.dougasamune img{
+border-radius: 8px;
+}
+
+.dougasamune .dougazikan {
+position:absolute;
+bottom: -5px;
+right: 4px;
+color: #fff;
+background-color: rgba(0, 0, 0, 0.8);
+padding: 2px 6px;
+border-radius: 5px;
+}

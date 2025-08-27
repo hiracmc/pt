@@ -21,6 +21,7 @@
 
 
 
+
   function sw(){
 if(ifd === 1){
   const text = d;
@@ -108,8 +109,10 @@ function extractVideoId(url) {
       <div class="kag"></div></div>
         <button type="submit" onclick="sw()" id="syouryaku">もっと見る</button>
   </div>
+  
   <div id="komee">読み込み中...</div>
 <div id="komento"></div>
+<div id="osusume"></div>
 <script type="module" src="../api/v1.js"></script>
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
 <script type="module">
@@ -131,6 +134,32 @@ url.textContent = `http://youtu.be/${videoId}`;
     loadVideoInfo(videoId);
   }
 
+  /**
+ * @param {number} totalSeconds
+ * @returns {string}
+ */
+function time(totalSeconds) {
+  if (typeof totalSeconds !== 'number' || totalSeconds < 0) {
+    return "0";
+  }
+  if (totalSeconds === 0) {
+    return "0";
+  }
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const parts = [];
+  if (hours > 0) {
+    parts.push(`${hours}:`);
+  }
+    parts.push(`${String(minutes).padStart(2, '0')}:`);
+    parts.push(`${String(seconds).padStart(2, '0')}`);
+
+  return parts.join('');
+}
+
 function syouryaku(text,max) {
   const maxLength = max;
   if (text.length <= maxLength) {
@@ -142,9 +171,9 @@ function syouryaku(text,max) {
 async function loadVideoInfo(videoId) {
   const apiUrl = `${baseUri}${videoId}`;
   try {
-    const response = getData(`videos/${videoId}`)
+    const response = await getData(`videos/${videoId}`)
 console.log(`動画の説明を読み込みます…${videoId}`)
-    const data = await response;
+    const data = await response.data;
 
 
 
@@ -160,8 +189,11 @@ console.log(`動画の説明を読み込みます…${videoId}`)
     if(localStorage.getItem('if_loop') === "true"){
       loop = "loop"
     }
-    container.innerHTML = `<video src="${omg}" width="${yoko}" height="${tate}" ${loop} poster="${data.videoThumbnails[3].url}" controls>動画の読み込みに失敗しました</video>`;
+    container.innerHTML = `<video id="vide" src="${omg}" width="${yoko}" height="${tate}" ${loop} poster="${data.videoThumbnails[3].url}" controls>動画の読み込みに失敗しました</video>`;
+    document.getElementById('vide').volume = 0.03
+
   }
+  
 
 
 
@@ -189,14 +221,39 @@ const text = d;
   document.getElementById('description').innerHTML = syoi(text) + ` .....`;
   const button = document.getElementById('syouryaku')
   button.innerText = "もっと見る";
-
     getkome(videoId)
+
+
+
+
+    const osusume = document.getElementById('osusume');
+    const osusu = await data.recommendedVideos
+let ht = ""
+console.log("関連動画読み込むで")
+
+osusu.forEach((d)=> {
+  const samuine = d.videoThumbnails[3].url
+ht + `
+<div class="dougasamune">
+            <a href="${ip}/watch/?v=${d.videoId}">
+          <img src="${samuine}" alt="${d.title}" width="320" height="180">
+          </a>
+`
+})
+osusume.innerHTML = ht;
+
+
+
+
   } catch (err) {
     console.error("エラーが発生しました:", err);
   }
 
   return true;
 }
+
+
+
 
  /**
    * 
@@ -209,7 +266,7 @@ async function getkome(videoId) {
     const response = await getData(`comments/${videoId}`)
     console.log(response)
 console.log(`動画の説明を読み込みます…${videoId}`)
-    const data = await response;
+    const data = await response.data;
     console.log(data)
     let text = "";
 
@@ -227,7 +284,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
           <img src="${icon}" alt="${name}" width="40" height="40">
           </a>
           </div>
-          <div class="komesita"><a href="${ip}/channel/?c=${comment.authorId}"><p class="b">${name}</p></a><p class="kometext"><p>${commentt}</p></div>
+          <div class="komesita"><a href="${ip}/channel/?c=${comment.authorId}"><p class="b">${name} - ${comment.likeCount}いいね</p></a><p class="kometext"><p>${commentt}</p></div>
 
         </div>
       `;

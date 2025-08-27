@@ -68,17 +68,17 @@ const promises = link.map(async urll => {
       const data = response.data;
       return { from: urll, data: data };
     } else {
-      throw new Error(`HTTP Error: ${response.status}`);
+
     }
   } catch (error) {
-    console.error(`エラー URL: ${url}`, error.message);
+
     throw error;
   }
 });
 
 try {
   const result = await Promise.any(promises);
-  return result.data;
+  return {data: result.data, by:result.from}
 } catch (error) {
   console.error("\nすべてのサーバーへの接続に失敗しました。");
   document.getElementById('sippa').innerHTML = `<h1 style="color: #fff; font-size: 16px; margin-left: 40px;">動画の情報の読み込みに失敗しました。再読み込みボタンをしてもう一度試してください</h1>`;
