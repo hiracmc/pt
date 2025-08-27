@@ -53,7 +53,7 @@ export async function getData(add) {
 ];
 
 
-  const li = `/api/v1/${add}`;
+const li = `/api/v1/${add}`;
 const promises = link.map(async urll => {
   const url = urll + li;
   
@@ -61,28 +61,24 @@ const promises = link.map(async urll => {
     const response = await axios.get(url, {
       timeout: 5000,
     });
-    
-
+  
     if (response.status >= 200 && response.status < 300) {
-      console.log(`このインスタンスのデータを使用します ${url}`);
       const data = response.data;
       return { from: urll, data: data };
     } else {
-
+      throw new Error(`HTTP Error: ${response.status}`);
     }
   } catch (error) {
-
     throw error;
   }
 });
 
 try {
   const result = await Promise.any(promises);
-  return {data: result.data, by:result.from}
+  return {data:result.data,by:result.from};
 } catch (error) {
   console.error("\nすべてのサーバーへの接続に失敗しました。");
   document.getElementById('sippa').innerHTML = `<h1 style="color: #fff; font-size: 16px; margin-left: 40px;">動画の情報の読み込みに失敗しました。再読み込みボタンをしてもう一度試してください</h1>`;
   return null;
 }
-
 }

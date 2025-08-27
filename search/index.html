@@ -12,6 +12,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
 </head>
 <body lang="ja">
+  <script>
+    const ipp = window.location.origin;
+    function e() {
+  event.preventDefault()
+  const url = document.getElementById('youtube-url').value;
+
+  if (url){
+  const videoId = extractVideoId(url);
+  if (videoId) {
+    const location = window.location.hash.slice(0);
+
+    window.location.href=`${ipp}/watch/?v=${videoId}`;
+    
+  } else {
+    const url = document.getElementById('youtube-url').value;
+  const videoId = extractVideoId2(url);
+    if(videoId){
+
+    const location = window.location.hash.slice(0);
+    window.location.href=`${ipp}/watch/?v=${videoId}`;
+
+    } else {
+
+    window.location.href=`${ipp}/search/?q=${url}`;
+  }}
+}}
+
+function extractVideoId(url) {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
+  const match = url.match(regExp);
+  return (match && match[5].length === 11) ? match[5] : null;
+}
+
+  function extractVideoId2(url) {
+   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
+  
+  const match = url.match(regex);
+
+    if (match) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
+   </script> 
 
 <script type="module">
   
@@ -55,44 +100,7 @@ function syouryaku(stext,max) {
   }
 
 
-function e() {
-  event.preventDefault()
-  const url = document.getElementById('youtube-url').value;
-  if (url){
-  const videoId = extractVideoId(url);
-  if (videoId) {
-    const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/watch/?v=${videoId}`;
 
-  } else {
-  const videoId = extractVideoId2(url);
-    if(videoId){
-    const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/watch/?v=${videoId}`;
-
-    } else {
-    window.location.href=`${ip}/search/?q=${url}`;
-  }}
-}}
-
-
-function extractVideoId(url) {
-  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
-  const match = url.match(regExp);
-  return (match && match[5].length === 11) ? match[5] : null;
-}
-
-  function extractVideoId2(url) {
-   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
-  
-  const match = url.match(regex);
-
-    if (match) {
-    return match[1];
-  } else {
-    return null;
-  }
-}
 
 
 async function kensak(q) {
@@ -235,7 +243,7 @@ console.log(`スクリプトを読み込みました`)
   const key = ne
   document.getElementById('youtube-url').value = key;
 
-  console.log(key)
+
  kensak(key);
 
 document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;

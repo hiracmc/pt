@@ -96,6 +96,7 @@ function extractVideoId(url) {
     </div>
 </div>
   <div id="sippa"><h1></h1></div>
+  <div id="view"><div id="view2">
   <div id="video-container"></div>
   <div id="video-name"><h1>読み込み中</h1></div>
   <div id="video-link"><h2></h2></div>
@@ -112,7 +113,9 @@ function extractVideoId(url) {
   
   <div id="komee">読み込み中...</div>
 <div id="komento"></div>
+</div>
 <div id="osusume"></div>
+</div>
 <script type="module" src="../api/v1.js"></script>
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
 <script type="module">
@@ -159,6 +162,15 @@ function time(totalSeconds) {
 
   return parts.join('');
 }
+
+  function samun(str,getip) {
+    if(str[0] === "/"){
+      if(str[1] === "/"){
+      return "https:" + str }else {
+        return `${getip}${str}`
+      }
+    } else {return str}
+  }
 
 function syouryaku(text,max) {
   const maxLength = max;
@@ -229,17 +241,32 @@ const text = d;
     const osusume = document.getElementById('osusume');
     const osusu = await data.recommendedVideos
 let ht = ""
-console.log("関連動画読み込むで")
+console.log(osusu)
 
-osusu.forEach((d)=> {
-  const samuine = d.videoThumbnails[3].url
-ht + `
+for (const d of osusu){
+  const samuine = samun(d.videoThumbnails[3].url,response.by)
+  const times = time(d.lengthSeconds);
+  const sya = syouryaku(d.author,20)
+let zika = `<p class=dougazikan>${times}</p>`;
+ht += `
+<div class="kanrendouga">
 <div class="dougasamune">
             <a href="${ip}/watch/?v=${d.videoId}">
-          <img src="${samuine}" alt="${d.title}" width="320" height="180">
+          <img src="${samuine}" alt="${d.title}" width="160" height="110">
+          ${zika}
           </a>
+          
+          </div>
+          <div class="blo">
+          <a href="${ip}/watch/?v=${d.videoId}">
+            <p class="kanrentitle">${syouryaku(d.title,25)}</p>
+            </a>
+            
+          <div class="sya"><a href="${ip}/channel/?c=${d.authorId}"><p class="b">${sya}</p></a></div><p class="c">${fn(d.viewCount)} 回視聴・${d.publishedText}</p></div>
+            </div>
+            </div>
 `
-})
+}
 osusume.innerHTML = ht;
 
 
@@ -284,7 +311,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
           <img src="${icon}" alt="${name}" width="40" height="40">
           </a>
           </div>
-          <div class="komesita"><a href="${ip}/channel/?c=${comment.authorId}"><p class="b">${name} - ${comment.likeCount}いいね</p></a><p class="kometext"><p>${commentt}</p></div>
+          <div class="komesita"><a href="${ip}/channel/?c=${comment.authorId}"><p class="b">${name}</p></a><p class="kometext"><p>${commentt}</p></div>
 
         </div>
       `;
