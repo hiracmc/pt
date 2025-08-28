@@ -17,6 +17,7 @@ a {
 }
 
 .home{
+  
   background: linear-gradient(to right, #ff0000,#ff9900, #ff0000);
   background-size: 200%;
   background-clip: text;
@@ -280,7 +281,7 @@ background-color: #0f0f0f;
 font-family: 'ヒラギノ角ゴシック','Hiragino Sans','メイリオ', Meiryo,sans-serif;
 }
 
-.ue {
+#ue {
 display: flex;
 text-align:center;
 width: 100vw;
@@ -290,10 +291,11 @@ left: 0;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 0px -1px;
-  background-color: #0f0f0f;
+
+  z-index: 100;
 }
 
-.ue .var{
+#ue .var{
 color: #fff;
 margin-left: 5px;
 font-size: 12px;
@@ -458,10 +460,11 @@ font-weight: bold;
 #kanrendayo
 {
   margin-left: 20px;
-margin-top: 0px;
+margin-top: 100px;
 font-size: 24px;
 font-weight: bold;
     color: #ffffff;
+    z-index: 999;
 }
 
 .dougasamune{
@@ -495,7 +498,7 @@ border-radius: 5px;
 #osusume{
   display: inline-block;
   margin-left: 20px;
-  margin-top: 0px;
+  margin-top: 5px;
 }
 
 .kanrendouga {

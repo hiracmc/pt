@@ -83,7 +83,7 @@ function extractVideoId(url) {
 }
   </script>
 
-<div class="ue">
+<div id="ue">
     <div id="gohome"></div>
 
     <form class="kensaku">
@@ -380,6 +380,7 @@ function fn(number) {
 }
 
 document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
+document.getElementById('ue').style.position = "fixed";
 </script>
 </body>
 </html>
