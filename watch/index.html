@@ -180,6 +180,8 @@ function syouryaku(text,max) {
   return text.slice(0, maxLength) + "...";
 }
 
+function km(input){const cleanInput=input.trim().toLowerCase();const lastChar=cleanInput.slice(-1);const numberPart=parseFloat(cleanInput.slice(0, -1));let multiplier=1;switch (lastChar){case'k':multiplier=1000;break;case 'm':multiplier = 1000000;break;case'b':multiplier=1000000000;break;default:const fullNumber=parseFloat(cleanInput);return isNaN(fullNumber)?input:fullNumber;}return numberPart*multiplier;}
+
 async function loadVideoInfo(videoId) {
   const apiUrl = `${baseUri}${videoId}`;
   try {
@@ -201,7 +203,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
     if(localStorage.getItem('if_loop') === "true"){
       loop = "loop"
     }
-    container.innerHTML = `<video id="vide" src="${omg}" width="${yoko}" height="${tate}" ${loop} poster="${data.videoThumbnails[3].url}" controls>動画の読み込みに失敗しました</video>`;
+    container.innerHTML = `<video id="vide" src="${omg}" width="${yoko}" height="${tate}" ${loop} poster="${samun(data.videoThumbnails[3].url)}" controls>動画の読み込みに失敗しました</video>`;
     document.getElementById('vide').volume = 0.03
 
   }
@@ -225,7 +227,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
     const videoinfo = data.author;
       const touroku = data.subCountText;
 
-      const c = `<a style="text-decoration: none;" href="${ip}/channel/?c=${data.authorId}"><img src="${data.authorThumbnails[2].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3></a><p>${touroku} 人の登録者</p></div>`;
+      const c = `<a style="text-decoration: none;" href="${ip}/channel/?c=${data.authorId}"><img src="${data.authorThumbnails[2].url}" alt="ちゃんねる" class="home"> <div class="so"><h3>${syouryaku(videoinfo,25)}</h3></a><p>${fn(km(touroku))}人の登録者</p></div>`;
 
       document.getElementById('channel-info').innerHTML = c;
 
@@ -262,7 +264,7 @@ ht += `
             <p class="kanrentitle">${syouryaku(d.title,25)}</p>
             </a>
             
-          <div class="sya"><a href="${ip}/channel/?c=${d.authorId}"><p class="b">${sya}</p></a></div><p class="c">${fn(d.viewCount)} 回視聴・${d.publishedText}</p></div>
+          <div class="sya"><a href="${ip}/channel/?c=${d.authorId}"><p class="b">${sya}</p></a></div><p class="c">${d.publishedText}に投稿</p></div>
             </div>
             </div>
 `

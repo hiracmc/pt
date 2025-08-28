@@ -14,98 +14,78 @@
 <body lang="ja">
   
 <script>
-async function getData(add) {
-  let link = [
-  "https://iv.melmac.space",
-  "https://invidious.reallyaweso.me",
-  "https://invidious.adminforge.de",
-  "https://invidious.esmailelbob.xyz",
-  "https://invidious.nerdvpn.de",
-  "https://invidious.perennialte.ch",
-  "https://invidious.dhusch.de",
-  "https://invidious.0011.lt",
-  "https://invidious.materialio.us",
-  "https://usa-proxy2.poketube.fun",
-  "https://invidious.darkness.service",
-  "https://invidious.flokinet.to",
-  "https://invidious.fdn.fr",
-  "https://iv.duti.dev",
-  "https://yt.artemislena.eu",
-  "https://invidious.projectsegfau.lt",
-  "https://id.420129.xyz",
-  "https://invidious.jing.rocks",
-  "https://nyc1.iv.ggtyler.dev",
-  "https://inv.in.projectsegfau.lt",
-  "https://invidious.drgns.space",
-  "https://cal1.iv.ggtyler.dev",
-  "https://invidious.nikkosphere.com",
-  "https://inv.us.projectsegfau.lt",
-  "https://lekker.gay",
-  "https://youtube.mosesmang.com",
-  "https://invidious.privacyredirect.com",
-  "https://invidious.lunivers.trade",
-  "https://invidious.incogniweb.net",
-  "https://invid-api.poketube.fun",
-  "https://inv.tux.pizza",
-  "https://invidious.ducks.party",
-  "https://pol1.iv.ggtyler.dev",
-  "https://invidious.protokolla.fi",
-  "https://invidious.einfachzocken.eu",
-  "https://yewtu.be",
-  "https://iv.datura.network",
-  "https://invidious.f5.si",
-  "https://invidious.privacydev.net",
-  "https://eu-proxy.poketube.fun",
-  "https://yt.drgnz.club",
-  "https://inv.nadeko.net",
-  "https://invidious.private.coffee"
-];
 
 
-  const li = `/api/v1/${add}`;
-  const controller = new AbortController();
-  const signal = controller.signal;
+    const ipp = window.location.origin;
+    function e() {
+  event.preventDefault()
+  const url = document.getElementById('youtube-url').value;
 
-  const promises = link.map(async urll => {
-    const url = urll + li;
+  if (url){
+  const videoId = extractVideoId(url);
+  if (videoId) {
+    const location = window.location.hash.slice(0);
+
+    window.location.href=`${ipp}/watch/?v=${videoId}`;
     
-    try {
-      const response = await fetch(url, { signal });
-      
-      if (response.ok) {
-        console.log(`このインスタンスのデータを使用します ${url}`);
-        const data = await response.json();
-        controller.abort();
-        return { from: urll, data: data };
-      } else {
-        throw new Error(`接続に失敗 ${response.status}  ${url}`);
-      }
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        throw error;
-      }
-      throw new Error(`接続エラー: ${error.message}`);
-    }
-  });
+  } else {
+    const url = document.getElementById('youtube-url').value;
+  const videoId = extractVideoId2(url);
+    if(videoId){
 
-  try {
-    const result = await Promise.any(promises);
-    return result.data;
-  } catch (error) {
-    console.error("\nすべてのサーバーへの接続に失敗しました。。");
+    const location = window.location.hash.slice(0);
+    window.location.href=`${ipp}/watch/?v=${videoId}`;
+
+    } else {
+
+    window.location.href=`${ipp}/search/?q=${url}`;
+  }}
+}}
+
+function extractVideoId(url) {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
+  const match = url.match(regExp);
+  return (match && match[5].length === 11) ? match[5] : null;
+}
+
+  function extractVideoId2(url) {
+   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
+  
+  const match = url.match(regex);
+
+    if (match) {
+    return match[1];
+  } else {
     return null;
   }
 }
 
+   </script> 
 
+<script type="module">
 
+  import {getData} from '../api/v1.js';
 
-const ip = window.location.origin;
+  function samun(str,getip) {
+    if(str[0] === "/"){
+      if(str[1] === "/"){
+      return "https:" + str }else {
+        return `${getip}${str}`
+      }
+    } else {return str}
+  }
+  const ip = window.location.origin;
 
+  console.log(`スクリプトを読み込みました`)
+  const url = new URL(window.location.href);
+  const ne =  url.searchParams.get('c');
+  const key = ne
 
-const server = "https://invidious.nikkosphere.com";
-  
-const baseUri = server + "/api/v1/channels/";
+  console.log(key)
+ kensa(key);
+
+document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
+
 
 function syouryaku(stext,max) {
   const text = stext || ''; 
@@ -127,51 +107,11 @@ function syouryaku(stext,max) {
   return kekka;
   }
 
-
-function e() {
-  event.preventDefault()
-  const url = document.getElementById('youtube-url').value;
-  if (url){
-  const videoId = extractVideoId(url);
-  if (videoId) {
-    const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
-
-  } else {
-  const videoId = extractVideoId2(url);
-    if(videoId){
-    const location = window.location.hash.slice(0);
-    window.location.href=`${ip}/w#${videoId}`;
-
-    } else {
-    window.location.href=`${ip}/search/?q=${url}`;
-  }}
-}}
-
-
-function extractVideoId(url) {
-  const regExp = /^.*((youtu.be\/)|(v\/)|(\/?\w?\/))([\w\-]{11}).*/;
-  const match = url.match(regExp);
-  return (match && match[5].length === 11) ? match[5] : null;
-}
-
-  function extractVideoId2(url) {
-   const regex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
-  
-  const match = url.match(regex);
-
-    if (match) {
-    return match[1];
-  } else {
-    return null;
-  }
-}
-
 async function kensa(q) {
-  const apiUrl = `${baseUri}${q}?hl=ja`;
+
   try {
     const response = await getData(`channels/${q}`)
-    const data = await response;
+    const data = await response.data;
     let bana = ""
     if (data.authorBanners[0]){
     console.log("ばななあった")
@@ -184,7 +124,7 @@ async function kensa(q) {
           ${bana}
 
           <div id="ic">
-          <img class="icon" src="${data.authorThumbnails[4].url}" alt="ばなー" width="160" height="160">
+          <img class="icon" src="${samun(data.authorThumbnails[4].url,response.by)}" alt="ばなー" width="160" height="160">
           <div class="na">
           <h1>${data.author}</h1>
           <p class="touroku">チャンネル登録者数 ${fn(data.subCount)}人</p></br>
@@ -210,7 +150,7 @@ async function kensa(q) {
         <div class="douga${ra}">
           <div class="dougasamune">
             <a href="${ip}/watch/?v=${video.videoId}">
-          <img src="${samune}" alt="${name}" width="320" height="180">
+          <img src="${samun(samune,response.by)}" alt="${name}" width="320" height="180">
           </a>
           ${zika}
           </div>
@@ -328,19 +268,11 @@ function time(totalSeconds) {
 
 </div>
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
-<script type="module">
+<script>
 
 
 // import { geturl } from "./assets/geturl.js";
-console.log(`スクリプトを読み込みました`)
-  const url = new URL(window.location.href);
-  const ne =  url.searchParams.get('c');
-  const key = ne
 
-  console.log(key)
- kensa(key);
-
-document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
 </script>
 </body>
 </html>
