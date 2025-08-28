@@ -14,7 +14,7 @@
 
 
     <div id="gohome"></div>
-    <div class="varr"><a href="#" id="va">v0.043</a></div>
+    <div class="varr"><a href="#" id="va"><div id="nuv">バージョンを取得しています</div></a></div>
 
 
 
@@ -68,6 +68,7 @@ async function getlog() {
       throw new Error(`${logdata.status}`);
     }
     const data = await logdata.json();
+    document.getElementById('nuv').innerHTML = "v" + data[0].ver;
     console.log(data)
     const htm = document.getElementById('clog');
     let html = "";
