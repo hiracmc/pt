@@ -35,6 +35,7 @@
 
     if (localStorage.getItem('if_dark') === null){ localStorage.setItem('if_dark', 'true'); }
     if (localStorage.getItem('if_eme') === null){ localStorage.setItem('if_eme', 'true'); }
+    if (localStorage.getItem('if_scroll') === null){ localStorage.setItem('if_scroll', 'true'); }
     if (localStorage.getItem('if_back') === ""){
         document.body.style.backgroundImage = `none`
     } else {
@@ -90,11 +91,12 @@ function config_load() {
 function config_kinou() {
     SConfig(1, 1, "ループ再生", "ループ再生をします。作業用にどうぞ。", "if_loop")
     SConfig(1, 2, "Youtubeの埋め込みで再生", "埋め込みで動画を視聴します。こっちのほうが高機能。", "if_eme")
-    SConfig(1, 3, "ベータ版", "開発中の機能を使えるようにします。不安定。", "if_beta")
+    SConfig(1, 3, "スクロール", "コメントから時間のリンクを踏んだ時に、動画のところまで戻るかどうか", "if_scroll")
+    SConfig(1, 4, "ベータ版", "開発中の機能を使えるようにします。不安定。", "if_beta")
 }
 
 function config_tema() {
-    SConfig(2, 4, "ホームのカスタム背景", `<a href="./back.html">サンプル</a>`, "if_back")
+    SConfig(2, 5, "ホームのカスタム背景", `<a href="./back.html">サンプル</a>`, "if_back")
 }
 
 function SConfig(type, id, v1, v2, v3, v4) {

@@ -114,7 +114,9 @@ function extractVideoId(url) {
   <div id="komee">読み込み中...</div>
 <div id="komento"></div>
 </div>
-<div id="osusume"></div>
+<div class="blockin">
+<div id="kanrendayo">関連動画</div>
+<div id="osusume"></div></div>
 </div>
 <script type="module" src="../api/v1.js"></script>
 <!--<script src="https://iwb.jp/s/js/tiny-console.js"></script>-->
@@ -128,6 +130,7 @@ const server = "https://invidious.nikkosphere.com";
 console.log("スクリプトを読み込みました")
   const url = new URL(window.location.href);
   const ne =  url.searchParams.get('v');
+  const t =  url.searchParams.get('t');
   console.log(ne)
   const videoId = ne;
   if(videoId){
@@ -136,6 +139,20 @@ url.textContent = `http://youtu.be/${videoId}`;
  console.log(videoId)
     loadVideoInfo(videoId);
   }
+
+
+function timest(text, urlTemplate) {
+  const timeRegex = /\b(\d{1,2}):([0-5]\d)\b/g;
+
+  return text.replace(timeRegex, (match, minutes, seconds) => {
+    const minInt = parseInt(minutes, 10);
+    const secInt = parseInt(seconds, 10);
+    const totalSeconds = (minInt * 60) + secInt;
+
+    const linkUrl = urlTemplate.replace('{SECONDS}', totalSeconds);
+    return `<a href="${linkUrl}" class="timestamp-link" data-seconds="${totalSeconds}">${match}</a>`;
+  });
+}
 
   /**
  * @param {number} totalSeconds
@@ -195,7 +212,11 @@ console.log(`動画の説明を読み込みます…${videoId}`)
   const yoko = (window.innerWidth) * 0.6 + 48;
   const tate = yoko * 9 / 16;
   if (localStorage.getItem('if_eme') === "true"){
-  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube-nocookie.com/embed/${videoId}?loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
+    let ta = ""
+    if (t){
+      ta = "start=" + t
+    }
+  container.innerHTML = `<iframe width="${yoko}" height="${tate}" src="https://www.youtube-nocookie.com/embed/${videoId}?loop=1${ta}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="douga"></iframe>`;
   } else {
     const omg = await data.formatStreams?.map(stream => stream.url) || [];
     console.log(`${omg}`)
@@ -237,18 +258,19 @@ const text = d;
   button.innerText = "もっと見る";
     getkome(videoId)
 
-
+const vieww = document.documentElement.clientWidth / 98;
 
 
     const osusume = document.getElementById('osusume');
     const osusu = await data.recommendedVideos
 let ht = ""
 console.log(osusu)
-
+let index = 0;
 for (const d of osusu){
+  index ++;
   const samuine = samun(d.videoThumbnails[3].url,response.by)
   const times = time(d.lengthSeconds);
-  const sya = syouryaku(d.author,20)
+  const sya = syouryaku(d.author,vieww)
 let zika = `<p class=dougazikan>${times}</p>`;
 ht += `
 <div class="kanrendouga">
@@ -261,7 +283,7 @@ ht += `
           </div>
           <div class="blo">
           <a href="${ip}/watch/?v=${d.videoId}">
-            <p class="kanrentitle">${syouryaku(d.title,25)}</p>
+            <p class="kanrentitle">${syouryaku(d.title,vieww + 6)}</p>
             </a>
             
           <div class="sya"><a href="${ip}/channel/?c=${d.authorId}"><p class="b">${sya}</p></a></div><p class="c">${d.publishedText}に投稿</p></div>
@@ -282,12 +304,16 @@ osusume.innerHTML = ht;
 }
 
 
-
-
- /**
-   * 
-   * @param {Array} comments
-   */
+function setTime(s) {
+  const scroll = localStorage.getItem('if_scroll');
+  if (scroll === "true"){
+    window.scrollTo({
+  top: 0,
+  behavior: 'smooth'
+});
+  }
+  document.getElementById('vide').currentTime = s
+}
 
 async function getkome(videoId) {
   const apiUrl = `${come}${videoId}`;
@@ -301,7 +327,7 @@ console.log(`動画の説明を読み込みます…${videoId}`)
 
     data.comments.forEach(comment => {
       const snippet = comment;
-      const commentt = snippet.contentHtml;
+      const commentt = timest(snippet.content,`${ip}/watch/?v=${videoId}&t={SECONDS}s`);
       const name = comment.author
       const icon = comment.authorThumbnails[0].url
       const commentCount = data.commentCount.toLocaleString();;
@@ -318,8 +344,21 @@ console.log(`動画の説明を読み込みます…${videoId}`)
         </div>
       `;
     })
+    const kom = document.getElementById('komento');
+    kom.innerHTML = text;
 
-    document.getElementById('komento').innerHTML = text;
+
+    kom.addEventListener('click', function(event) {
+
+  const link = event.target.closest('a.timestamp-link');
+
+  if (!link) {
+    return;
+  }
+  event.preventDefault();
+  const seconds = parseInt(link.dataset.seconds, 10);
+  setTime(seconds);
+});
 
   } catch (err) {
     console.error("エラーが発生しました:", err);

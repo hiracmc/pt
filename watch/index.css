@@ -455,9 +455,18 @@ font-weight: bold;
 
 }
 
+#kanrendayo
+{
+  margin-left: 20px;
+margin-top: 0px;
+font-size: 24px;
+font-weight: bold;
+    color: #ffffff;
+}
+
 .dougasamune{
 position: relative;
-margin-top: 00px;
+margin-top: 0px;
 width: 160px;
 height: 110px;
 }
@@ -486,12 +495,12 @@ border-radius: 5px;
 #osusume{
   display: inline-block;
   margin-left: 20px;
-  margin-top: 25px;
+  margin-top: 0px;
 }
 
 .kanrendouga {
   display: flex;
-  background-color: #131313;
+  background-color: #1b1b1b;
   padding: 15px 20px;
   border-radius: 3px;
   margin-top: 10px;
@@ -504,6 +513,7 @@ border-radius: 5px;
   margin-top: 10px;
   font-weight: bold;
   margin-left: 10px;
+  font-size: 14px;
 }
 
 .sya{
@@ -527,4 +537,8 @@ color: #bdbdbd;
 margin-left: 10px;
 margin-top: -5px;
 
+}
+
+.blockin{
+  display: inline-block;
 }
