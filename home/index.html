@@ -205,28 +205,23 @@ function syouryaku(stext,max) {
         e();
     });
     const lmao = document.getElementById('youtube-url');
-  const kensakurireki = JSON.parse(localStorage.getItem("seahos") || "[]").slice(0, 10);
-  const rireki = document.getElementById("kouho");
+    const rireki = document.getElementById("kouho");
+    geth(JSON.parse(localStorage.getItem("seahos") || "[]").slice(0, 10))
+
+
+    function geth(kensakurireki) {
   rireki.style.display = "none";
   let html = "";
-  kensakurireki.forEach(d => {
-    html += `<div class="ar"><a href="${ip}/search/?q=${d}">${syouryaku(d,50)}</p></div>`
-  });
-  rireki.innerHTML = `<div class="kou">${html}</div>`;
+  for (let index = 0; index < kensakurireki.length; index++) {
+    const d= kensakurireki[index];
+       html += `<div class="ar"><a href="${ip}/search/?q=${d}">${syouryaku(d,50)}</a><p class="delete" data-index="${index}">削除</p></div>`
+  
+  }
+  rireki.innerHTML = `<div id="kou">${html}</div>`;
+}
 
-  let timerId
-  lmao.addEventListener("focus", () => {
-    clearTimeout(timerId);
-    rireki.style.display = "inline-block";
-  });
-
-  // フォーカスが外れた時
-  lmao.addEventListener("blur", () => {
-    timerId = setTimeout(() => {
-  rireki.style.display = "none";
-    }, 100);
-  });
-
+  
+document.getElementById("kouho").addEventListener("click", function(event) {const link = event.target.closest("#kou p.delete");if (!link) {return;}event.preventDefault();const s = link.dataset.index;const arr = JSON.parse(localStorage.getItem("seahos") || "[]");arr.splice(s, 1);localStorage.setItem("seahos", JSON.stringify(arr));geth(arr.slice(0, 10));clearTimeout(timerId);rireki.style.display = "inline-block";});let timerId;lmao.addEventListener("focus", () => {clearTimeout(timerId);rireki.style.display = "inline-block";});lmao.addEventListener("input", () => {const key = lmao.value;const data = JSON.parse(localStorage.getItem("seahos") || "[]").filter(item => item.toLowerCase().includes(key.toLowerCase()));geth(data.slice(0, 10));rireki.style.display = "inline-block";});lmao.addEventListener("blur", () => {timerId = setTimeout(() => {rireki.style.display = "none";}, 100);});
 </script>
 </body>
 </html>

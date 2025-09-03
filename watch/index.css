@@ -138,9 +138,48 @@ font-size: 20px;
 }
 
 
+.kensakubox{
+  position: relative;
+      margin: 0.5em 0;
+    margin-left: 80px;
+    font-size: 16px;
+    margin-top: 13px;
+    z-index: 10;
+}
+.kensakubox #kou {
+  box-shadow: 0px 1px 10px #000;
+  position: absolute;
+  left: 0%;
+  margin-top: 0px;
+  padding: 10px 0px;
+  background-color: #0e0e0ee8;
+  width: 700px;
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+  border: 1px solid #494949;
+}
+.ar {
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 17px;
+  padding: 6px 6px;
+  display: flex;
+}
+.ar :hover{
+ background-color: #363636e8;
+ text-decoration: underline;
+}
+.ar a{
+color:#fff;
+}
+.ar .delete{
+  color: #b3b3b3;
+  position: absolute;
+  right: 15px;
+  margin-top: -2px;
+}
 .kensaku{
 display: flex;
-
     width: 700px;
     height: 30px;
     padding: 0.5em;
@@ -148,10 +187,6 @@ display: flex;
     border: 1px solid #494949;
 border-radius: 30px;
     background: #202020;
-    margin: 0.5em 0;
-    margin-left: 80px;
-    font-size: 16px;
-    margin-top: 13px;
 }
 
 .iroiro{
