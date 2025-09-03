@@ -245,6 +245,18 @@ console.log(`スクリプトを読み込みました`)
 
 
  kensak(key);
+ const get = localStorage.getItem('seahos') || "[]";
+ const rireki = JSON.parse(get);
+ if (rireki.includes(key)){
+  const index = rireki.indexOf(key);
+  rireki.splice(index,1)
+ }
+ rireki.unshift(key)
+ if (rireki.length > 30){
+  rireki.splice(rireki.length - 2,2)
+ }
+  localStorage.setItem("seahos",`${JSON.stringify(rireki)}`)
+
 
 document.getElementById('gohome').innerHTML = `<a href="${ip}/home"><h1 class="home">Pontube</h1></a>`;
   </script>

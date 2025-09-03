@@ -41,16 +41,16 @@
     <div id="gosetting"></div>
 
     <form id="gu">
+      <div class="kensakubox">
 <div class="kensakuu">
-  <input type="text" id="youtube-url" placeholder="検索" class="kensakuu1">
+  <input type="text" id="youtube-url" placeholder="検索" class="kensakuu1" autocomplete="off">
  <button type="submit" onclick="e()" class="kensakuu2"><img src="https://hiracmc.github.io/psvg/svg/psvg_search.svg" width="20px" height="20px"></button>
-
-    </div></form>
+</form>
+</div>
+ <div id="kouho"></div>
+    </div>
     <div class="okini"></div>
 </div>
-  <!--<iframe width="560" height="315" src="https://cloud.google.com" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  -->
-
 <script>
   const opens = document.getElementById('va');
   const log = document.getElementById('log');
@@ -188,11 +188,44 @@ function extractVideoId(url) {
   }
 }
 
+function syouryaku(stext,max) {
+  const text = stext || ''; 
+
+  const maxLength = max;
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.slice(0, maxLength) + "...";
+}
+
+
   const formm = document.getElementById('gu');
     formm.addEventListener('submit', function(ev) {
         ev.preventDefault();
         e();
     });
+    const lmao = document.getElementById('youtube-url');
+  const kensakurireki = JSON.parse(localStorage.getItem("seahos") || "[]").slice(0, 10);
+  const rireki = document.getElementById("kouho");
+  rireki.style.display = "none";
+  let html = "";
+  kensakurireki.forEach(d => {
+    html += `<div class="ar"><a href="${ip}/search/?q=${d}">${syouryaku(d,50)}</p></div>`
+  });
+  rireki.innerHTML = `<div class="kou">${html}</div>`;
+
+  let timerId
+  lmao.addEventListener("focus", () => {
+    clearTimeout(timerId);
+    rireki.style.display = "inline-block";
+  });
+
+  // フォーカスが外れた時
+  lmao.addEventListener("blur", () => {
+    timerId = setTimeout(() => {
+  rireki.style.display = "none";
+    }, 100);
+  });
 
 </script>
 </body>
