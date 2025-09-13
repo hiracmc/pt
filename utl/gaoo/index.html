@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gaoo</title>
+</head>
+<body>
+<h1>Gaogle</h1>
+<canvas id="js-canvas" class="js-canvas"></canvas>
+<script>
+// 音声ファイルのURL
+const JUMP_SOUND_URL = 'https://hiracmc.github.io/pt/utl/resource/jump.mp3';
+
+// ゲーム設定
+const canvas = document.getElementById('js-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = 570;
+
+const GRAVITY = 0.8;
+const JUMP_FORCE = -17;
+let OBSTACLE_SPEED = 5;
+
+// ゲーム状態
+let isGameOver = false;
+let score = 0;
+let jumpSound;
+
+// プレイヤー
+const player = {
+  x: 50,
+  y: canvas.height - 40,
+  width: 40,
+  height: 40,
+  velocityY: 0
+};
+
+// 障害物
+let obstacles = [];
+
+// 音声の読み込み
+function loadSound() {
+  return new Promise((resolve, reject) => {
+    jumpSound = new Audio(JUMP_SOUND_URL);
+    jumpSound.addEventListener('canplaythrough', resolve);
+    jumpSound.addEventListener('error', reject);
+  });
+}
+
+// ゲーム初期化
+async function initGame() {
+  try {
+    await loadSound();
+    requestAnimationFrame(gameLoop);
+  } catch (error) {
+    console.error('音声の読み込みに失敗しました:', error);
+  }
+}
+
+// ジャンプ処理
+function jump() {
+  if (player.y === canvas.height - player.height) {
+    player.velocityY = JUMP_FORCE;
+    jumpSound.play();
+  }
+}
+
+// 障害物の生成
+function createObstacle() {
+  obstacles.push({
+    x: canvas.width,
+    y: canvas.height - 40,
+    width: 20,
+    height: 40
+  });
+}
+
+// 衝突判定
+function checkCollision(a, b) {
+  return a.x < b.x + b.width &&
+         a.x + a.width > b.x &&
+         a.y < b.y + b.height &&
+         a.y + a.height > b.y;
+}
+
+// ゲームループ
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!isGameOver) {
+    // プレイヤーの更新
+    player.velocityY += GRAVITY;
+    player.y += player.velocityY;
+    player.y = Math.min(player.y, canvas.height - player.height);
+
+    // 障害物の更新
+    obstacles.forEach((obstacle, index) => {
+      obstacle.x -= OBSTACLE_SPEED;
+      if (obstacle.x + obstacle.width < 0) {
+        obstacles.splice(index, 1);
+        score += 10;
+        OBSTACLE_SPEED += 0.2
+      }
+      if (checkCollision(player, obstacle)) {
+        isGameOver = true;
+      }
+    });
+
+    // 新しい障害物の生成
+    if (Math.random() < 0.01) {
+      createObstacle();
+    }
+  }
+
+  // 描画
+  ctx.fillStyle = '#000';
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+
+  obstacles.forEach(obstacle => {
+    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+  });
+
+  // 地面
+  ctx.fillRect(0, canvas.height - 1, canvas.width, 1);
+
+  // スコア表示
+  ctx.fillStyle = '#000';
+  ctx.font = '20px Arial';
+  ctx.fillText(`Score: ${score}`, 10, 30);
+
+  if (isGameOver) {
+    ctx.fillStyle = '#000';
+    ctx.font = '30px Arial';
+    ctx.fillText('Game Over - Jump to Restart', canvas.width / 2 - 150, canvas.height / 2);
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+// イベントリスナー
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' || e.code === 'ArrowUp') {
+    if (isGameOver) {
+      isGameOver = false;
+      player.y = canvas.height - player.height;
+      player.velocityY = 0;
+      obstacles = [];
+      score = 0;
+      OBSTACLE_SPEED = 5;
+    } else {
+      jump();
+    }
+  }
+});
+
+canvas.addEventListener('touchstart', () => {
+  if (isGameOver) {
+    isGameOver = false;
+    player.y = canvas.height - player.height;
+    player.velocityY = 0;
+    obstacles = [];
+    score = 0;
+    OBSTACLE_SPEED = 5;
+  } else {
+    jump();
+  }
+});
+
+// ゲーム開始
+initGame();</script>
+</body>
+</html>
