@@ -155,6 +155,7 @@ img.emoji {
 
 .reac {
   background: rgba(31, 37, 44, 0.75);
+  border: 2px solid rgba(31, 37, 44, 0.75);
       border-radius: 5px;
       margin-left: 5px;
       width: 50px;
@@ -165,8 +166,15 @@ img.emoji {
       margin-top: 18px;
       transition: ease-in-out 0.3s;
       text-align:center;
-      padding: 5px 5px;
+      padding: 4px 4px;
       color: #b3b3b3;
       font-family: "TikTok Sans", sans-serif;
       font-size: 15px;
+}
+
+.reac:hover{
+  background: rgba(49, 59, 70, 0.75);
+  border: 2px solid rgba(56, 66, 78, 0.75);
+  transform: scale(1.1);
+  font-family: "TikTok Sans", sans-serif;
 }

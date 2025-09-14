@@ -37,12 +37,27 @@
   </main>
   <div id="bodys"></div>
 
-<script type="module">
-  import { forEmoJi } from "./resource/convertEmoji.js";
+<script>
 
-let data = await fetch("")
+const forEmoJi = new Map([
+  ["nico", "😃"],
+  ["thinking", "🤔"],
+  ["boom", "🤯"],
+  ["sunglasses", "😎"],
+  ["otaku", "🤓"],
+  ["sob", "😭"],
+  ["omg", "😮"],
+  ["oh", "😱"],
+  ["good", "👍"],
+  ["bye", "👋"],
+]);
 
 function byid(id){return document.getElementById(id)}
+
+function getData() {
+  const promise = fetch("https://raw.githubusercontent.com/hiracmc/pt/refs/heads/main/free-board/resource/test-data.json");
+  promise.then(response => response.json()).then(data => {
+
 
 const bodys = byid("bodys");
 
@@ -83,9 +98,12 @@ if (data.length > 0){
   }, 500);
 }, 100);
 }
-
-
+  })
 twemoji.parse(document.body);
+}
+
+getData()
+
 </script>
 
     </body>
