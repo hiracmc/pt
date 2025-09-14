@@ -26,6 +26,30 @@ a {
   letter-spacing: 0.02em;
 }
 
+.sett{
+  transition: .2s cubic-bezier(0.45, 0, 0.55, 1);
+  background: linear-gradient(to right, #008327,#00bb38, #008327);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 3s linear infinite;
+  
+  position: absolute;
+  right: 20px;
+  top: 50px;
+  color: #fff;
+  font-family: "TikTok Sans", sans-serif;
+  font-size: 30px;
+  /*text-shadow: 0px 0px 5px #ececec;*/
+}
+
+.sett:hover{
+  text-shadow: 0px 0px 10px #008327;
+  letter-spacing: 0.02em;
+}
+
 @keyframes popup {
   0% {
     transform: translateY(50px) scale(0.9);

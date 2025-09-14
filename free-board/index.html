@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
+        <title>
+            効率のいい勉強塾 - StudyHouse
+        </title>
+        <link href="./index.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header class="topbar" role="banner" aria-label="Main header">
+    <div class="topbar-inner">
+        <a href="#" class="logo"><img src="./bbs-logo.svg"></svg></a>
+
+        <nav>
+        <a class="nav-item active" href="#home">ホーム</a>
+        <a class="nav-item" href="../home/">tube</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+    <div id="loader">
+      
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+
+  </div>
+  <div id="load-text">データを読み込んでいます</div>
+  </main>
+  <div id="bodys"></div>
+
+<script type="module">
+  import { forEmoJi } from "./resource/convertEmoji.js";
+
+let data = [
+    {
+        id: "test",
+        name: "効率のいい勉強法を模索中",
+        date: 1735657200,
+        data: [
+            {
+                id:0,
+                authorId: "ponzu123",
+                autnorName: "ぽんず",
+                date: 1735657800,
+                text: "どうしよう...\n暗記パンを食べても覚えれないし、塩コショウをかけても覚えることができないよ...",
+                emoji: [{ id: "good", value: 30 },{ id: "thinking", value: 13 },{ id: "otaku", value: 50 }]
+            }
+        ]
+
+    }
+]
+
+function byid(id){return document.getElementById(id)}
+
+const bodys = byid("bodys");
+
+let newHtml = "";
+data.forEach(d => {
+    const itti = d.data[0]
+    let emojidata = "";
+    itti.emoji.forEach(e => {
+        emojidata += `
+        <div class="reac">
+            <p>${forEmoJi.get(e.id)} ${e.value}</p>
+        </div>
+        `
+    })
+newHtml += `
+<div class="card">
+    <h2>${d.name}</h2>
+      <p style="color: #cfcfcf; font-size: 13px;">[0] ${itti.autnorName} - @${itti.authorId} :</p>
+      <p style="color: #a0a0a0ff;">${itti.text.replace(/\n/g, "<br>")}</p>
+      <div class="flex">${emojidata}</div>
+    </div>
+`
+})
+
+
+bodys.innerHTML = newHtml;
+
+
+const load = byid("loader");
+const loadText = byid("load-text");
+if (data.length > 0){
+    setTimeout(() => {
+  load.classList.add("hide");
+  loadText.classList.add("hide");
+  setTimeout(() => {
+    load.style.display = "none";
+    loadText.style.display = "none";
+  }, 500);
+}, 100);
+}
+
+
+twemoji.parse(document.body);
+</script>
+
+    </body>
+</html>

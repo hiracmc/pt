@@ -39,6 +39,7 @@
 
 
     <div id="gosetting"></div>
+    <div id="gobbs"></div>
 
     <form id="gu">
       <div class="kensakubox">
@@ -109,6 +110,7 @@ async function getlog() {
 <script>
 let ip = window.location.origin;
 document.getElementById('gosetting').innerHTML = `<a href="${ip}/setting/"><h1 class="set">Setting</h1></a>`;
+document.getElementById('gobbs').innerHTML = `<a href="${ip}/free-board/"><h1 class="sett">BBS</h1></a>`;
     if (localStorage.getItem('if_back') === ""){
         document.body.style.backgroundImage = `none`
         document.getElementById('gohome').innerHTML = `<a href="${ip}/home/"><div class="om"><h1 class="homein">Pontube</h1></div></a>`;
@@ -218,10 +220,11 @@ function syouryaku(stext,max) {
   
   }
   rireki.innerHTML = `<div id="kou">${html}</div>`;
+  console.log("load")
 }
 
   
-document.getElementById("kouho").addEventListener("click", function(event) {const link = event.target.closest("#kou p.delete");if (!link) {return;}event.preventDefault();const s = link.dataset.index;const arr = JSON.parse(localStorage.getItem("seahos") || "[]");arr.splice(s, 1);localStorage.setItem("seahos", JSON.stringify(arr));geth(arr.slice(0, 10));clearTimeout(timerId);rireki.style.display = "inline-block";});let timerId;lmao.addEventListener("focus", () => {clearTimeout(timerId);rireki.style.display = "inline-block";});lmao.addEventListener("input", () => {const key = lmao.value;const data = JSON.parse(localStorage.getItem("seahos") || "[]").filter(item => item.toLowerCase().includes(key.toLowerCase()));geth(data.slice(0, 10));rireki.style.display = "inline-block";});lmao.addEventListener("blur", () => {timerId = setTimeout(() => {rireki.style.display = "none";}, 100);});
+document.getElementById("kouho").addEventListener("click", function(event) {console.log("発火");const link = event.target.closest("#kou p.delete");if (!link) {return;}event.preventDefault();const s = link.dataset.index;const arr = JSON.parse(localStorage.getItem("seahos") || "[]");arr.splice(s, 1);localStorage.setItem("seahos", JSON.stringify(arr));geth(arr.slice(0, 10));clearTimeout(timerId);rireki.style.display = "inline-block";});let timerId;lmao.addEventListener("focus", () => {clearTimeout(timerId);rireki.style.display = "inline-block";});lmao.addEventListener("input", () => {const key = lmao.value;const data = JSON.parse(localStorage.getItem("seahos") || "[]").filter(item => item.toLowerCase().includes(key.toLowerCase()));geth(data.slice(0, 10));rireki.style.display = "inline-block";});lmao.addEventListener("blur", () => {timerId = setTimeout(() => {rireki.style.display = "none";}, 100);});
 </script>
 </body>
 </html>
